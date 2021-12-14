@@ -1,4 +1,3 @@
-
 // Note about coordinates:
 // Each square is [row, col], kind of like chess notation
 class Board {
@@ -8,7 +7,6 @@ class Board {
       this.squares.push([null, null, null, null, null, null, null, null])
     }
   }
-
   isSquareOnBoard(square) {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >=0 && col >= 0
@@ -26,7 +24,7 @@ class Board {
   // If move is valid, updates the board and returns true
   // If not, returns false
   move(fromSquare, toSquare) {
-    // todo: validate there is a piece on the source
+    // TODO: validate there is a piece on the source
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
 
@@ -42,10 +40,64 @@ class Board {
           if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
           validToSquares.push(currentSquare)
         }
-
-        // todo: look to left, down, up 
-
+        // look to the left
+        for(let i = 1; i <= 8; i++) {
+          const currentSquare = [fromRow, fromCol - i]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+        }
+        //look up
+        for(let i = 1; i <= 8; i++) {
+          const currentSquare = [fromRow + i , fromCol ]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+        }
+        //look down
+        for(let i = 1; i <= 8; i++) {
+          const currentSquare = [fromRow - i, fromCol ]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+        }
         if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
+          // todo: update the board 
+          return true
+        } else {
+          return false
+        }
+      }
+    case 'bishop' : {
+        // look up and left
+        for (let i = 1; i <= 8; i++){
+          const currentSquare = [fromRow - i , fromCol - i ]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+      }
+        // look up and right
+        for (let i = 1; i <= 8; i++){      
+          const currentSquare = [fromRow - i , fromCol + i ]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+      }
+        // look down and left
+        for (let i = 1; i <= 8; i++){      
+          const currentSquare = [fromRow + i , fromCol - i ]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+      }
+        // look down and right
+        for (let i = 1; i <= 8; i++){      
+          const currentSquare = [fromRow + i , fromCol + i ]
+          if (!this.isSquareOnBoard(currentSquare)) break
+          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          validToSquares.push(currentSquare)
+      }
+      if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
           // todo: update the board 
           return true
         } else {
@@ -68,10 +120,15 @@ describe('Board', () => {
   });
 
   describe('rook movement', () => {
-    it('rook can move to the right', () => {
+    it('rook can move down', () => {
       const board = new Board()
-      board.squares[0][0] = { type: "rook" }
-      expect(board.move([0, 0], [0, 1])).toBe(true)   
+      board.squares[0][2] = { type: "rook" }
+      expect(board.move([0, 2], [0, 0])).toBe(true)   
+    })
+    it('rook can move to the left', () => {
+      const board = new Board()
+      board.squares[0][1] = { type: "rook" }
+      expect(board.move([0, 1], [0, 0])).toBe(true)   
     })
 
     it('rook cannot move diagonally', () => {
@@ -90,7 +147,32 @@ describe('Board', () => {
       const board = new Board()
       board.squares[0][3] = { type: "rook" }
       board.squares[0][0] = { type: "rook" }
-      expect(board.move([0, 0], [0, 7])).toBe(false)
+      expect(board.move([0, 0], [0, 4])).toBe(false)
+    })
+  })
+  describe('bishop movement', () => {
+    it('bishop can move up and left', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "bishop" }
+      expect(board.move([3, 3], [0, 0])).toBe(true)   
+    })
+
+    it('bishop can move up and right', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "bishop" }
+      expect(board.move([3, 3], [1, 5])).toBe(true)   
+    })
+
+    it('bishop can move down and left', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "bishop" }
+      expect(board.move([3, 3], [5, 1])).toBe(true)   
+    })
+
+    it('bishop can move down and right', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "bishop" }
+      expect(board.move([3, 3], [5, 5])).toBe(true)   
     })
   })
 });
