@@ -24,6 +24,7 @@ class Board {
   // If move is valid, updates the board and returns true
   // If not, returns false
   move(fromSquare, toSquare) {
+    // TODO: Refactor queen, rook and bishop move loops
     // TODO: validate there is a piece on the source
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
@@ -172,28 +173,21 @@ class Board {
         const currentSquare = []
         for (let i = -2; i <= 2; i++){
           if (i === 0){
-            break
+            continue
           }
           for (let x = -2; x <= 2; x++){
            if (i === x){
-             break
+             continue
            } 
            const currentSquare = [ fromRow + i, fromCol + x]
-           if (!this.isSquareOnBoard(currentSquare)) break
-           if (this.isSquareOccupied(currentSquare)) return false
+           if (!this.isSquareOnBoard(currentSquare)) continue
+           if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
            validToSquares.push(currentSquare)
           }
         }
-        // 2 left, 1 up
-        // 2 left, 1 down
-        // 1 left, 2 up
-        // 1 left, 2 down
-        // 2 right, 1 up
-        // 2 right, 1 down
-        // 1 right, 2 up
-        // 1 right, 2 down
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          // todo: update the board 
+          //TODO: fromSquare should now be null
+          this.squares[toSquare[0]][toSquare[1]] = { type: 'knight' }
           return true
         } else {
           return false
@@ -371,8 +365,29 @@ describe('Board', () => {
   it('knight cannot move off board', () => {
       const board = new Board()
       board.squares[3][3] = { type: "knight" }
-      expect(board.move([1, 1], [-1, 2])).toBe(false)   
+      expect(board.move([3, 3], [-1, 2])).toBe(false)   
     })
+
+  it('knight cannot move like bishop', () => {
+    const board = new Board()
+    board.squares[3][3] = { type: "knight" }
+    expect(board.move([3, 3], [5, 5])).toBe(false)   
+  })
+
+  it('knight cannot move like rook', () => {
+    const board = new Board()
+    board.squares[3][3] = { type: "knight" }
+    expect(board.move([3, 3], [3, 5])).toBe(false)   
+  })
+
+  describe('board can update', () => {
+    it('toSquare should contain piece type if move is valid', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight"}
+      board.move([3, 3], [4, 5])
+      expect(board.squares[4][5].type === "knight").toBe(true)
+    })
+  })
   })
 });
 
