@@ -168,6 +168,37 @@ class Board {
           return false
         }
       }
+      case 'knight' : {
+        const currentSquare = []
+        for (let i = -2; i <= 2; i++){
+          if (i === 0){
+            break
+          }
+          for (let x = -2; x <= 2; x++){
+           if (i === x){
+             break
+           } 
+           const currentSquare = [ fromRow + i, fromCol + x]
+           if (!this.isSquareOnBoard(currentSquare)) break
+           if (this.isSquareOccupied(currentSquare)) return false
+           validToSquares.push(currentSquare)
+          }
+        }
+        // 2 left, 1 up
+        // 2 left, 1 down
+        // 1 left, 2 up
+        // 1 left, 2 down
+        // 2 right, 1 up
+        // 2 right, 1 down
+        // 1 right, 2 up
+        // 1 right, 2 down
+      if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
+          // todo: update the board 
+          return true
+        } else {
+          return false
+        }
+      }
       default: {
         throw new Error("unknown piece")
       }
@@ -285,6 +316,62 @@ describe('Board', () => {
       board.squares[0][3] = { type: "queen" }
       board.squares[0][0] = { type: "queen" }
       expect(board.move([0, 0], [0, 4])).toBe(false)
+    })
+  })
+
+  describe('knight movement', () => {
+    it('knight can move 2 left, 1 up', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [1, 2])).toBe(true)   
+    })
+
+  it('knight can move 2 left, 1 down', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [1, 4])).toBe(true)   
+    })
+
+  it('knight can move 1 left, 2 up', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [2, 1])).toBe(true)   
+    })
+
+  it('knight can move 1 left, 2 down', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [2, 5])).toBe(true)   
+    })
+
+  it('knight can move 2 right, 1 up', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [5, 2])).toBe(true)   
+    })
+
+  it('knight can move 2 right, 1 down', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [5, 4])).toBe(true)   
+    })
+
+  it('knight can move 1 right, 2 up', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [4, 1])).toBe(true)   
+    })
+
+  it('knight can move 1 right, 2 down', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([3, 3], [4, 5])).toBe(true)   
+    })
+
+  it('knight cannot move off board', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight" }
+      expect(board.move([1, 1], [-1, 2])).toBe(false)   
     })
   })
 });
