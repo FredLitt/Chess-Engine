@@ -63,7 +63,8 @@ class Board {
           validToSquares.push(currentSquare)
         }
         if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          // todo: update the board 
+          this.squares[toRow][toCol] = { type: 'rook' }
+          this.squares[fromRow][fromCol] = null
           return true
         } else {
           return false
@@ -99,7 +100,8 @@ class Board {
           validToSquares.push(currentSquare)
       }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          // todo: update the board 
+          this.squares[toRow][toCol] = { type: 'bishop' }
+          this.squares[fromRow][fromCol] = null
           return true
         } else {
           return false
@@ -163,7 +165,8 @@ class Board {
           validToSquares.push(currentSquare)
       }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          // todo: update the board 
+          this.squares[toRow][toCol] = { type: 'queen' }
+          this.squares[fromRow][fromCol] = null
           return true
         } else {
           return false
@@ -186,8 +189,8 @@ class Board {
           }
         }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          //TODO: fromSquare should now be null
-          this.squares[toSquare[0]][toSquare[1]] = { type: 'knight' }
+          this.squares[toRow][toCol] = { type: 'knight' }
+          this.squares[fromRow][fromCol] = null
           return true
         } else {
           return false
@@ -263,6 +266,20 @@ describe('Board', () => {
       board.squares[3][3] = { type: "bishop" }
       expect(board.move([3, 3], [5, 5])).toBe(true)   
     })
+
+    it('bishop cannot move off the board', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "bishop" }
+      expect(board.move([3, 3], [-1, -1])).toBe(false)   
+    })
+
+    it('bishop cannot move through piece', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "bishop" }
+      board.squares[2][2] = { type: "pawn" }
+      expect(board.move([3, 3], [1, 1])).toBe(false)
+    })
+
   })
   describe('queen movement', () => {
     it('queen can move up and left', () => {
@@ -386,6 +403,12 @@ describe('Board', () => {
       board.squares[3][3] = { type: "knight"}
       board.move([3, 3], [4, 5])
       expect(board.squares[4][5].type === "knight").toBe(true)
+    })
+    it('fromSquare should become null if move is valid', () => {
+      const board = new Board()
+      board.squares[3][3] = { type: "knight"}
+      board.move([3, 3], [4, 5])
+      expect(board.squares[3][3] === null).toBe(true)
     })
   })
   })
