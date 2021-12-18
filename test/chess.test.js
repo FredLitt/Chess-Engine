@@ -45,7 +45,15 @@ class Board {
         for(let i = 1; i <= 8; i++) {
           const currentSquare = [fromRow, fromCol - i]
           if (!this.isSquareOnBoard(currentSquare)) break
-          if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
+          if (this.squares[fromRow][fromCol - i] !== null){
+            if (this.squares[fromRow][fromCol].color === this.squares[fromRow][fromCol - i].color){
+              return false
+            } else {
+              validToSquares.push(currentSquare)
+              break
+            }
+          }
+          // if (this.isSquareOccupied(currentSquare)) return false //TODO: && piece is not opposing color
           validToSquares.push(currentSquare)
         }
         //look up
@@ -219,8 +227,9 @@ describe('Board', () => {
     })
     it('rook can move to the left', () => {
       const board = new Board()
-      board.squares[0][1] = { type: "rook" }
-      expect(board.move([0, 1], [0, 0])).toBe(true)   
+      board.squares[0][3] = { type: "rook", color: "black" }
+      board.squares[0][2] = { type: "rook", color: "white" }
+      expect(board.move([0, 3], [0, 2])).toBe(true)   
     })
 
     it('rook cannot move diagonally', () => {
