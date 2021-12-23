@@ -1,5 +1,3 @@
-// TODO: Refactor bishop, rook and queen moves 
-// TODO: 
 class Piece {
   constructor (type, color){
     this.type = type
@@ -21,11 +19,7 @@ class Board {
   }
   isSquareOccupied(square){
     const [row, col] = square
-    if (this.squares[row][col] !== null){ 
-      return true
-    } else {
-      return false
-    }
+    if (this.squares[row][col] !== null) return true
   }
   isPieceFriendly(fromSquare, currentSquare){
     const [row1, col1] = fromSquare
@@ -38,7 +32,7 @@ class Board {
   // If not, returns false
   move(fromSquare, toSquare) {
     // TODO: Refactor queen, rook and bishop move loops
-    // TODO: validate there is a piece on the source
+    // TODO: Add pawn moves
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
 
@@ -46,9 +40,51 @@ class Board {
     const validToSquares = []
 
     switch(pieceAtFromSquare.type) {
-      case 'rook': {
-        // look to the right 
-        for(let i = 1; i <= 8; i++) {
+      case 'rook': {    
+        // const rookDirections = {
+        // "Right": [fromRow, fromCol + i],
+        // "Left": [fromRow, fromCol - i],
+        // "Up": [fromRow - i, fromCol],
+        // "Down": [fromRow + i, fromCol]
+        // }
+        // for (let i = 1; i < 8; i++){
+        //   for (const direction in rookDirections){
+        //     if (rookDirections.hasOwnProperty(direction)){
+        //     const currentSquare = rookDirections[direction]
+        //       if (!this.isSquareOnBoard(currentSquare)){
+        //         delete rookDirections[direction]
+        //         continue
+        //       }
+        //       if (this.isSquareOccupied(currentSquare)){
+        //         console.log(fromSquare)
+        //         console.log("square is occupied")
+        //         if (this.isPieceFriendly(fromSquare, currentSquare)){
+        //           console.log("friendly piece")
+        //           console.log(direction)
+        //           delete rookDirections[direction]
+        //           continue
+        //         } else {
+        //         console.log("enemy piece")
+        //         validToSquares.push(currentSquare)
+        //         delete rookDirections[direction]
+        //         console.log(direction)
+        //         console.log(rookDirections)
+        //         continue 
+        //         }
+        //       } else {
+        //         validToSquares.push(currentSquare)
+        //       }
+        //       console.log(rookDirections)
+        //       //else {
+        //       //     validToSquares.push(currentSquare)
+        //       //     break
+        //       //   }
+        //       // }
+        //       // validToSquares.push(currentSquare)
+        //     }
+        //   }
+
+        for(let i = 1; i < 8; i++) {
           const currentSquare = [fromRow, fromCol + i]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -62,7 +98,7 @@ class Board {
           validToSquares.push(currentSquare)
         }
         // look to the left
-        for(let i = 1; i <= 8; i++) {
+        for(let i = 1; i < 8; i++) {
           const currentSquare = [fromRow, fromCol - i]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -76,7 +112,7 @@ class Board {
           validToSquares.push(currentSquare)
         }
         //look up
-        for(let i = 1; i <= 8; i++) {
+        for(let i = 1; i < 8; i++) {
           const currentSquare = [fromRow + i , fromCol ]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -90,7 +126,7 @@ class Board {
           validToSquares.push(currentSquare)
         }
         //look down
-        for(let i = 1; i <= 8; i++) {
+        for(let i = 1; i < 8; i++) {
           const currentSquare = [fromRow - i, fromCol ]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -104,7 +140,7 @@ class Board {
           validToSquares.push(currentSquare)
         }
         if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          this.squares[toRow][toCol] = { type: 'rook' }
+          this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
           return true
         } else {
@@ -113,7 +149,7 @@ class Board {
       }
     case 'bishop' : {
         // look up and left
-        for (let i = 1; i <= 8; i++){
+        for (let i = 1; i < 8; i++){
           const currentSquare = [fromRow - i , fromCol - i ]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -134,7 +170,7 @@ class Board {
           validToSquares.push(currentSquare)
       }
         // look up and right
-        for (let i = 1; i <= 8; i++){      
+        for (let i = 1; i < 8; i++){      
           const currentSquare = [fromRow - i , fromCol + i ]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -155,7 +191,7 @@ class Board {
           validToSquares.push(currentSquare)
       }
         // look down and left
-        for (let i = 1; i <= 8; i++){      
+        for (let i = 1; i < 8; i++){      
           const currentSquare = [fromRow + i , fromCol - i ]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -176,7 +212,7 @@ class Board {
           validToSquares.push(currentSquare)
       }
         // look down and right
-        for (let i = 1; i <= 8; i++){      
+        for (let i = 1; i < 8; i++){      
           const currentSquare = [fromRow + i , fromCol + i ]
           if (!this.isSquareOnBoard(currentSquare)) break
           if (this.isSquareOccupied(currentSquare)){
@@ -197,7 +233,7 @@ class Board {
           validToSquares.push(currentSquare)
       }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          this.squares[toRow][toCol] = { type: 'bishop' }
+          this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
           return true
         } else {
@@ -318,7 +354,7 @@ class Board {
           validToSquares.push(currentSquare)
       }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          this.squares[toRow][toCol] = { type: 'queen' }
+          this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
           return true
         } else {
@@ -349,7 +385,47 @@ class Board {
           }
         }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
-          this.squares[toRow][toCol] = { type: 'knight' }
+          this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
+          this.squares[fromRow][fromCol] = null
+          return true
+        } else {
+          return false
+        }
+      }
+      case 'pawn' : {
+        if (pieceAtFromSquare.color === "black"){
+          //attacking squares: [ fromRow - 1, fromCol - 1] and [ fromRow - 1, fromCol +1]
+          const currentSquare = [ fromRow - 1, fromCol]
+          if (this.isSquareOccupied(currentSquare)){
+            return false
+          }
+          validToSquares.push(currentSquare)
+          //start position
+          if (fromRow === 5){
+            const currentSquare = [ fromRow - 2, fromCol]
+            if (this.isSquareOccupied(currentSquare)){
+              return false
+            }
+            validToSquares.push(currentSquare)
+          }
+        }
+        if (pieceAtFromSquare.color === "white"){
+          //attacking squares: [ fromRow + 1, fromCol - 1] and [ fromRow + 1, fromCol +1]
+          const currentSquare = [ fromRow + 1, fromCol]
+          if (this.isSquareOccupied(currentSquare)){
+            return false
+          }
+          validToSquares.push(currentSquare)
+          if (fromRow === 2){
+            const currentSquare = [ fromRow + 2, fromCol]
+            if (this.isSquareOccupied(currentSquare)){
+              return false
+            }
+            validToSquares.push(currentSquare)
+          }
+        }
+        if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
+          this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
           return true
         } else {
@@ -374,13 +450,26 @@ describe('Board', () => {
   describe('rook movement', () => {
     it('rook can move down', () => {
       const board = new Board()
-      board.squares[0][2] = new Piece("rook")
-      expect(board.move([0, 2], [0, 0])).toBe(true)   
+      board.squares[2][2] = new Piece("rook", "black")
+      expect(board.move([2, 2], [2, 5])).toBe(true)   
     })
+
+    it('rook can move up', () => {
+      const board = new Board()
+      board.squares[1][6] = new Piece("rook", "white")
+      expect(board.move([1, 6], [1, 3])).toBe(true)   
+    })
+
+    it('rook can move to the right', () => {
+      const board = new Board()
+      board.squares[0][0] = new Piece("rook", "white")
+      expect(board.move([0, 0], [0, 2])).toBe(true)   
+    })
+
     it('rook can move to the left', () => {
       const board = new Board()
-      board.squares[0][3] = new Piece("rook", "white")
-      expect(board.move([0, 3], [0, 2])).toBe(true)   
+      board.squares[0][7] = new Piece("rook", "white")
+      expect(board.move([0, 7], [0, 0])).toBe(true)   
     })
 
     it('rook cannot move diagonally', () => {
@@ -395,13 +484,6 @@ describe('Board', () => {
       expect(board.move([0, 7], [0, 8])).toBe(false)   
     })
 
-    it('rook cannot move through piece', () => {
-      const board = new Board()
-      board.squares[0][3] = new Piece("rook", "white")
-      board.squares[0][0] = new Piece("rook", "white")
-      expect(board.move([0, 0], [0, 4])).toBe(false)
-    })
-
     it('rook can capture enemy piece', () => {
       const board = new Board()
       board.squares[0][3] = new Piece("rook", "white")
@@ -409,18 +491,25 @@ describe('Board', () => {
       expect(board.move([0, 3], [0, 0])).toBe(true)
     })
 
-    it('rook cannot move through friendly piece', () => {
+    it('rook cannot capture friendly piece', () => {
       const board = new Board()
       board.squares[0][3] = new Piece("rook", "white")
       board.squares[0][0] = new Piece("rook", "white")
-      expect(board.move([0, 0], [0, 4])).toBe(false)
+      expect(board.move([0, 3], [0, 0])).toBe(false)
+    })
+
+    it('rook cannot move through friendly piece', () => {
+      const board = new Board()
+      board.squares[0][0] = new Piece("rook", "white")
+      board.squares[0][4] = new Piece("rook", "white")
+      expect(board.move([0, 0], [0, 6])).toBe(false)
     })
 
     it('rook cannot move through enemy piece', () => {
       const board = new Board()
-      board.squares[0][3] = new Piece("rook", "white")
-      board.squares[0][0] = new Piece("rook", "black")
-      expect(board.move([0, 0], [0, 4])).toBe(false)
+      board.squares[0][0] = new Piece("rook", "white")
+      board.squares[0][4] = new Piece("rook", "black")
+      expect(board.move([0, 0], [0, 6])).toBe(false)
     })
   })
 
@@ -541,79 +630,131 @@ describe('Board', () => {
       expect(board.move([3, 3], [1, 2])).toBe(true)   
     })
 
-  it('knight can move 2 left, 1 down', () => {
+    it('knight can move 2 left, 1 down', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [1, 4])).toBe(true)   
+      })
+
+    it('knight can move 1 left, 2 up', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [2, 1])).toBe(true)   
+      })
+
+    it('knight can move 1 left, 2 down', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [2, 5])).toBe(true)   
+      })
+
+    it('knight can move 2 right, 1 up', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [5, 2])).toBe(true)   
+      })
+
+    it('knight can move 2 right, 1 down', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [5, 4])).toBe(true)   
+      })
+
+    it('knight can move 1 right, 2 up', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [4, 1])).toBe(true)   
+      })
+
+    it('knight can move 1 right, 2 down', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [4, 5])).toBe(true)   
+      })
+
+    it('knight cannot move off board', () => {
+        const board = new Board()
+        board.squares[3][3] = new Piece("knight", "black")
+        expect(board.move([3, 3], [-1, 2])).toBe(false)   
+      })
+
+    it('knight cannot move like bishop', () => {
       const board = new Board()
       board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [1, 4])).toBe(true)   
+      expect(board.move([3, 3], [5, 5])).toBe(false)   
     })
 
-  it('knight can move 1 left, 2 up', () => {
+    it('knight cannot move like rook', () => {
       const board = new Board()
       board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [2, 1])).toBe(true)   
+      expect(board.move([3, 3], [3, 5])).toBe(false)   
     })
 
-  it('knight can move 1 left, 2 down', () => {
+    it('knight can capture enemy piece', () => {
+      const board = new Board()
+      board.squares[3][3] = new Piece("knight", "white")
+      board.squares[4][5] = new Piece("knight", "black")
+      expect(board.move([3, 3], [4, 5])).toBe(true)
+      expect(board.squares[4][5].color === "white" && board.squares[4][5].type === "knight")   
+    })
+
+    it('knight cannot capture friendly piece', () => {
       const board = new Board()
       board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [2, 5])).toBe(true)   
+      board.squares[3][5] = new Piece("knight", "black")
+      expect(board.move([3, 3], [3, 5])).toBe(false)   
     })
 
-  it('knight can move 2 right, 1 up', () => {
+  describe('pawn moves', () => {
+    it('black pawn can move 1 square up board', () => {
       const board = new Board()
-      board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [5, 2])).toBe(true)   
+      board.squares[5][5] = new Piece("pawn", "black")
+      expect(board.move([5, 5], [4, 5])).toBe(true)
     })
 
-  it('knight can move 2 right, 1 down', () => {
+    it('black pawn can move 2 squares up board on first move', () => {
       const board = new Board()
-      board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [5, 4])).toBe(true)   
+      board.squares[5][5] = new Piece("pawn", "black")
+      expect(board.move([5, 5], [3, 5])).toBe(true)
     })
 
-  it('knight can move 1 right, 2 up', () => {
+    it('black pawn cannot move 2 squares up board after first move', () => {
       const board = new Board()
-      board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [4, 1])).toBe(true)   
+      board.squares[4][5] = new Piece("pawn", "black")
+      expect(board.move([4, 5], [2, 5])).toBe(false)
     })
 
-  it('knight can move 1 right, 2 down', () => {
+    it('black pawn cannot move into piece', () => {
       const board = new Board()
-      board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [4, 5])).toBe(true)   
+      board.squares[5][5] = new Piece("pawn", "black")
+      board.squares[3][5] = new Piece("rook", "white")
+      expect(board.move([5, 5], [3, 5])).toBe(false)
     })
 
-  it('knight cannot move off board', () => {
+    it('white pawn can move 1 square down board', () => {
       const board = new Board()
-      board.squares[3][3] = new Piece("knight", "black")
-      expect(board.move([3, 3], [-1, 2])).toBe(false)   
+      board.squares[3][3] = new Piece("pawn", "white")
+      expect(board.move([3, 3], [4, 3])).toBe(true)
     })
 
-  it('knight cannot move like bishop', () => {
-    const board = new Board()
-    board.squares[3][3] = new Piece("knight", "black")
-    expect(board.move([3, 3], [5, 5])).toBe(false)   
-  })
+    it('white pawn can move 2 squares down board on first move', () => {
+      const board = new Board()
+      board.squares[2][5] = new Piece("pawn", "white")
+      expect(board.move([2, 5], [4, 5])).toBe(true)
+    })
 
-  it('knight cannot move like rook', () => {
-    const board = new Board()
-    board.squares[3][3] = new Piece("knight", "black")
-    expect(board.move([3, 3], [3, 5])).toBe(false)   
-  })
+    it('white pawn cannot move 2 squares down board after first move', () => {
+      const board = new Board()
+      board.squares[3][5] = new Piece("pawn", "white")
+      expect(board.move([3, 5], [5, 5])).toBe(false)
+    })
 
-  it('knight can capture enemy piece', () => {
-    const board = new Board()
-    board.squares[3][3] = new Piece("knight", "white")
-    board.squares[4][5] = new Piece("knight", "black")
-    expect(board.move([3, 3], [4, 5])).toBe(true)
-    expect(board.squares[4][5].color === "white" && board.squares[4][5].type === "knight")   
-  })
-
-  it('knight cannot capture friendly piece', () => {
-    const board = new Board()
-    board.squares[3][3] = new Piece("knight", "black")
-    board.squares[3][5] = new Piece("knight", "black")
-    expect(board.move([3, 3], [3, 5])).toBe(false)   
+    it('white pawn cannot move into piece', () => {
+      const board = new Board()
+      board.squares[2][5] = new Piece("pawn", "white")
+      board.squares[3][5] = new Piece("rook", "black")
+      expect(board.move([2, 5], [4, 5])).toBe(false)
+    })
   })
 
   describe('board can update', () => {
@@ -623,6 +764,7 @@ describe('Board', () => {
       board.move([3, 3], [4, 5])
       expect(board.squares[4][5].type === "knight" && board.squares[4][5].color === "white").toBe(true)
     })
+
     it('fromSquare should become null if move is valid', () => {
       const board = new Board()
       board.squares[3][3] = new Piece("knight", "black")
@@ -631,4 +773,3 @@ describe('Board', () => {
     })
   })
 });
-
