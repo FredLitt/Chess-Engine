@@ -565,28 +565,28 @@ describe('Board', () => {
       expect(board.move([5, 5], [3, 5])).toBe(false)
     })
 
-    it('black pawn can capture enemy piece to its left', () => {
+    it('black pawn can capture enemy piece to the west', () => {
       const board = new Board()
       board.squares[4][5] = new Piece("pawn", "black")
       board.squares[3][4] = new Piece("knight", "white")
       expect(board.move([4, 5], [3, 4])).toBe(true)
     })
 
-    it('black pawn can capture enemy piece to its right', () => {
+    it('black pawn can capture enemy piece to the east', () => {
       const board = new Board()
       board.squares[4][5] = new Piece("pawn", "black")
       board.squares[3][6] = new Piece("knight", "white")
       expect(board.move([4, 5], [3, 6])).toBe(true)
     })
 
-    it('black pawn cannot capture friendly piece to its left', () => {
+    it('black pawn cannot capture friendly piece to the west', () => {
       const board = new Board()
       board.squares[4][5] = new Piece("pawn", "black")
       board.squares[3][4] = new Piece("knight", "black")
       expect(board.move([4, 5], [3, 4])).toBe(false)
     })
 
-    it('black pawn cannot capture friendly piece to its right', () => {
+    it('black pawn cannot capture friendly piece to the east', () => {
       const board = new Board()
       board.squares[4][5] = new Piece("pawn", "black")
       board.squares[3][6] = new Piece("knight", "black")
@@ -616,6 +616,34 @@ describe('Board', () => {
       board.squares[2][5] = new Piece("pawn", "white")
       board.squares[3][5] = new Piece("rook", "black")
       expect(board.move([2, 5], [4, 5])).toBe(false)
+    })
+
+    it('white pawn can capture enemy piece to the east', () => {
+      const board = new Board()
+      board.squares[3][4] = new Piece("pawn", "white")
+      board.squares[4][5] = new Piece("knight", "black")
+      expect(board.move([3, 4], [4, 5])).toBe(true)
+    })
+
+    it('white pawn can capture enemy piece to the west', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "white")
+      board.squares[5][4] = new Piece("knight", "black")
+      expect(board.move([4, 5], [5, 4])).toBe(true)
+    })
+
+    it('white pawn cannot capture friendly piece to the east', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "white")
+      board.squares[5][6] = new Piece("knight", "white")
+      expect(board.move([4, 5], [5, 6])).toBe(false)
+    })
+
+    it('white pawn cannot capture friendly piece to the west', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "white")
+      board.squares[5][6] = new Piece("knight", "white")
+      expect(board.move([4, 5], [5, 6])).toBe(false)
     })
   })
 
