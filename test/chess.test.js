@@ -12,27 +12,35 @@ class Board {
     for(let i = 0; i < 8; i++) {
       this.squares.push([null, null, null, null, null, null, null, null])
     }
+    this.playedMoveList = []
   }
+
   isSquareOnBoard(square) {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >=0 && col >= 0
   }
   isSquareOccupied(square){
     const [row, col] = square
-    if (this.squares[row][col] !== null) return true
+    if (this.squares[row][col] !== null){
+      return true
+    }
+    return false
   }
   isPieceFriendly(fromSquare, currentSquare){
     const [row1, col1] = fromSquare
     const [row2, col2] = currentSquare
     return (this.squares[row1][col1].color === this.squares[row2][col2].color)
   }
-  moveIsValid(validToSquares, toSquare){
-    return validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])
+  moveIsValid(validMoveList, targetSquare){
+    return validMoveList.find(square => square[0] === targetSquare[0] && square[1] === targetSquare[1])
   }
-  updateBoard(toRow, toCol, fromRow, fromCol, pieceAtFromSquare){
-    this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
-    this.squares[fromRow][fromCol] = null
-    return true
+  // updateBoard(movedPiece, startSquare, endSquare){
+  //   endSquare = movedPiece
+  //   startSquare = null
+  //   return true
+  // }
+  promotePawn(promotionSquare, chosenPiece){
+
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -75,7 +83,6 @@ class Board {
             validToSquares.push(currentSquare)
           }
         }
-        // if (moveIsValid) updateBoard
         if(this.moveIsValid(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
@@ -192,33 +199,55 @@ class Board {
         }
       }
       case 'pawn' : {
-        if (pieceAtFromSquare.color === "black"){
-          //attacking squares: [ fromRow - 1, fromCol - 1] and [ fromRow - 1, fromCol +1]
-          const currentSquare = [ fromRow - 1, fromCol]
-          if (this.isSquareOccupied(currentSquare)){
-            return false
+        switch(pieceAtFromSquare.color) {
+          case 'black' : {
+          const blackPawnMoves = {
+            "NorthOneSquare": [ fromRow - 1, fromCol],
+            "NorthTwoSquares": [ fromRow - 2, fromCol],
+            "CaptureWest": [ fromRow - 1, fromCol - 1], 
+            "CaptureEast": [ fromRow - 1, fromCol + 1] 
           }
-          validToSquares.push(currentSquare)
-          //start position
-          if (fromRow === 5){
-            const currentSquare = [ fromRow - 2, fromCol]
-            if (this.isSquareOccupied(currentSquare)){
-              return false
+          for (const move in blackPawnMoves){
+            const currentSquare = blackPawnMoves[move]
+            if (move === "NorthOneSquare" && this.isSquareOccupied(currentSquare)){
+              delete blackPawnMoves["NorthTwoSquares"]
+              continue
+            }
+            if (move === "NorthTwoSquares" && fromRow !== 5 || move === "NorthTwoSquares" && this.isSquareOccupied(currentSquare)){
+              continue
+            }
+            if (move === "CaptureWest" || move === "CaptureEast"){
+              if (this.isSquareOccupied(currentSquare)){
+                if (this.isPieceFriendly(fromSquare, currentSquare)){
+                continue
+                }
+              }
             }
             validToSquares.push(currentSquare)
           }
         }
-        if (pieceAtFromSquare.color === "white"){
-          //attacking squares: [ fromRow + 1, fromCol - 1] and [ fromRow + 1, fromCol +1]
-          const currentSquare = [ fromRow + 1, fromCol]
-          if (this.isSquareOccupied(currentSquare)){
-            return false
+        case 'white' : {
+          const whitePawnMoves = {
+            "SouthOneSquare": [ fromRow + 1, fromCol],
+            "SouthTwoSquares": [ fromRow + 2, fromCol],
+            "CaptureWest": [ fromRow + 1, fromCol - 1], 
+            "CaptureEast": [ fromRow + 1, fromCol + 1] 
           }
-          validToSquares.push(currentSquare)
-          if (fromRow === 2){
-            const currentSquare = [ fromRow + 2, fromCol]
-            if (this.isSquareOccupied(currentSquare)){
-              return false
+          for (const move in whitePawnMoves){
+            const currentSquare = whitePawnMoves[move]
+            if (move === "SouthOneSquare" && this.isSquareOccupied(currentSquare)){
+              delete whitePawnMoves["SouthTwoSquares"]
+              continue
+            }
+            if (move === "SouthTwoSquares" && fromRow !== 2 || move === "SouthTwoSquares" && this.isSquareOccupied(currentSquare)){
+              continue
+            }
+            if (move === "CaptureWest" || move === "CaptureEast"){
+              if (this.isSquareOccupied(currentSquare)){
+                if (this.isPieceFriendly(fromSquare, currentSquare)){
+                continue
+                }
+              }
             }
             validToSquares.push(currentSquare)
           }
@@ -231,12 +260,18 @@ class Board {
           return false
         }
       }
+      }
       default: {
         throw new Error("unknown piece")
       }
     }
   }
 }
+
+// TODO:
+// [ ] Add move to playedMoveList if move is true
+// [ ] Add en passant captures by looking at playedMoveList
+// [ ] Pawn promotion when reaching opposite rank
 
 describe('Board', () => {
   it('can create a new board', () => {
@@ -530,17 +565,33 @@ describe('Board', () => {
       expect(board.move([5, 5], [3, 5])).toBe(false)
     })
 
-    // it('black pawn can capture piece to its left', () => {
-    //   const board = new Board()
-    //   board.squares[4][5] = new Piece("pawn", "black")
-    //   expect(board.move([4, 5], [3, 4])).toBe(true)
-    // })
+    it('black pawn can capture enemy piece to its left', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "black")
+      board.squares[3][4] = new Piece("knight", "white")
+      expect(board.move([4, 5], [3, 4])).toBe(true)
+    })
 
-    // it('black pawn can capture piece to its right', () => {
-    //   const board = new Board()
-    //   board.squares[4][5] = new Piece("pawn", "black")
-    //   expect(board.move([4, 5], [3, 6])).toBe(true)
-    // })
+    it('black pawn can capture enemy piece to its right', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "black")
+      board.squares[3][6] = new Piece("knight", "white")
+      expect(board.move([4, 5], [3, 6])).toBe(true)
+    })
+
+    it('black pawn cannot capture friendly piece to its left', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "black")
+      board.squares[3][4] = new Piece("knight", "black")
+      expect(board.move([4, 5], [3, 4])).toBe(false)
+    })
+
+    it('black pawn cannot capture friendly piece to its right', () => {
+      const board = new Board()
+      board.squares[4][5] = new Piece("pawn", "black")
+      board.squares[3][6] = new Piece("knight", "black")
+      expect(board.move([4, 5], [3, 6])).toBe(false)
+    })
 
     it('white pawn can move 1 square down board', () => {
       const board = new Board()
