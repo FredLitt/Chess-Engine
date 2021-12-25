@@ -29,10 +29,13 @@ class Board {
   moveIsValid(validToSquares, toSquare){
     return validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])
   }
-  updateBoard(toRow, toCol, fromRow, fromCol, pieceAtFromSquare){
-    this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
-    this.squares[fromRow][fromCol] = null
-    return true
+  // updateBoard(movedPiece, startSquare, endSquare){
+  //   endSquare = movedPiece
+  //   startSquare = null
+  //   return true
+  // }
+  promotePawn(promotionSquare, chosenPiece){
+
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -75,7 +78,6 @@ class Board {
             validToSquares.push(currentSquare)
           }
         }
-        // if (moveIsValid) updateBoard
         if(this.moveIsValid(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
@@ -192,7 +194,8 @@ class Board {
         }
       }
       case 'pawn' : {
-        if (pieceAtFromSquare.color === "black"){
+        switch(pieceAtFromSquare.color) {
+          case 'black' : {
           //attacking squares: [ fromRow - 1, fromCol - 1] and [ fromRow - 1, fromCol +1]
           const currentSquare = [ fromRow - 1, fromCol]
           if (this.isSquareOccupied(currentSquare)){
@@ -208,7 +211,7 @@ class Board {
             validToSquares.push(currentSquare)
           }
         }
-        if (pieceAtFromSquare.color === "white"){
+        case 'white' : {
           //attacking squares: [ fromRow + 1, fromCol - 1] and [ fromRow + 1, fromCol +1]
           const currentSquare = [ fromRow + 1, fromCol]
           if (this.isSquareOccupied(currentSquare)){
@@ -230,6 +233,7 @@ class Board {
         } else {
           return false
         }
+      }
       }
       default: {
         throw new Error("unknown piece")
