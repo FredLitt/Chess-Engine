@@ -44,27 +44,22 @@ class Board {
         const completedDirections = []
         for (let i = 1; i < 8; i++){
           const rookDirections = {
-            "East": [fromRow, fromCol + i],
-            "West": [fromRow, fromCol - i],
             "North": [fromRow - i, fromCol],
-            "South": [fromRow + i, fromCol]
+            "South": [fromRow + i, fromCol],
+            "East": [fromRow, fromCol + i],
+            "West": [fromRow, fromCol - i]
           }
           completedDirections.forEach(direction => delete rookDirections[direction])
           for (const direction in rookDirections){
             const currentSquare = rookDirections[direction]
             if (!this.isSquareOnBoard(currentSquare)) continue
             if (this.isSquareOccupied(currentSquare)){
-              console.log("square is occupied")
               if (this.isPieceFriendly(fromSquare, currentSquare)){
-                console.log("friendly piece")
                 completedDirections.push(direction)
-                console.log(completedDirections)
                 continue
               } else {
-              console.log("enemy piece")
               validToSquares.push(currentSquare)
               completedDirections.push(direction)
-              console.log(completedDirections)
               continue 
               }
             } else {
@@ -73,62 +68,6 @@ class Board {
             validToSquares.push(currentSquare)
           }
         }
-
-        // for(let i = 1; i < 8; i++) {
-        //   const currentSquare = [fromRow, fromCol + i]
-        //   if (!this.isSquareOnBoard(currentSquare)) break
-        //   if (this.isSquareOccupied(currentSquare)){
-        //     if (this.isPieceFriendly(fromSquare, currentSquare)){
-        //       return false
-        //     } else {
-        //       validToSquares.push(currentSquare)
-        //       break
-        //     }
-        //   }
-        //   validToSquares.push(currentSquare)
-        // }
-        // // look to the left
-        // for(let i = 1; i < 8; i++) {
-        //   const currentSquare = [fromRow, fromCol - i]
-        //   if (!this.isSquareOnBoard(currentSquare)) break
-        //   if (this.isSquareOccupied(currentSquare)){
-        //     if (this.isPieceFriendly(fromSquare, currentSquare)){
-        //       return false
-        //     } else {
-        //       validToSquares.push(currentSquare)
-        //       break
-        //     }
-        //   }
-        //   validToSquares.push(currentSquare)
-        // }
-        // //look up
-        // for(let i = 1; i < 8; i++) {
-        //   const currentSquare = [fromRow + i , fromCol ]
-        //   if (!this.isSquareOnBoard(currentSquare)) break
-        //   if (this.isSquareOccupied(currentSquare)){
-        //     if (this.isPieceFriendly(fromSquare, currentSquare)){
-        //       return false
-        //     } else {
-        //       validToSquares.push(currentSquare)
-        //       break
-        //     }
-        //   }
-        //   validToSquares.push(currentSquare)
-        // }
-        // //look down
-        // for(let i = 1; i < 8; i++) {
-        //   const currentSquare = [fromRow - i, fromCol ]
-        //   if (!this.isSquareOnBoard(currentSquare)) break
-        //   if (this.isSquareOccupied(currentSquare)){
-        //     if (this.isPieceFriendly(fromSquare, currentSquare)){
-        //       return false
-        //     } else {
-        //       validToSquares.push(currentSquare)
-        //       break
-        //     }
-        //   }
-        //   validToSquares.push(currentSquare)
-        // }
         if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
@@ -138,90 +77,33 @@ class Board {
         }
       }
     case 'bishop' : {
-        // look up and left
+        const completedDirections = []
         for (let i = 1; i < 8; i++){
-          const currentSquare = [fromRow - i , fromCol - i ]
-          if (!this.isSquareOnBoard(currentSquare)) break
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
-          }if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
+          const bishopDirections = {
+            "NorthWest": [fromRow - i, fromCol - i ],
+            "NorthEast": [fromRow - i, fromCol + i ],
+            "SouthWest": [fromRow + i , fromCol - i],
+            "SouthEast": [fromRow + i , fromCol + i]
           }
-          validToSquares.push(currentSquare)
-      }
-        // look up and right
-        for (let i = 1; i < 8; i++){      
-          const currentSquare = [fromRow - i , fromCol + i ]
-          if (!this.isSquareOnBoard(currentSquare)) break
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
+          completedDirections.forEach(direction => delete bishopDirections[direction])
+          for (const direction in bishopDirections){
+            const currentSquare = bishopDirections[direction]
+            if (!this.isSquareOnBoard(currentSquare)) continue
+            if (this.isSquareOccupied(currentSquare)){
+              if (this.isPieceFriendly(fromSquare, currentSquare)){
+                completedDirections.push(direction)
+                continue
+              } else {
+              validToSquares.push(currentSquare)
+              completedDirections.push(direction)
+              continue 
+              }
             } else {
               validToSquares.push(currentSquare)
-              break
             }
-          }if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
+            validToSquares.push(currentSquare)
           }
-          validToSquares.push(currentSquare)
-      }
-        // look down and left
-        for (let i = 1; i < 8; i++){      
-          const currentSquare = [fromRow + i , fromCol - i ]
-          if (!this.isSquareOnBoard(currentSquare)) break
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
-          }if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
-          }
-          validToSquares.push(currentSquare)
-      }
-        // look down and right
-        for (let i = 1; i < 8; i++){      
-          const currentSquare = [fromRow + i , fromCol + i ]
-          if (!this.isSquareOnBoard(currentSquare)) break
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
-          }if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
-          }
-          validToSquares.push(currentSquare)
-      }
+        }
       if(validToSquares.find(square => square[0] === toSquare[0] && square[1] === toSquare[1])) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
