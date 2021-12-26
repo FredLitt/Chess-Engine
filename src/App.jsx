@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { Piece, Board } from './chessBoard';
 import './App.css';
 
-const board = []
-for (let i = 0; i < 8; i++) {
-  board.push([null, null, null, null, null, null, null, null])
-}
-
-
+const board = new Board()
 
 function App() {
   return (
     <main>
       <table>
-        {board.map((row) => <tr>
-          {row.map((square) => <td>Square</td>)}
+        {board.squares.map((row) => <tr>
+          {row.map((square) => <td>{square !== null && `${square.color} ${square.type}`}</td>)}
         </tr>)}
       </table>
     </main>
