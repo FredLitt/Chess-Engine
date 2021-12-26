@@ -168,28 +168,50 @@ class Board {
         }
       }
       case 'knight' : {
-        const currentSquare = []
-        for (let i = -2; i <= 2; i++){
-          if (i === 0){
-            continue
-          }
-          for (let x = -2; x <= 2; x++){
-           if (i === x){
-             continue
-           } 
-           const currentSquare = [ fromRow + i, fromCol + x]
-           if (!this.isSquareOnBoard(currentSquare)) continue
-           if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              return false
-            } else {
-              validToSquares.push(currentSquare)
-              break
-            }
-          }
-           validToSquares.push(currentSquare)
-          }
+        const knightMoves = {
+          "NorthOneEastTwo": [ fromRow - 1, fromCol + 2 ],
+          "NorthTwoEastOne": [ fromRow - 2, fromCol + 1 ],
+          "SouthOneEastTwo": [ fromRow + 1, fromCol + 2 ],
+          "SouthTwoEastOne": [ fromRow + 2, fromCol + 1 ],
+          "NorthOneWesttTwo": [ fromRow - 1, fromCol - 2 ],
+          "NorthTwoWesttOne": [ fromRow - 2, fromCol - 1 ],
+          "SouthOneWestTwo": [ fromRow + 1, fromCol - 2 ],
+          "SouthTwoWestOne": [ fromRow + 2, fromCol - 1 ]
         }
+        for (const move in knightMoves){
+          const currentSquare = knightMoves[move]
+          if (!this.isSquareOnBoard(currentSquare)) continue
+          if (this.isSquareOccupied(currentSquare)){
+            if (this.isPieceFriendly(fromSquare, currentSquare)){
+              continue
+              } else {
+                validToSquares.push(currentSquare)
+              } 
+          }
+          validToSquares.push(currentSquare)
+        }
+        // const currentSquare = []
+        // for (let i = -2; i <= 2; i++){
+        //   if (i === 0){
+        //     continue
+        //   }
+        //   for (let x = -2; x <= 2; x++){
+        //    if (i === x){
+        //      continue
+        //    } 
+        //    const currentSquare = [ fromRow + i, fromCol + x]
+        //    if (!this.isSquareOnBoard(currentSquare)) continue
+        //    if (this.isSquareOccupied(currentSquare)){
+        //     if (this.isPieceFriendly(fromSquare, currentSquare)){
+        //       return false
+        //     } else {
+        //       validToSquares.push(currentSquare)
+        //       break
+        //     }
+        //   }
+        //    validToSquares.push(currentSquare)
+        //   }
+        // }
       if(this.moveIsValid(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
@@ -209,6 +231,12 @@ class Board {
           }
           for (const move in blackPawnMoves){
             const currentSquare = blackPawnMoves[move]
+            if (move === "NorthOneSquare" && fromRow === 1 && !this.isSquareOccupied(currentSquare)){
+              // promote to queen by default
+              console.log('pawn promoted!')
+              this.squares[toRow][toCol] = new Piece("queen", "black")
+              //this.promotePawn(currentSquare, chosenPiece)
+            }
             if (move === "NorthOneSquare" && this.isSquareOccupied(currentSquare)){
               delete blackPawnMoves["NorthTwoSquares"]
               continue
@@ -219,7 +247,7 @@ class Board {
             if (move === "CaptureWest" || move === "CaptureEast"){
               if (this.isSquareOccupied(currentSquare)){
                 if (this.isPieceFriendly(fromSquare, currentSquare)){
-                continue
+                  continue
                 }
               }
             }
@@ -245,7 +273,7 @@ class Board {
             if (move === "CaptureWest" || move === "CaptureEast"){
               if (this.isSquareOccupied(currentSquare)){
                 if (this.isPieceFriendly(fromSquare, currentSquare)){
-                continue
+                  continue
                 }
               }
             }
@@ -269,9 +297,10 @@ class Board {
 }
 
 // TODO:
+// [ ] Refactor knight moves
+// [ ] Pawn promotion when reaching opposite rank
 // [ ] Add move to playedMoveList if move is true
 // [ ] Add en passant captures by looking at playedMoveList
-// [ ] Pawn promotion when reaching opposite rank
 
 describe('Board', () => {
   it('can create a new board', () => {
@@ -544,6 +573,13 @@ describe('Board', () => {
       const board = new Board()
       board.squares[5][5] = new Piece("pawn", "black")
       expect(board.move([5, 5], [4, 5])).toBe(true)
+    })
+
+    it('black pawn can promote to queen', () => {
+      const board = new Board()
+      board.squares[1][5] = new Piece("pawn", "black")
+      expect(board.move([1, 5], [0, 5])).toBe(true)
+      expect(this.squares[0][5].type === "queen").toBe(true)
     })
 
     it('black pawn can move 2 squares up board on first move', () => {
