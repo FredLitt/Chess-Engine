@@ -14,17 +14,18 @@ class Board {
     }
     this.playedMoveList = []
   }
-
   isSquareOnBoard(square) {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >=0 && col >= 0
   }
-  isSquareOccupied(square){
-    const [row, col] = square
-    if (this.squares[row][col] !== null){
-      return true
+  isSquareOccupied(fromSquare, targetSquare){
+    const [row1, col1] = fromSquare
+    const [row2, col2] = targetSquare
+    if (this.squares[row2][col2] === null) return false
+    if (this.squares[row1][col1].color === this.squares[row2][col2].color){
+      return "byFriendlyPiece"
     }
-    return false
+    return "byEnemyPiece"
   }
   isPieceFriendly(fromSquare, currentSquare){
     const [row1, col1] = fromSquare
@@ -40,7 +41,7 @@ class Board {
   //   return true
   // }
   promotePawn(promotionSquare, chosenPiece){
-
+    //promotionSquare = chosenPiece
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -67,20 +68,19 @@ class Board {
           completedDirections.forEach(direction => delete rookDirections[direction])
           for (const direction in rookDirections){
             const currentSquare = rookDirections[direction]
-            if (!this.isSquareOnBoard(currentSquare)) continue
-            if (this.isSquareOccupied(currentSquare)){
-              if (this.isPieceFriendly(fromSquare, currentSquare)){
-                completedDirections.push(direction)
-                continue
-              } else {
+            if (!this.isSquareOnBoard(currentSquare)) {
+              continue
+            }
+            if (this.isSquareOccupied(fromSquare, currentSquare) === "byFriendlyPiece"){
+              completedDirections.push(direction)
+              continue
+              } 
+            if (this.isSquareOccupied(fromSquare, currentSquare) === "byEnemyPiece"){
               validToSquares.push(currentSquare)
               completedDirections.push(direction)
               continue 
               }
-            } else {
               validToSquares.push(currentSquare)
-            }
-            validToSquares.push(currentSquare)
           }
         }
         if(this.moveIsValid(validToSquares, toSquare)) {
@@ -104,21 +104,18 @@ class Board {
         for (const direction in bishopDirections){
           const currentSquare = bishopDirections[direction]
           if (!this.isSquareOnBoard(currentSquare)) continue
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
+          if (this.isSquareOccupied(fromSquare, currentSquare) === "byFriendlyPiece"){
               completedDirections.push(direction)
               continue
-            } else {
-            validToSquares.push(currentSquare)
-            completedDirections.push(direction)
-            continue 
-            }
-          } else {
-            validToSquares.push(currentSquare)
+              } 
+            if (this.isSquareOccupied(fromSquare, currentSquare) === "byEnemyPiece"){
+              validToSquares.push(currentSquare)
+              completedDirections.push(direction)
+              continue 
+              }
+              validToSquares.push(currentSquare)
           }
-          validToSquares.push(currentSquare)
         }
-      }
       if(this.moveIsValid(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
@@ -131,10 +128,10 @@ class Board {
         const completedDirections = []
         for (let i = 1; i < 8; i++){
         const queenDirections = {
-          "North": [fromRow - i, fromCol],
-          "South": [fromRow + i, fromCol],
-          "East": [fromRow, fromCol + i],
-          "West": [fromRow, fromCol - i],
+          "North": [fromRow - i, fromCol ],
+          "South": [fromRow + i, fromCol ],
+          "East": [fromRow, fromCol + i ],
+          "West": [fromRow, fromCol - i ],
           "NorthWest": [fromRow - i, fromCol - i ],
           "NorthEast": [fromRow - i, fromCol + i ],
           "SouthWest": [fromRow + i , fromCol - i],
@@ -144,21 +141,18 @@ class Board {
         for (const direction in queenDirections){
           const currentSquare = queenDirections[direction]
           if (!this.isSquareOnBoard(currentSquare)) continue
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
+          if (this.isSquareOccupied(fromSquare, currentSquare) === "byFriendlyPiece"){
               completedDirections.push(direction)
               continue
-            } else {
-            validToSquares.push(currentSquare)
-            completedDirections.push(direction)
-            continue 
-            }
-          } else {
-            validToSquares.push(currentSquare)
+              } 
+            if (this.isSquareOccupied(fromSquare, currentSquare) === "byEnemyPiece"){
+              validToSquares.push(currentSquare)
+              completedDirections.push(direction)
+              continue 
+              }
+              validToSquares.push(currentSquare)
           }
-          validToSquares.push(currentSquare)
         }
-      }
       if(this.moveIsValid(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
@@ -181,38 +175,16 @@ class Board {
         for (const move in knightMoves){
           const currentSquare = knightMoves[move]
           if (!this.isSquareOnBoard(currentSquare)) continue
-          if (this.isSquareOccupied(currentSquare)){
-            if (this.isPieceFriendly(fromSquare, currentSquare)){
-              continue
-              } else {
-                validToSquares.push(currentSquare)
-              } 
-          }
-          validToSquares.push(currentSquare)
+          if (this.isSquareOccupied(fromSquare, currentSquare) === "byFriendlyPiece"){
+            continue
+            } 
+          if (this.isSquareOccupied(fromSquare, currentSquare) === "byEnemyPiece"){
+            validToSquares.push(currentSquare)
+            continue 
+            }
+            validToSquares.push(currentSquare)
         }
-        // const currentSquare = []
-        // for (let i = -2; i <= 2; i++){
-        //   if (i === 0){
-        //     continue
-        //   }
-        //   for (let x = -2; x <= 2; x++){
-        //    if (i === x){
-        //      continue
-        //    } 
-        //    const currentSquare = [ fromRow + i, fromCol + x]
-        //    if (!this.isSquareOnBoard(currentSquare)) continue
-        //    if (this.isSquareOccupied(currentSquare)){
-        //     if (this.isPieceFriendly(fromSquare, currentSquare)){
-        //       return false
-        //     } else {
-        //       validToSquares.push(currentSquare)
-        //       break
-        //     }
-        //   }
-        //    validToSquares.push(currentSquare)
-        //   }
-        // }
-      if(this.moveIsValid(validToSquares, toSquare)) {
+        if(this.moveIsValid(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
           return true
@@ -224,31 +196,23 @@ class Board {
         switch(pieceAtFromSquare.color) {
           case 'black' : {
           const blackPawnMoves = {
-            "NorthOneSquare": [ fromRow - 1, fromCol],
-            "NorthTwoSquares": [ fromRow - 2, fromCol],
+            "NorthOne": [ fromRow - 1, fromCol],
+            "NorthTwo": [ fromRow - 2, fromCol],
             "CaptureWest": [ fromRow - 1, fromCol - 1], 
             "CaptureEast": [ fromRow - 1, fromCol + 1] 
           }
           for (const move in blackPawnMoves){
             const currentSquare = blackPawnMoves[move]
-            if (move === "NorthOneSquare" && fromRow === 1 && !this.isSquareOccupied(currentSquare)){
-              // promote to queen by default
-              console.log('pawn promoted!')
-              this.squares[toRow][toCol] = new Piece("queen", "black")
-              //this.promotePawn(currentSquare, chosenPiece)
-            }
-            if (move === "NorthOneSquare" && this.isSquareOccupied(currentSquare)){
-              delete blackPawnMoves["NorthTwoSquares"]
+            if (move === "NorthOne" && !this.isSquareOccupied(fromSquare, currentSquare) === false){
+              delete blackPawnMoves["NorthTwo"]
               continue
             }
-            if (move === "NorthTwoSquares" && fromRow !== 5 || move === "NorthTwoSquares" && this.isSquareOccupied(currentSquare)){
+            if (move === "NorthTwo" && fromRow !== 5 || move === "NorthTwo" && !this.isSquareOccupied(fromSquare, currentSquare) === false){
               continue
             }
             if (move === "CaptureWest" || move === "CaptureEast"){
-              if (this.isSquareOccupied(currentSquare)){
-                if (this.isPieceFriendly(fromSquare, currentSquare)){
-                  continue
-                }
+              if (this.isSquareOccupied(fromSquare, currentSquare) !== "byEnemyPiece"){
+                continue
               }
             }
             validToSquares.push(currentSquare)
@@ -256,31 +220,37 @@ class Board {
         }
         case 'white' : {
           const whitePawnMoves = {
-            "SouthOneSquare": [ fromRow + 1, fromCol],
-            "SouthTwoSquares": [ fromRow + 2, fromCol],
-            "CaptureWest": [ fromRow + 1, fromCol - 1], 
-            "CaptureEast": [ fromRow + 1, fromCol + 1] 
+            "SouthOne": [ fromRow + 1, fromCol ],
+            "SouthTwo": [ fromRow + 2, fromCol ],
+            "CaptureWest": [ fromRow + 1, fromCol - 1 ], 
+            "CaptureEast": [ fromRow + 1, fromCol + 1 ] 
           }
           for (const move in whitePawnMoves){
             const currentSquare = whitePawnMoves[move]
-            if (move === "SouthOneSquare" && this.isSquareOccupied(currentSquare)){
-              delete whitePawnMoves["SouthTwoSquares"]
+            if (move === "SouthOne" && this.isSquareOccupied(fromSquare, currentSquare) !== false){
+              delete whitePawnMoves["SouthTwo"]
               continue
             }
-            if (move === "SouthTwoSquares" && fromRow !== 2 || move === "SouthTwoSquares" && this.isSquareOccupied(currentSquare)){
+            if (move === "SouthTwo" && fromRow !== 2 || move === "SouthTwo" && this.isSquareOccupied(fromSquare, currentSquare) !== false){
               continue
             }
-            if (move === "CaptureWest" || move === "CaptureEast"){
-              if (this.isSquareOccupied(currentSquare)){
-                if (this.isPieceFriendly(fromSquare, currentSquare)){
-                  continue
-                }
-              }
+            if (move === "CaptureWest" || move === "CaptureEast")
+              if(this.isSquareOccupied(fromSquare, currentSquare) !== "byEnemyPiece"){
+              continue
             }
             validToSquares.push(currentSquare)
           }
         }
         if(this.moveIsValid(validToSquares, toSquare)) {
+          // Promotion check
+          if(pieceAtFromSquare.color === "black" && toRow === 0 || pieceAtFromSquare.type === "white" && toRow === 7)
+          {
+            //queen by default
+            //promote pawn function will be async when piece choice is added
+            const chosenPiece = 'queen'
+            this.promotePawn(toSquare, pieceAtFromSquare.color, chosenPiece)
+            return true
+          }
           this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
           this.squares[fromRow][fromCol] = null
           return true
@@ -297,7 +267,6 @@ class Board {
 }
 
 // TODO:
-// [ ] Refactor knight moves
 // [ ] Pawn promotion when reaching opposite rank
 // [ ] Add move to playedMoveList if move is true
 // [ ] Add en passant captures by looking at playedMoveList
