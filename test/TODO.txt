@@ -2,3 +2,35 @@ Add en passant captures by looking at playedMoveList
 Add captured piece to appropriate captured piece array
 Add King moves
 Prevent illegal king moves
+
+
+
+
+
+GRAND PLAN
+
+v1:
+- on one computer
+- two humans
+
+Components:
+- Game Logic
+  - Legal Move Checking
+  - Win condition checking
+  - Move History (undo)
+- Board UI
+
+Milestones:
+- ~CLI app~
+- Ugly Basic React UI
+  - Show a board
+    - Empty board 
+    - Show pieces from a Board object
+  - Some UI to make moves (text box, click, etc)
+  - Validate moves using the legality checker
+
+Notes:
+- We can support undo by replaying board state from scratch using the move list
+
+v2:
+- multiplayer across the internet

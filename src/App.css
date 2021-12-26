@@ -1,5 +1,8 @@
-main {
-  text-align: center;
-  vertical-align: center;
-  line-height: 100vh
+table, td {
+  border: 1px solid black;
+}
+
+td {
+  width: 40px;
+  height: 40px;
 }
