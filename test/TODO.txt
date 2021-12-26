@@ -1,0 +1,4 @@
+Add en passant captures by looking at playedMoveList
+Add captured piece to appropriate captured piece array
+Add King moves
+Prevent illegal king moves
