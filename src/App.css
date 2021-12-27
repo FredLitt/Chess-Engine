@@ -1,8 +1,11 @@
-table, td {
+#board, .square {
   border: 1px solid black;
+
 }
 
-td {
+.square {
   width: 40px;
   height: 40px;
+  font-size: 30px;
+  text-align: center;
 }

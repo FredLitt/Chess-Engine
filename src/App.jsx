@@ -10,8 +10,8 @@ function App() {
   return (
     <main>
       <table>
-        {board.squares.map((row) => <tr>
-          {row.map((square) => <td>{square !== null && `${square.symbol} ${square.type}`}</td>)}
+        {board.squares.map((row) => <tr id="board">
+          {row.map((square) => <td className="square">{square !== null && `${square.symbol}`}</td>)}
         </tr>)}
       </table>
     </main>
