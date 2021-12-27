@@ -11,7 +11,7 @@ function App() {
     <main>
       <table>
         {board.squares.map((row) => <tr>
-          {row.map((square) => <td>{square !== null && `${square.color} ${square.type}`}</td>)}
+          {row.map((square) => <td>{square !== null && `${square.symbol} ${square.type}`}</td>)}
         </tr>)}
       </table>
     </main>

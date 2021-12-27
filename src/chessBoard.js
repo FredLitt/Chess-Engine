@@ -1,13 +1,27 @@
 export class Piece {
-  constructor(type, color) {
+  constructor(type, color, symbol) {
     this.type = type
     this.color = color
+    this.symbol = symbol
   }
 }
+const whiteKingSymbol = `\u2654`
+const whiteQueenSymbol = `\u2655`
+const whiteRookSymbol = '\u2656'
+const whiteBishopSymbol = '\u2657'
+const whiteKnightSymbol = '\u2658'
+const whitePawnSymbol = '\u2659'
+
+const blackKingSymbol = `\u265A`
+const blackeQueenSymbol = '\u265B'
+const blackRookSymbol = '\u265C'
+const blackBishopSymbol = '\u265D'
+const blackKnightSymbol = '\u265E'
+const blackPawnSymbol = '\u265F'
 // En Passant must look at last played move
 // Validate that it was a pawn move
 // Validate that distance moved was 2 squares
-// Validate that pawn landed on horizontally adjacanet square [fromRow, fromCol+1, fromCol=1]
+// Validate that pawn landed on horizontally adjacent square [fromRow, fromCol+1, fromCol-1]
 export class PlayedMove {
   constructor(movedPiece, fromSquare, toSquare) {
     this.movedPiece = movedPiece
@@ -26,53 +40,16 @@ export class Board {
     this.playedMoveList = []
     this.blackCapturedPieces = []
     this.whiteCapturedPieces = []
-
-    // this.squares[0][0] = new Piece("rook", "white")
-    // this.squares[0][1] = new Piece("knight", "white")
-    // this.squares[0][2] = new Piece("bishop", "white")
-    // this.squares[0][3] = new Piece("king", "white")
-    // this.squares[0][4] = new Piece("queen", "white")
-    // this.squares[0][5] = new Piece("bishop", "white")
-    // this.squares[0][6] = new Piece("knight", "white")
-    // this.squares[0][7] = new Piece("rook", "white")
-
-    // this.squares[1][0] = new Piece("pawn", "white")
-    // this.squares[1][1] = new Piece("pawn", "white")
-    // this.squares[1][2] = new Piece("pawn", "white")
-    // this.squares[1][3] = new Piece("pawn", "white")
-    // this.squares[1][4] = new Piece("pawn", "white")
-    // this.squares[1][5] = new Piece("pawn", "white")
-    // this.squares[1][6] = new Piece("pawn", "white")
-    // this.squares[1][7] = new Piece("pawn", "white")
-
-    // this.squares[7][0] = new Piece("rook", "black")
-    // this.squares[7][1] = new Piece("knight", "black")
-    // this.squares[7][2] = new Piece("bishop", "black")
-    // this.squares[7][3] = new Piece("king", "black")
-    // this.squares[7][4] = new Piece("queen", "black")
-    // this.squares[7][5] = new Piece("bishop", "black")
-    // this.squares[7][6] = new Piece("knight", "black")
-    // this.squares[7][7] = new Piece("rook", "black")
-
-    // this.squares[6][0] = new Piece("pawn", "black")
-    // this.squares[6][1] = new Piece("pawn", "black")
-    // this.squares[6][2] = new Piece("pawn", "black")
-    // this.squares[6][3] = new Piece("pawn", "black")
-    // this.squares[6][4] = new Piece("pawn", "black")
-    // this.squares[6][5] = new Piece("pawn", "black")
-    // this.squares[6][6] = new Piece("pawn", "black")
-    // this.squares[6][7] = new Piece("pawn", "black")
   }
   setToStartPosition(){
     this.squares[0][0] = new Piece("rook", "white")
     this.squares[0][1] = new Piece("knight", "white")
-    this.squares[0][2] = new Piece("bishop", "white")
-    this.squares[0][3] = new Piece("king", "white")
-    this.squares[0][4] = new Piece("queen", "white")
-    this.squares[0][5] = new Piece("bishop", "white")
+    this.squares[0][2] = new Piece("bishop", "white", whiteBishopSymbol)
+    this.squares[0][3] = new Piece("king", "white", whiteKingSymbol)
+    this.squares[0][4] = new Piece("queen", "white", whiteQueenSymbol)
+    this.squares[0][5] = new Piece("bishop", "white", whiteBishopSymbol)
     this.squares[0][6] = new Piece("knight", "white")
     this.squares[0][7] = new Piece("rook", "white")
-
     this.squares[1][0] = new Piece("pawn", "white")
     this.squares[1][1] = new Piece("pawn", "white")
     this.squares[1][2] = new Piece("pawn", "white")
@@ -90,7 +67,6 @@ export class Board {
     this.squares[7][5] = new Piece("bishop", "black")
     this.squares[7][6] = new Piece("knight", "black")
     this.squares[7][7] = new Piece("rook", "black")
-
     this.squares[6][0] = new Piece("pawn", "black")
     this.squares[6][1] = new Piece("pawn", "black")
     this.squares[6][2] = new Piece("pawn", "black")
