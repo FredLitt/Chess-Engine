@@ -4,6 +4,8 @@ import './App.css';
 
 const board = new Board()
 
+board.setToStartPosition()
+
 function App() {
   return (
     <main>

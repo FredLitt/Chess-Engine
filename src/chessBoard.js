@@ -27,7 +27,78 @@ export class Board {
     this.blackCapturedPieces = []
     this.whiteCapturedPieces = []
 
-    this.squares[0][4] = new Piece("king", "white")
+    // this.squares[0][0] = new Piece("rook", "white")
+    // this.squares[0][1] = new Piece("knight", "white")
+    // this.squares[0][2] = new Piece("bishop", "white")
+    // this.squares[0][3] = new Piece("king", "white")
+    // this.squares[0][4] = new Piece("queen", "white")
+    // this.squares[0][5] = new Piece("bishop", "white")
+    // this.squares[0][6] = new Piece("knight", "white")
+    // this.squares[0][7] = new Piece("rook", "white")
+
+    // this.squares[1][0] = new Piece("pawn", "white")
+    // this.squares[1][1] = new Piece("pawn", "white")
+    // this.squares[1][2] = new Piece("pawn", "white")
+    // this.squares[1][3] = new Piece("pawn", "white")
+    // this.squares[1][4] = new Piece("pawn", "white")
+    // this.squares[1][5] = new Piece("pawn", "white")
+    // this.squares[1][6] = new Piece("pawn", "white")
+    // this.squares[1][7] = new Piece("pawn", "white")
+
+    // this.squares[7][0] = new Piece("rook", "black")
+    // this.squares[7][1] = new Piece("knight", "black")
+    // this.squares[7][2] = new Piece("bishop", "black")
+    // this.squares[7][3] = new Piece("king", "black")
+    // this.squares[7][4] = new Piece("queen", "black")
+    // this.squares[7][5] = new Piece("bishop", "black")
+    // this.squares[7][6] = new Piece("knight", "black")
+    // this.squares[7][7] = new Piece("rook", "black")
+
+    // this.squares[6][0] = new Piece("pawn", "black")
+    // this.squares[6][1] = new Piece("pawn", "black")
+    // this.squares[6][2] = new Piece("pawn", "black")
+    // this.squares[6][3] = new Piece("pawn", "black")
+    // this.squares[6][4] = new Piece("pawn", "black")
+    // this.squares[6][5] = new Piece("pawn", "black")
+    // this.squares[6][6] = new Piece("pawn", "black")
+    // this.squares[6][7] = new Piece("pawn", "black")
+  }
+  setToStartPosition(){
+    this.squares[0][0] = new Piece("rook", "white")
+    this.squares[0][1] = new Piece("knight", "white")
+    this.squares[0][2] = new Piece("bishop", "white")
+    this.squares[0][3] = new Piece("king", "white")
+    this.squares[0][4] = new Piece("queen", "white")
+    this.squares[0][5] = new Piece("bishop", "white")
+    this.squares[0][6] = new Piece("knight", "white")
+    this.squares[0][7] = new Piece("rook", "white")
+
+    this.squares[1][0] = new Piece("pawn", "white")
+    this.squares[1][1] = new Piece("pawn", "white")
+    this.squares[1][2] = new Piece("pawn", "white")
+    this.squares[1][3] = new Piece("pawn", "white")
+    this.squares[1][4] = new Piece("pawn", "white")
+    this.squares[1][5] = new Piece("pawn", "white")
+    this.squares[1][6] = new Piece("pawn", "white")
+    this.squares[1][7] = new Piece("pawn", "white")
+
+    this.squares[7][0] = new Piece("rook", "black")
+    this.squares[7][1] = new Piece("knight", "black")
+    this.squares[7][2] = new Piece("bishop", "black")
+    this.squares[7][3] = new Piece("king", "black")
+    this.squares[7][4] = new Piece("queen", "black")
+    this.squares[7][5] = new Piece("bishop", "black")
+    this.squares[7][6] = new Piece("knight", "black")
+    this.squares[7][7] = new Piece("rook", "black")
+
+    this.squares[6][0] = new Piece("pawn", "black")
+    this.squares[6][1] = new Piece("pawn", "black")
+    this.squares[6][2] = new Piece("pawn", "black")
+    this.squares[6][3] = new Piece("pawn", "black")
+    this.squares[6][4] = new Piece("pawn", "black")
+    this.squares[6][5] = new Piece("pawn", "black")
+    this.squares[6][6] = new Piece("pawn", "black")
+    this.squares[6][7] = new Piece("pawn", "black")
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -46,8 +117,6 @@ export class Board {
   squaresEqual(square1, square2) {
     return square1[0] === square2[0] && square1[1] === square2[1]
   }
-
-
   moveIsValid(validMoveList, targetSquare) {
     return validMoveList.find(square => square[0] === targetSquare[0] && square[1] === targetSquare[1])
   }
@@ -65,6 +134,7 @@ export class Board {
     this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare))
     console.log(this.playedMoveList)
   }
+  
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
   // If move is valid, updates the board, adds to played move array and returns true

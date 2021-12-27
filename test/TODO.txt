@@ -4,9 +4,6 @@ Add King moves
 Prevent illegal king moves
 
 
-
-
-
 GRAND PLAN
 
 v1:
