@@ -59,9 +59,19 @@ class Board {
     const [row, col] = promotionSquare
     this.squares[row][col] = new Piece(chosenPiece, pieceColor)
   }
+<<<<<<< HEAD
   addMoveToPlayedMoveList(movedPiece, fromSquare, toSquare) {
     this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare))
     console.log(this.playedMoveList)
+=======
+  // updateBoard(movedPiece, startSquare, endSquare){
+  //   endSquare = movedPiece
+  //   startSquare = null
+  //   return true
+  // }
+  promotePawn(promotionSquare, chosenPiece){
+
+>>>>>>> origin/main
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -103,9 +113,14 @@ class Board {
             validToSquares.push(targetSquare)
           }
         }
+<<<<<<< HEAD
         if (this.moveIsValid(validToSquares, toSquare)) {
           const movedPiece = pieceAtFromSquare
           this.squares[toRow][toCol] = movedPiece
+=======
+        if(this.moveIsValid(validToSquares, toSquare)) {
+          this.squares[toRow][toCol] = new Piece(pieceAtFromSquare.type, pieceAtFromSquare.color)
+>>>>>>> origin/main
           this.squares[fromRow][fromCol] = null
           this.addMoveToPlayedMoveList(movedPiece, fromSquare, toSquare)
           return true
@@ -214,6 +229,7 @@ class Board {
           return false
         }
       }
+<<<<<<< HEAD
       case 'pawn': {
         let pawnMoves
         let startRow
@@ -223,6 +239,15 @@ class Board {
             "ForwardTwo": [fromRow + 2, fromCol],
             "CaptureWest": [fromRow + 1, fromCol - 1],
             "CaptureEast": [fromRow + 1, fromCol + 1]
+=======
+      case 'pawn' : {
+        switch(pieceAtFromSquare.color) {
+          case 'black' : {
+          //attacking squares: [ fromRow - 1, fromCol - 1] and [ fromRow - 1, fromCol +1]
+          const currentSquare = [ fromRow - 1, fromCol]
+          if (this.isSquareOccupied(currentSquare)){
+            return false
+>>>>>>> origin/main
           }
           startRow = 2
         } else {
@@ -234,6 +259,7 @@ class Board {
           }
           startRow = 5
         }
+<<<<<<< HEAD
         const isOnStartRow = (fromRow === startRow)
         for (const move in pawnMoves) {
           const targetSquare = pawnMoves[move]
@@ -243,6 +269,13 @@ class Board {
               delete pawnMoves["ForwardTwo"]
               continue
             }
+=======
+        case 'white' : {
+          //attacking squares: [ fromRow + 1, fromCol - 1] and [ fromRow + 1, fromCol +1]
+          const currentSquare = [ fromRow + 1, fromCol]
+          if (this.isSquareOccupied(currentSquare)){
+            return false
+>>>>>>> origin/main
           }
           if (move === "ForwardTwo") {
             const invalidMove = !isOnStartRow || this.isSquareOccupied(fromSquare, targetSquare)
@@ -271,6 +304,7 @@ class Board {
         } else {
           return false
         }
+      }
       }
       default: {
         throw new Error("unknown piece")

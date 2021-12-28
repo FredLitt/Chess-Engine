@@ -14,10 +14,26 @@ function App() {
 
   const [boardPosition, setBoardPosition] = useState(board.squares)
 
-  const [selectedMove, setSelectedMove] = useState("")
+  const [selectedMove, setSelectedMove] = useState(null)
+
+  const convertCoordinateToArray = (coordinate) => {
+    const stringArray = coordinate.split(",")
+    return stringArray.map(coordinate => parseInt(coordinate))
+  }
 
   const selectPiece = (square) => {
-    console.log(square.target.piece)
+    const clickedCoordinate = convertCoordinateToArray(square.currentTarget.getAttribute('coordinate'))
+    const squareHasPiece = (square.currentTarget.hasAttribute('piece'))
+    if (squareHasPiece && selectedMove === null){
+      setSelectedMove(clickedCoordinate)
+      console.log(clickedCoordinate)
+    }
+    if (selectedMove !== null){
+      const startSquare = selectedMove
+      const endSquare = clickedCoordinate
+      console.log(board.move(startSquare, endSquare))
+      setSelectedMove(null)
+    }
   }
 
   return (
@@ -32,7 +48,7 @@ function App() {
                   coordinate={square.coordinate}
                   piece={square.piece}
                   key={square.coordinate} 
-                  onClick={selectPiece}>
+                  onClick={(e) => selectPiece(e)}>
                     {square.piece !== null && square.piece.symbol}
                 </td>)}
           </tr>)}

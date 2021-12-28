@@ -81,7 +81,7 @@ export class Board {
   isSquareOccupied(fromSquare, targetSquare) {
     const [row1, col1] = fromSquare
     const [row2, col2] = targetSquare
-    if (!this.squares[row2][col2].containsPiece !== null) return false
+    if (!this.squares[row2][col2].piece !== null) return false
     if (this.squares[row1][col1].color === this.squares[row2][col2].color) return "byFriendlyPiece"
     return "byEnemyPiece"
   }
@@ -107,13 +107,14 @@ export class Board {
     const [toRow, toCol] = toSquare
 
     const pieceAtFromSquare = this.squares[fromRow][fromCol]
+
     const validToSquares = []
 
     const emptySquare = {
-      containsPiece: null,
+      piece: null,
     }
 
-    switch (pieceAtFromSquare.type) {
+    switch (pieceAtFromSquare.piece.type) {
       case 'rook': {
         const completedDirections = []
         for (let i = 1; i < 8; i++) {
