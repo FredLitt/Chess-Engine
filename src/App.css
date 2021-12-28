@@ -1,6 +1,5 @@
-#board, .square {
+table, .board-row, .square {
   border: 1px solid black;
-
 }
 
 .square {
@@ -8,4 +7,10 @@
   height: 40px;
   font-size: 30px;
   text-align: center;
+}
+
+#current-move {
+  border: 1px solid black;
+  height: 50px;
+  width: 150px;
 }
