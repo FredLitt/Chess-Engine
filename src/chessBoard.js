@@ -23,56 +23,56 @@ export class PlayedMove {
 export class Board {
   constructor() {
     this.squares = []
-    for (let i = 0; i < 8; i++) {
-      const emptySquare = {
-        containsPiece: null,
-      }
-      this.squares.push([emptySquare, emptySquare, emptySquare, emptySquare, emptySquare, emptySquare, emptySquare, emptySquare])
+    for (let x = 0; x < 8; x++) {
+      const boardRow = []
+      for (let y = 0; y < 8; y ++){
+        const square = {
+          piece: null,
+          coordinate: [x, y]
+          }
+        boardRow.push(square)
+        }
+      this.squares.push(boardRow)
     }
-    for (let x = 0; x < 8; x++){
-      for (let y = 0; y < 8; y++){
-        this.squares.forEach(s => s.coordinate = `${x}${y}`)
-        console.log(this.squares)
-      }
-    }
+    
     this.playedMoveList = []
     this.blackCapturedPieces = []
     this.whiteCapturedPieces = []
   }
   setToStartPosition(){
-    this.squares[0][0] = new Piece("rook", "white", pieceSymbols.whiteRook)
-    this.squares[0][1] = new Piece("knight", "white", pieceSymbols.whiteKnight)
-    this.squares[0][2] = new Piece("bishop", "white", pieceSymbols.whiteBishop)
-    this.squares[0][3] = new Piece("king", "white", pieceSymbols.whiteKing)
-    this.squares[0][4] = new Piece("queen", "white", pieceSymbols.whiteQueen)
-    this.squares[0][5] = new Piece("bishop", "white", pieceSymbols.whiteBishop)
-    this.squares[0][6] = new Piece("knight", "white", pieceSymbols.whiteKnight)
-    this.squares[0][7] = new Piece("rook", "white", pieceSymbols.whiteRook)
-    this.squares[1][0] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][1] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][2] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][3] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][4] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][5] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][6] = new Piece("pawn", "white", pieceSymbols.whitePawn)
-    this.squares[1][7] = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[0][0].piece = new Piece("rook", "white", pieceSymbols.whiteRook)
+    this.squares[0][1].piece = new Piece("knight", "white", pieceSymbols.whiteKnight)
+    this.squares[0][2].piece = new Piece("bishop", "white", pieceSymbols.whiteBishop)
+    this.squares[0][3].piece = new Piece("king", "white", pieceSymbols.whiteKing)
+    this.squares[0][4].piece = new Piece("queen", "white", pieceSymbols.whiteQueen)
+    this.squares[0][5].piece = new Piece("bishop", "white", pieceSymbols.whiteBishop)
+    this.squares[0][6].piece = new Piece("knight", "white", pieceSymbols.whiteKnight)
+    this.squares[0][7].piece = new Piece("rook", "white", pieceSymbols.whiteRook)
+    this.squares[1][0].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][1].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][2].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][3].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][4].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][5].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][6].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
+    this.squares[1][7].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
 
-    this.squares[7][0] = new Piece("rook", "black", pieceSymbols.blackRook)
-    this.squares[7][1] = new Piece("knight", "black", pieceSymbols.blackKnight)
-    this.squares[7][2] = new Piece("bishop", "black", pieceSymbols.blackBishop)
-    this.squares[7][3] = new Piece("king", "black", pieceSymbols.blackKing)
-    this.squares[7][4] = new Piece("queen", "black", pieceSymbols.blackQueen)
-    this.squares[7][5] = new Piece("bishop", "black", pieceSymbols.blackBishop)
-    this.squares[7][6] = new Piece("knight", "black", pieceSymbols.blackKnight)
-    this.squares[7][7] = new Piece("rook", "black", pieceSymbols.blackRook)
-    this.squares[6][0] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][1] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][2] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][3] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][4] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][5] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][6] = new Piece("pawn", "black", pieceSymbols.blackPawn)
-    this.squares[6][7] = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[7][0].piece = new Piece("rook", "black", pieceSymbols.blackRook)
+    this.squares[7][1].piece = new Piece("knight", "black", pieceSymbols.blackKnight)
+    this.squares[7][2].piece = new Piece("bishop", "black", pieceSymbols.blackBishop)
+    this.squares[7][3].piece = new Piece("king", "black", pieceSymbols.blackKing)
+    this.squares[7][4].piece = new Piece("queen", "black", pieceSymbols.blackQueen)
+    this.squares[7][5].piece = new Piece("bishop", "black", pieceSymbols.blackBishop)
+    this.squares[7][6].piece = new Piece("knight", "black", pieceSymbols.blackKnight)
+    this.squares[7][7].piece = new Piece("rook", "black", pieceSymbols.blackRook)
+    this.squares[6][0].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][1].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][2].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][3].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][4].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][5].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][6].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+    this.squares[6][7].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -144,7 +144,7 @@ export class Board {
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
           this.squares[fromRow][fromCol] = emptySquare
-          this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
           return false
@@ -178,7 +178,7 @@ export class Board {
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
           this.squares[fromRow][fromCol] = emptySquare
-          this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
           return false
@@ -216,7 +216,7 @@ export class Board {
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
           this.squares[fromRow][fromCol] = emptySquare
-          this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
           return false
@@ -248,7 +248,7 @@ export class Board {
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
           this.squares[fromRow][fromCol] = emptySquare
-          this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
           return false
@@ -280,7 +280,7 @@ export class Board {
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
           this.squares[fromRow][fromCol] = emptySquare
-          this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
           return false
@@ -339,12 +339,12 @@ export class Board {
             this.squares[fromRow][fromCol] = emptySquare
             const chosenPiece = 'queen'
             this.promotePawn(toSquare, chosenPiece, pieceAtFromSquare.color)
-            this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+            this.addMoveToPlayedMoveList(fromSquare, toSquare)
             return true
           }
           this.squares[toRow][toCol] = pieceAtFromSquare
           this.squares[fromRow][fromCol] = emptySquare
-          this.addMoveToPlayedMoveList(pieceAtFromSquare, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
           return false
