@@ -10,7 +10,7 @@ function App() {
 
   const board = new Board()
   board.setToStartPosition()
-  // board.move([1, 3], [2, 3])
+//   board.move([1, 3], [2, 3])
 
   const [boardPosition, setBoardPosition] = useState(board.squares)
 
@@ -26,12 +26,12 @@ function App() {
     const squareHasPiece = (square.currentTarget.hasAttribute('piece'))
     if (squareHasPiece && selectedMove === null){
       setSelectedMove(clickedCoordinate)
-      console.log(clickedCoordinate)
     }
     if (selectedMove !== null){
       const startSquare = selectedMove
       const endSquare = clickedCoordinate
-      console.log(board.move(startSquare, endSquare))
+      board.move(startSquare, endSquare)
+      setBoardPosition(board.squares)
       setSelectedMove(null)
     }
   }

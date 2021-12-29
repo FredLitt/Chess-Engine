@@ -12,8 +12,7 @@ export class Piece {
 // Validate that distance moved was 2 squares
 // Validate that pawn landed on horizontally adjacent square [fromRow, fromCol+1, fromCol-1]
 export class PlayedMove {
-  constructor(movedPiece, fromSquare, toSquare) {
-    this.movedPiece = movedPiece
+  constructor(fromSquare, toSquare) {
     this.fromSquare = fromSquare
     this.toSquare = toSquare
   }
@@ -81,8 +80,12 @@ export class Board {
   isSquareOccupied(fromSquare, targetSquare) {
     const [row1, col1] = fromSquare
     const [row2, col2] = targetSquare
-    if (!this.squares[row2][col2].piece !== null) return false
-    if (this.squares[row1][col1].color === this.squares[row2][col2].color) return "byFriendlyPiece"
+    console.log(`piece color: ${this.squares[row1][col1].piece.color}`)
+    if (this.squares[row2][col2].piece === null) {
+      console.log('not occupied')
+      return false
+      }
+    if (this.squares[row1][col1].piece.color === this.squares[row2][col2].piece.color) {return "byFriendlyPiece"}
     return "byEnemyPiece"
   }
   // given two squares, are they the same?
@@ -106,15 +109,12 @@ export class Board {
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
 
-    const pieceAtFromSquare = this.squares[fromRow][fromCol]
+    const pieceAtFromSquare = this.squares[fromRow][fromCol].piece
 
     const validToSquares = []
 
-    const emptySquare = {
-      piece: null,
-    }
-
-    switch (pieceAtFromSquare.piece.type) {
+    console.log(pieceAtFromSquare)
+    switch (pieceAtFromSquare.type) {
       case 'rook': {
         const completedDirections = []
         for (let i = 1; i < 8; i++) {
@@ -143,8 +143,9 @@ export class Board {
           }
         }
         if (this.squaresEqual(validToSquares, toSquare)) {
-          this.squares[toRow][toCol] = pieceAtFromSquare
-          this.squares[fromRow][fromCol] = emptySquare
+          
+          this.squares[toRow][toCol].piece = pieceAtFromSquare
+          this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -177,11 +178,12 @@ export class Board {
           }
         }
         if (this.squaresEqual(validToSquares, toSquare)) {
-          this.squares[toRow][toCol] = pieceAtFromSquare
-          this.squares[fromRow][fromCol] = emptySquare
+          this.squares[toRow][toCol].piece = pieceAtFromSquare
+          this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
+          
           return false
         }
       }
@@ -215,8 +217,8 @@ export class Board {
           }
         }
         if (this.squaresEqual(validToSquares, toSquare)) {
-          this.squares[toRow][toCol] = pieceAtFromSquare
-          this.squares[fromRow][fromCol] = emptySquare
+          this.squares[toRow][toCol].piece = pieceAtFromSquare
+          this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -248,7 +250,7 @@ export class Board {
         }
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
-          this.squares[fromRow][fromCol] = emptySquare
+          this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -280,7 +282,7 @@ export class Board {
         }
         if (this.squaresEqual(validToSquares, toSquare)) {
           this.squares[toRow][toCol] = pieceAtFromSquare
-          this.squares[fromRow][fromCol] = emptySquare
+          this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -331,23 +333,24 @@ export class Board {
             }
           }
           validToSquares.push(targetSquare)
+          console.log(validToSquares)
         }
         if (this.squaresEqual(validToSquares, toSquare)) {
-          // Promotion check
           if (pieceAtFromSquare.color === "black" && isOnPromotionRow || pieceAtFromSquare.type === "white" && isOnPromotionRow) {
             //queen by default
             //promote pawn function will be async when piece choice is added
-            this.squares[fromRow][fromCol] = emptySquare
+            this.squares[fromRow][fromCol].piece = null
             const chosenPiece = 'queen'
             this.promotePawn(toSquare, chosenPiece, pieceAtFromSquare.color)
             this.addMoveToPlayedMoveList(fromSquare, toSquare)
             return true
           }
-          this.squares[toRow][toCol] = pieceAtFromSquare
-          this.squares[fromRow][fromCol] = emptySquare
+          this.squares[toRow][toCol].piece = pieceAtFromSquare
+          this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
+          console.log('not a move')
           return false
         }
       }
