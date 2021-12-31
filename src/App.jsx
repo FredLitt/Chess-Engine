@@ -3,10 +3,8 @@ import { Piece, Board } from './chessBoard';
 import { pieceSymbols } from './pieceSymbols.js'
 import './App.css';
 
-//TODO: Get board.move to work
-//board reverts to original state on every re-render
-//TODO: Get coordinates on click
 //TODO: Color every other square
+//TODO: Only allow moves alternating turns
 
   const board = new Board()
   board.setToStartPosition()
@@ -15,7 +13,7 @@ function App() {
   
   const [boardPosition, setBoardPosition] = useState(board.squares)
 
-  const [selectedMove, setSelectedMove] = useState(null)
+  const [startingCoordinate, setStartingCoordinate] = useState(null)
 
   const convertCoordinateToArray = (coordinate) => {
     const stringArray = coordinate.split(",")
@@ -26,23 +24,21 @@ function App() {
     const clickedCoordinate = convertCoordinateToArray(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
     console.log(`clicked on: ${clickedCoordinate}`)
-    if (squareHasPiece && selectedMove === null){
-      console.log("square has piece")
-      console.log(clickedCoordinate)
-      setSelectedMove(clickedCoordinate)
- 
+    if (squareHasPiece && startingCoordinate === null){
+      setStartingCoordinate(clickedCoordinate)
     }
-    if (selectedMove !== null){
+    if (startingCoordinate !== null){
       console.log("clicking on second square")
-      console.log(`first square was ${selectedMove}`)
+      console.log(`first square was ${startingCoordinate}`)
       const endSquare = clickedCoordinate
-      board.move(selectedMove, endSquare)
+      board.move(startingCoordinate, endSquare)
       setBoardPosition(board.squares)
-      setSelectedMove(null)
+      setStartingCoordinate(null)
     }
-         console.log(`starting square: ${selectedMove}`)
-         console.log(board.squares[2][3])
-         console.log(board.squares)
+  }
+
+  const isDarkSquare = (x, y) => {
+    return ((x + y) % 2 === 0)
   }
 
   return (
@@ -59,12 +55,16 @@ function App() {
                   coordinate={square.coordinate}
                   piece={square.piece}
                   key={square.coordinate} 
+                  style={{
+                    backgroundColor: isDarkSquare(square.coordinate[0], square.coordinate[1]) ? 'lightgrey' : 'grey',
+                  }}
                   onClick={(e) => selectPiece(e)}>
                     {square.piece !== null && square.piece.symbol}
+                
                 </td>)}
           </tr>)}
         </table>
-        <div id="current-move">Current move: {selectedMove}</div>
+        <div id="current-move">Moving: {startingCoordinate}</div>
       </div>
     </main>
   );

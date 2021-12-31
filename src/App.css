@@ -9,6 +9,10 @@ table, .board-row, .square {
   text-align: center;
 }
 
+.is-dark-square {
+  background-color: lightblue;
+}
+
 #current-move {
   border: 1px solid black;
   height: 50px;

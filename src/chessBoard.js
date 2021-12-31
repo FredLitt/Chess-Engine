@@ -291,7 +291,7 @@ export class Board {
             "CaptureWest": [fromRow + 1, fromCol - 1],
             "CaptureEast": [fromRow + 1, fromCol + 1]
           }
-          startRow = 2
+          startRow = 1
           promotionRow = 7
         } else {
           pawnMoves = {
@@ -300,7 +300,7 @@ export class Board {
             "CaptureWest": [fromRow - 1, fromCol + 1],
             "CaptureEast": [fromRow - 1, fromCol - 1]
           }
-          startRow = 5
+          startRow = 6
           promotionRow = 0
         }
         const isOnStartRow = (fromRow === startRow)
