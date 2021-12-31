@@ -716,19 +716,19 @@ describe('pawn moves', () => {
   })
 })
 
-//   describe('board can update', () => {
-//     it('toSquare should contain piece type and color if move is valid', () => {
-//       const board = new Board()
-//       board.squares[3][3].piece = new Piece("knight", "white")
-//       board.move([3, 3], [4, 5])
-//       expect(board.squares[4][5].piece.type === "knight" && board.squares[4][5].piece.color === "white").toBe(true)
-//     })
+  describe('board can update', () => {
+    it('toSquare should contain piece type and color if move is valid', () => {
+      const board = new Board()
+      board.squares[3][3].piece = new Piece("knight", "white")
+      board.move([3, 3], [4, 5])
+      expect(board.squares[4][5].piece.type === "knight" && board.squares[4][5].piece.color === "white").toBe(true)
+    })
 
-//     it('fromSquare should become null if move is valid', () => {
-//       const board = new Board()
-//       board.squares[3][3].piece = new Piece("knight", "black")
-//       board.move([3, 3], [4, 5])
-//       expect(board.squares[3][3].piece === null).toBe(true)
-//     })
-  // })
+    it('fromSquare should become null if move is valid', () => {
+      const board = new Board()
+      board.squares[3][3].piece = new Piece("knight", "black")
+      board.move([3, 3], [4, 5])
+      expect(board.squares[3][3].piece === null).toBe(true)
+    })
+  })
 });

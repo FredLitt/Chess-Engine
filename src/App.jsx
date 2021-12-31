@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Piece, Board } from './chessBoard';
+import { pieceSymbols } from './pieceSymbols.js'
 import './App.css';
 
 //TODO: Get board.move to work
+//board reverts to original state on every re-render
 //TODO: Get coordinates on click
 //TODO: Color every other square
 
-function App() {
-
   const board = new Board()
   board.setToStartPosition()
-//   board.move([1, 3], [2, 3])
 
+function App() {
+  
   const [boardPosition, setBoardPosition] = useState(board.squares)
 
   const [selectedMove, setSelectedMove] = useState(null)
@@ -23,25 +24,35 @@ function App() {
 
   const selectPiece = (square) => {
     const clickedCoordinate = convertCoordinateToArray(square.currentTarget.getAttribute('coordinate'))
-    const squareHasPiece = (square.currentTarget.hasAttribute('piece'))
+    const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
+    console.log(`clicked on: ${clickedCoordinate}`)
     if (squareHasPiece && selectedMove === null){
+      console.log("square has piece")
+      console.log(clickedCoordinate)
       setSelectedMove(clickedCoordinate)
+ 
     }
     if (selectedMove !== null){
-      const startSquare = selectedMove
+      console.log("clicking on second square")
+      console.log(`first square was ${selectedMove}`)
       const endSquare = clickedCoordinate
-      board.move(startSquare, endSquare)
+      board.move(selectedMove, endSquare)
       setBoardPosition(board.squares)
       setSelectedMove(null)
     }
+         console.log(`starting square: ${selectedMove}`)
+         console.log(board.squares[2][3])
+         console.log(board.squares)
   }
 
   return (
     <main>
       <div>
-        <table id="board">
+        <table 
+          id="board">
           {boardPosition.map((row) =>
-            <tr className="board-row">
+            <tr 
+              className="board-row">
               {row.map((square) => 
                 <td 
                   className="square" 
