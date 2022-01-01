@@ -64,18 +64,17 @@ export class Board {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >= 0 && col >= 0
   }
-  isSquareOccupied(fromSquare, possibleSquare) {
+  isSquareOccupied(fromSquare, possibleSquare){
     const [row1, col1] = fromSquare
     const [row2, col2] = possibleSquare
-    //console.log(this.squares[row2][col2].piece)
-    if (this.squares[row2][col2].piece === null) {
+    if (this.squares[row2][col2].piece === null){
       return false
       }
-    if (this.squares[row1][col1].piece.color === this.squares[row2][col2].piece.color) {return "byFriendlyPiece"}
+    if (this.squares[row1][col1].piece.color === this.squares[row2][col2].piece.color){
+      return "byFriendlyPiece"
+    }
     return "byEnemyPiece"
   }
-  // given two squares, are they the same?
-  // TODO: replace calls to moveIsValid with using squaresEqual?
   squaresEqual(square1, square2) {
     return square1[0] === square2[0] && square1[1] === square2[1]
   }
@@ -217,6 +216,8 @@ export class Board {
         }
       }
       case 'king': {
+        console.log(fromSquare)
+        console.log(toSquare)
         const kingDirections = {
           "North": [fromRow - 1, fromCol],
           "South": [fromRow + 1, fromCol],
@@ -229,6 +230,7 @@ export class Board {
         }
         for (const direction in kingDirections) {
           const possibleSquare = kingDirections[direction]
+          console.log(possibleSquare)
           if (!this.isSquareOnBoard(possibleSquare)) continue
           if (this.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
             continue
@@ -240,7 +242,8 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          this.squares[toRow][toCol] = pieceAtFromSquare
+          console.log('valid move')
+          this.squares[toRow][toCol].piece = pieceAtFromSquare
           this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true

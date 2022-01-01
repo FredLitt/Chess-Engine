@@ -1,44 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Piece, Board } from './chessBoard';
-import { pieceSymbols } from './pieceSymbols.js'
 import './App.css';
 
-//TODO: Color every other square
+//TODO: Fix King Moves
 //TODO: Only allow moves alternating turns
+//TODO: En Passant
+//TODO: Move tracking interface
 
-  const board = new Board()
-  board.setToStartPosition()
+const board = new Board()
+board.setToStartPosition()
 
 function App() {
   
   const [boardPosition, setBoardPosition] = useState(board.squares)
 
-  const [startingCoordinate, setStartingCoordinate] = useState(null)
+  const [movingPieceStartSquare, setMovingPieceStartSquare] = useState(null)
 
-  const convertCoordinateToArray = (coordinate) => {
-    const stringArray = coordinate.split(",")
-    return stringArray.map(coordinate => parseInt(coordinate))
+  const getCoordinates = (coordinates) => {
+    const stringArray = coordinates.split(",")
+    return stringArray.map(coordinates => parseInt(coordinates))
   }
 
-  const selectPiece = (square) => {
-    const clickedCoordinate = convertCoordinateToArray(square.currentTarget.getAttribute('coordinate'))
+  const movePiece = (square) => {
+    const clickedSquaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
-    console.log(`clicked on: ${clickedCoordinate}`)
-    if (squareHasPiece && startingCoordinate === null){
-      setStartingCoordinate(clickedCoordinate)
+    const pieceToMoveNotSelected = (movingPieceStartSquare === null)
+    if (squareHasPiece && pieceToMoveNotSelected){
+      setMovingPieceStartSquare(clickedSquaresCoordinates)
     }
-    if (startingCoordinate !== null){
-      console.log("clicking on second square")
-      console.log(`first square was ${startingCoordinate}`)
-      const endSquare = clickedCoordinate
-      board.move(startingCoordinate, endSquare)
+    if (!pieceToMoveNotSelected){
+      const endSquare = clickedSquaresCoordinates
+      board.move(movingPieceStartSquare, endSquare)
       setBoardPosition(board.squares)
-      setStartingCoordinate(null)
+      setMovingPieceStartSquare(null)
     }
   }
 
-  const isDarkSquare = (x, y) => {
-    return ((x + y) % 2 === 0)
+  const isDarkSquare = (xCoordinate, yCoordinate) => {
+    return ((xCoordinate + yCoordinate) % 2 === 0)
   }
 
   return (
@@ -58,13 +57,11 @@ function App() {
                   style={{
                     backgroundColor: isDarkSquare(square.coordinate[0], square.coordinate[1]) ? 'lightgrey' : 'grey',
                   }}
-                  onClick={(e) => selectPiece(e)}>
-                    {square.piece !== null && square.piece.symbol}
-                
+                  onClick={(e) => movePiece(e)}>
+                    {square.piece !== null && square.piece.symbol}         
                 </td>)}
           </tr>)}
         </table>
-        <div id="current-move">Moving: {startingCoordinate}</div>
       </div>
     </main>
   );

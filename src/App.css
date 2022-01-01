@@ -1,5 +1,9 @@
-table, .board-row, .square {
+#board, .board-row, .square {
   border: 1px solid black;
+}
+
+#board {
+  margin: auto;
 }
 
 .square {
@@ -7,14 +11,4 @@ table, .board-row, .square {
   height: 40px;
   font-size: 30px;
   text-align: center;
-}
-
-.is-dark-square {
-  background-color: lightblue;
-}
-
-#current-move {
-  border: 1px solid black;
-  height: 50px;
-  width: 150px;
 }
