@@ -101,6 +101,13 @@ export class Board {
     const [toRow, toCol] = toSquare
 
     const pieceAtFromSquare = this.squares[fromRow][fromCol].piece
+    const movingPieceColor = this.squares[fromRow][fromCol].piece.color
+
+    const isWhitesTurn = (this.playedMoveList.length % 2 === 0)
+
+    if (movingPieceColor === "white" && !isWhitesTurn || movingPieceColor === "black" && isWhitesTurn){
+      return 
+    }
 
     const validToSquares = []
 
@@ -130,7 +137,6 @@ export class Board {
               continue
             }
             validToSquares.push(possibleSquare)
-            //console.log(`valid squares: ${validToSquares.length}`)
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
@@ -216,8 +222,6 @@ export class Board {
         }
       }
       case 'king': {
-        console.log(fromSquare)
-        console.log(toSquare)
         const kingDirections = {
           "North": [fromRow - 1, fromCol],
           "South": [fromRow + 1, fromCol],
@@ -242,7 +246,6 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          console.log('valid move')
           this.squares[toRow][toCol].piece = pieceAtFromSquare
           this.squares[fromRow][fromCol].piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)

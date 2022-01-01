@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Piece, Board } from './chessBoard';
 import './App.css';
 
-//TODO: Fix King Moves
-//TODO: Only allow moves alternating turns
 //TODO: En Passant
 //TODO: Move tracking interface
 
