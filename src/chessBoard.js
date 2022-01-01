@@ -61,7 +61,6 @@ export class Board {
     return row <= 7 && col <= 7 && row >= 0 && col >= 0
   }
   isSquareOccupied(fromSquare, possibleSquare){
-    console.log(possibleSquare)
     const [row1, col1] = fromSquare
     const [row2, col2] = possibleSquare
     if (this.squares[row2][col2].piece === null){
@@ -306,22 +305,25 @@ export class Board {
           promotionRow = 0
         }
         // EN PASSANT CHECK
-        const isNotFirstMoveOfGame = (this.playedMoveList.length !== 0)
-        if (isNotFirstMoveOfGame){
+        const firstTurnThatEnPassantCouldOccur = (this.playedMoveList.length > 2)
+        let canCaptureEnPassant
+        if (firstTurnThatEnPassantCouldOccur){
           const lastPlayedMove = this.playedMoveList[this.playedMoveList.length-1]
           const lastMovedPiece = this.squares[lastPlayedMove.toSquare[0]][lastPlayedMove.toSquare[1]].piece.type
+          console.log(lastMovedPiece)
           if (lastMovedPiece === "pawn"){
-            const distancePawnMoved = (lastPlayedMove.toSquare[0] -  lastPlayedMove.fromSquare[0])
+            const distancePawnMoved = Math.abs((lastPlayedMove.toSquare[0] -  lastPlayedMove.fromSquare[0]))
             if(distancePawnMoved === 2){
               console.log('moved two')
-              console.log(fromRow)
-              console.log(lastPlayedMove.toSquare[0])
-              if(fromRow === lastPlayedMove.toSquare[0]) console.log('adjacent')
-              //const squarePawnLandedOn = [lastPlayedMove.toSquare[0]]
-              //const pawnLandedOnAdjacentSquare = 
+              const isOnSameRow = (fromRow === lastPlayedMove.toSquare[0])
+              console.log(isOnSameRow)
+              const isOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
+              const isOnAdjacentSquare = (isOnSameRow && isOnAdjacentColumn)
+              if(isOnAdjacentSquare){
+                canCaptureEnPassant = true
+              }
             }
           }
-        // Validate that pawn landed on horizontally adjacent square [fromRow, fromCol+1, fromCol-1]
         }
         const isOnStartRow = (fromRow === startRow)
         const isOnPromotionRow = (toRow === promotionRow)
@@ -340,18 +342,15 @@ export class Board {
           }
           if (move === "CaptureWest" || move === "CaptureEast") {
             const invalidMove = (!this.isSquareOnBoard(possibleSquare) || this.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
-            // if(canCaptureEnPassant){
-            // validToSquares.push(possibleSquare) 
-            //}
-            if (invalidMove) {
-              continue
+            if(canCaptureEnPassant){
+            validToSquares.push(possibleSquare) 
             }
+            if (invalidMove) { continue }
           }
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
           if (isOnPromotionRow){
-            console.log('promotion!')
             //queen by default
             this.squares[fromRow][fromCol].piece = null
             const chosenPiece = 'queen'
