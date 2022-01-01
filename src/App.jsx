@@ -4,6 +4,13 @@ import './App.css';
 
 //TODO: En Passant
 //TODO: Move tracking interface
+//TODO: Render captured pieces
+//TODO: Highlight possible moves
+//TODO: Prevent king from moving into check
+// TODO: Castling!
+//TODO: Add skip forward and backward buttons below screen
+// TODO: Allow selection of promoted pawns
+// TODO: Determine checkmate!
 
 const board = new Board()
 board.setToStartPosition()

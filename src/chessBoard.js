@@ -7,10 +7,6 @@ export class Piece {
     this.symbol = symbol
   }
 }
-// En Passant must look at last played move
-// Validate that it was a pawn move
-// Validate that distance moved was 2 squares
-// Validate that pawn landed on horizontally adjacent square [fromRow, fromCol+1, fromCol-1]
 export class PlayedMove {
   constructor(fromSquare, toSquare) {
     this.fromSquare = fromSquare
@@ -65,6 +61,7 @@ export class Board {
     return row <= 7 && col <= 7 && row >= 0 && col >= 0
   }
   isSquareOccupied(fromSquare, possibleSquare){
+    console.log(possibleSquare)
     const [row1, col1] = fromSquare
     const [row2, col2] = possibleSquare
     if (this.squares[row2][col2].piece === null){
@@ -145,7 +142,6 @@ export class Board {
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
-          console.log("no moves found")
           return false
         }
       }
@@ -309,6 +305,24 @@ export class Board {
           startRow = 6
           promotionRow = 0
         }
+        // EN PASSANT CHECK
+        const isNotFirstMoveOfGame = (this.playedMoveList.length !== 0)
+        if (isNotFirstMoveOfGame){
+          const lastPlayedMove = this.playedMoveList[this.playedMoveList.length-1]
+          const lastMovedPiece = this.squares[lastPlayedMove.toSquare[0]][lastPlayedMove.toSquare[1]].piece.type
+          if (lastMovedPiece === "pawn"){
+            const distancePawnMoved = (lastPlayedMove.toSquare[0] -  lastPlayedMove.fromSquare[0])
+            if(distancePawnMoved === 2){
+              console.log('moved two')
+              console.log(fromRow)
+              console.log(lastPlayedMove.toSquare[0])
+              if(fromRow === lastPlayedMove.toSquare[0]) console.log('adjacent')
+              //const squarePawnLandedOn = [lastPlayedMove.toSquare[0]]
+              //const pawnLandedOnAdjacentSquare = 
+            }
+          }
+        // Validate that pawn landed on horizontally adjacent square [fromRow, fromCol+1, fromCol-1]
+        }
         const isOnStartRow = (fromRow === startRow)
         const isOnPromotionRow = (toRow === promotionRow)
         for (const move in pawnMoves) {
@@ -325,7 +339,11 @@ export class Board {
             if (invalidMove) { continue }
           }
           if (move === "CaptureWest" || move === "CaptureEast") {
-            if (this.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece") {
+            const invalidMove = (!this.isSquareOnBoard(possibleSquare) || this.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
+            // if(canCaptureEnPassant){
+            // validToSquares.push(possibleSquare) 
+            //}
+            if (invalidMove) {
               continue
             }
           }
