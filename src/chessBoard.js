@@ -345,10 +345,16 @@ export class Board {
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
           if (isOnPromotionRow){
             //queen by default
+            let chosenPiece
+            console.log(pieceAtFromSquare)
+            if(pieceAtFromSquare.color === "black"){
+              chosenPiece = pieces.blackQueen
+            }
+            if(pieceAtFromSquare.color === "white"){
+              chosenPiece = pieces.whiteQueen
+            }
             this.squares[fromRow][fromCol].piece = null
-            const chosenPiece = 'queen'
-            pieceAtFromSquare.type = chosenPiece
-            this.promotePawn(toSquare, pieceAtFromSquare)
+            this.promotePawn(toSquare, chosenPiece)
             this.addMoveToPlayedMoveList(fromSquare, toSquare)
             return true
           }
