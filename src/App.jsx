@@ -3,6 +3,7 @@ import { Piece, Board } from './chessBoard';
 import './App.css';
 
 //TODO: En Passant
+//TODO: Promoted pawn needs to change symbol
 //TODO: Move tracking interface
 //TODO: Render captured pieces
 //TODO: Highlight possible moves

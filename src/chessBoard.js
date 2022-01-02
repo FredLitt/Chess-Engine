@@ -284,6 +284,7 @@ export class Board {
       case 'pawn': {
         let pawnMoves
         let startRow
+        let enPassantRow
         let promotionRow
         if (pieceAtFromSquare.color === "white") {
           pawnMoves = {
@@ -294,6 +295,7 @@ export class Board {
           }
           startRow = 1
           promotionRow = 7
+          enPassantRow = 4
         } else {
           pawnMoves = {
             "ForwardOne": [fromRow - 1, fromCol],
@@ -303,24 +305,27 @@ export class Board {
           }
           startRow = 6
           promotionRow = 0
+          enPassantRow = 3
         }
         // EN PASSANT CHECK
-        const firstTurnThatEnPassantCouldOccur = (this.playedMoveList.length > 2)
-        let canCaptureEnPassant
-        if (firstTurnThatEnPassantCouldOccur){
+        const minimumTurnNumberForEnPassant = (this.playedMoveList.length > 2)
+        if (minimumTurnNumberForEnPassant){
           const lastPlayedMove = this.playedMoveList[this.playedMoveList.length-1]
           const lastMovedPiece = this.squares[lastPlayedMove.toSquare[0]][lastPlayedMove.toSquare[1]].piece.type
-          console.log(lastMovedPiece)
           if (lastMovedPiece === "pawn"){
             const distancePawnMoved = Math.abs((lastPlayedMove.toSquare[0] -  lastPlayedMove.fromSquare[0]))
             if(distancePawnMoved === 2){
-              console.log('moved two')
-              const isOnSameRow = (fromRow === lastPlayedMove.toSquare[0])
-              console.log(isOnSameRow)
-              const isOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
-              const isOnAdjacentSquare = (isOnSameRow && isOnAdjacentColumn)
-              if(isOnAdjacentSquare){
-                canCaptureEnPassant = true
+              const pawnIsOnSameRow = (fromRow === lastPlayedMove.toSquare[0])
+              const pawnIsOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
+              const pawnIsOnAdjacentSquare = (pawnIsOnSameRow && pawnIsOnAdjacentColumn)
+              if(pawnIsOnAdjacentSquare){
+                const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
+                squareOfCapturedPawn.piece = null
+                console.log('adjacent')
+                this.squares[toRow][toCol].piece = pieceAtFromSquare
+                this.squares[fromRow][fromCol].piece = null
+                this.addMoveToPlayedMoveList(fromSquare, toSquare)
+                return true
               }
             }
           }
@@ -342,9 +347,6 @@ export class Board {
           }
           if (move === "CaptureWest" || move === "CaptureEast") {
             const invalidMove = (!this.isSquareOnBoard(possibleSquare) || this.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
-            if(canCaptureEnPassant){
-            validToSquares.push(possibleSquare) 
-            }
             if (invalidMove) { continue }
           }
           validToSquares.push(possibleSquare)
