@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Piece, Board } from './chessBoard';
+import { Board } from './chessBoard';
 import './App.css';
 
-//TODO: En Passant
 //TODO: Promoted pawn needs to change symbol
 //TODO: Move tracking interface
 //TODO: Render captured pieces

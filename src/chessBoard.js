@@ -1,12 +1,5 @@
-import { pieceSymbols } from './pieceSymbols.js'
+import { pieces } from './pieces.js'
 
-export class Piece {
-  constructor(type, color, symbol) {
-    this.type = type
-    this.color = color
-    this.symbol = symbol
-  }
-}
 export class PlayedMove {
   constructor(fromSquare, toSquare) {
     this.fromSquare = fromSquare
@@ -35,26 +28,26 @@ export class Board {
   }
   setToStartPosition(){
     for (let i = 0; i < 8; i++){
-      this.squares[1][i].piece = new Piece("pawn", "white", pieceSymbols.whitePawn)
-      this.squares[6][i].piece = new Piece("pawn", "black", pieceSymbols.blackPawn)
+      this.squares[1][i].piece = pieces.whitePawn
+      this.squares[6][i].piece = pieces.blackPawn
     }
-    this.squares[0][0].piece = new Piece("rook", "white", pieceSymbols.whiteRook)
-    this.squares[0][1].piece = new Piece("knight", "white", pieceSymbols.whiteKnight)
-    this.squares[0][2].piece = new Piece("bishop", "white", pieceSymbols.whiteBishop)
-    this.squares[0][3].piece = new Piece("king", "white", pieceSymbols.whiteKing)
-    this.squares[0][4].piece = new Piece("queen", "white", pieceSymbols.whiteQueen)
-    this.squares[0][5].piece = new Piece("bishop", "white", pieceSymbols.whiteBishop)
-    this.squares[0][6].piece = new Piece("knight", "white", pieceSymbols.whiteKnight)
-    this.squares[0][7].piece = new Piece("rook", "white", pieceSymbols.whiteRook)
+    this.squares[0][0].piece = pieces.whiteRook
+    this.squares[0][1].piece = pieces.whiteKnight
+    this.squares[0][2].piece = pieces.whiteBishop
+    this.squares[0][3].piece = pieces.whiteKing
+    this.squares[0][4].piece = pieces.whiteQueen
+    this.squares[0][5].piece = pieces.whiteBishop
+    this.squares[0][6].piece = pieces.whiteKnight
+    this.squares[0][7].piece = pieces.whiteRook
 
-    this.squares[7][0].piece = new Piece("rook", "black", pieceSymbols.blackRook)
-    this.squares[7][1].piece = new Piece("knight", "black", pieceSymbols.blackKnight)
-    this.squares[7][2].piece = new Piece("bishop", "black", pieceSymbols.blackBishop)
-    this.squares[7][3].piece = new Piece("king", "black", pieceSymbols.blackKing)
-    this.squares[7][4].piece = new Piece("queen", "black", pieceSymbols.blackQueen)
-    this.squares[7][5].piece = new Piece("bishop", "black", pieceSymbols.blackBishop)
-    this.squares[7][6].piece = new Piece("knight", "black", pieceSymbols.blackKnight)
-    this.squares[7][7].piece = new Piece("rook", "black", pieceSymbols.blackRook)
+    this.squares[7][0].piece = pieces.blackRook
+    this.squares[7][1].piece = pieces.blackKnight
+    this.squares[7][2].piece = pieces.blackBishop
+    this.squares[7][3].piece = pieces.blackKing
+    this.squares[7][4].piece = pieces.blackQueen
+    this.squares[7][5].piece = pieces.blackBishop
+    this.squares[7][6].piece = pieces.blackKnight
+    this.squares[7][7].piece = pieces.blackRook
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -229,7 +222,6 @@ export class Board {
         }
         for (const direction in kingDirections) {
           const possibleSquare = kingDirections[direction]
-          console.log(possibleSquare)
           if (!this.isSquareOnBoard(possibleSquare)) continue
           if (this.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
             continue
@@ -321,7 +313,6 @@ export class Board {
               if(pawnIsOnAdjacentSquare){
                 const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
                 squareOfCapturedPawn.piece = null
-                console.log('adjacent')
                 this.squares[toRow][toCol].piece = pieceAtFromSquare
                 this.squares[fromRow][fromCol].piece = null
                 this.addMoveToPlayedMoveList(fromSquare, toSquare)
