@@ -76,8 +76,21 @@ export class Board {
     }
   }
   updateBoard(startSquare, endSquare, movedPiece){
-    targetSquare.piece = movingPiece
+    endSquare.piece = movedPiece
     startSquare.piece = null
+  }
+  capturePiece(capturedPiece){
+    const capturedPieceColor = capturedPiece.color
+    switch(capturedPieceColor){
+      case 'white':
+        this.whiteCapturedPieces.push(capturedPiece)
+        break
+      case 'black':
+        this.blackCapturedPieces.push(capturedPiece)
+        break
+    }
+    console.log(this.whiteCapturedPieces)
+    console.log(this.blackCapturedPieces)
   }
   promotePawn(promotionSquare, promotedPiece) {
     // possible issue with captured promoted piece being incorrectly added to captured pieces array
@@ -87,15 +100,6 @@ export class Board {
   }
   addMoveToPlayedMoveList(fromSquare, toSquare) {
     this.playedMoveList.push(new PlayedMove(fromSquare, toSquare))
-  }
-  capturePiece(capturedPiece){
-    const capturedPieceColor = capturedPiece.color
-    switch(capturedPieceColor){
-      case 'white':
-        this.whiteCapturedPieces.push(capturedPiece)
-      case 'black':
-        this.blackCapturedPieces.push(capturedPiece)
-    }
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -147,6 +151,11 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
+          const moveWasACapture = (targetSquare.piece !== null)
+          if(moveWasACapture){
+            const capturedPiece = (targetSquare.piece)
+            this.capturePiece(capturedPiece)
+          }
           this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
@@ -180,6 +189,11 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
+          const moveWasACapture = (targetSquare.piece !== null)
+          if(moveWasACapture){
+            const capturedPiece = (targetSquare.piece)
+            this.capturePiece(capturedPiece)
+          }
           this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
@@ -217,6 +231,11 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
+          const moveWasACapture = (targetSquare.piece !== null)
+          if(moveWasACapture){
+            const capturedPiece = (targetSquare.piece)
+            this.capturePiece(capturedPiece)
+          }
           this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
@@ -248,6 +267,11 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
+          const moveWasACapture = (targetSquare.piece !== null)
+          if(moveWasACapture){
+            const capturedPiece = (targetSquare.piece)
+            this.capturePiece(capturedPiece)
+          }
           this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
@@ -279,6 +303,11 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
+          const moveWasACapture = (targetSquare.piece !== null)
+          if(moveWasACapture){
+            const capturedPiece = (targetSquare.piece)
+            this.capturePiece(capturedPiece)
+          }
           this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
