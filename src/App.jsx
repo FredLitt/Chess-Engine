@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Board } from './chessBoard';
 import './App.css';
 
-//TODO: Promoted pawn needs to change symbol
 //TODO: Move tracking interface
 //TODO: Render captured pieces
 //TODO: Highlight possible moves
 //TODO: Prevent king from moving into check
-// TODO: Castling!
+//TODO: Require dealing with check
+//TODO: Castling!
 //TODO: Add skip forward and backward buttons below screen
-// TODO: Allow selection of promoted pawns
-// TODO: Determine checkmate!
+//TODO: Allow select piece on pawn promotion
+//TODO: Determine checkmate!
 
 const board = new Board()
 board.setToStartPosition()

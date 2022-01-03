@@ -48,6 +48,9 @@ export class Board {
     this.squares[7][5].piece = pieces.blackBishop
     this.squares[7][6].piece = pieces.blackKnight
     this.squares[7][7].piece = pieces.blackRook
+
+    this.squares[3][3].piece = pieces.whitePawn
+    this.squares[4][4].piece = pieces.blackPawn
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -81,6 +84,15 @@ export class Board {
   addMoveToPlayedMoveList(fromSquare, toSquare) {
     this.playedMoveList.push(new PlayedMove(fromSquare, toSquare))
   }
+  capturePiece(capturedPiece){
+    const capturedPieceColor = capturedPiece.color
+    switch(capturedPieceColor){
+      case 'white':
+        this.whiteCapturedPieces.push(capturedPiece)
+      case 'black':
+        this.blackCapturedPieces.push(capturedPiece)
+    }
+  }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
   // If move is valid, updates the board, adds to played move array and returns true
@@ -88,9 +100,11 @@ export class Board {
   move(fromSquare, toSquare) {
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
+    const startSquare = this.squares[fromRow][fromCol]
+    const targetSquare = this.squares[toRow][toCol]
 
-    const pieceAtFromSquare = this.squares[fromRow][fromCol].piece
-    const movingPieceColor = this.squares[fromRow][fromCol].piece.color
+    const movingPiece = startSquare.piece
+    const movingPieceColor = startSquare.piece.color
 
     const isWhitesTurn = (this.playedMoveList.length % 2 === 0)
 
@@ -100,7 +114,7 @@ export class Board {
 
     const validToSquares = []
 
-    switch (pieceAtFromSquare.type) {
+    switch (movingPiece.type) {
       case 'rook': {
         const completedDirections = []
         for (let i = 1; i < 8; i++) {
@@ -129,8 +143,8 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          this.squares[toRow][toCol].piece = pieceAtFromSquare
-          this.squares[fromRow][fromCol].piece = null
+          targetSquare.piece = movingPiece
+          startSquare.piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -163,8 +177,8 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          this.squares[toRow][toCol].piece = pieceAtFromSquare
-          this.squares[fromRow][fromCol].piece = null
+          targetSquare.piece = movingPiece
+          startSquare.piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -201,8 +215,8 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          this.squares[toRow][toCol].piece = pieceAtFromSquare
-          this.squares[fromRow][fromCol].piece = null
+          targetSquare.piece = movingPiece
+          startSquare.piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -233,8 +247,8 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          this.squares[toRow][toCol].piece = pieceAtFromSquare
-          this.squares[fromRow][fromCol].piece = null
+          targetSquare.piece = movingPiece
+          startSquare.piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -265,8 +279,8 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          this.squares[toRow][toCol].piece = pieceAtFromSquare
-          this.squares[fromRow][fromCol].piece = null
+          targetSquare.piece = movingPiece
+          startSquare.piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -278,7 +292,7 @@ export class Board {
         let startRow
         let enPassantRow
         let promotionRow
-        if (pieceAtFromSquare.color === "white") {
+        if (movingPiece.color === "white") {
           pawnMoves = {
             "ForwardOne": [fromRow + 1, fromCol],
             "ForwardTwo": [fromRow + 2, fromCol],
@@ -300,24 +314,21 @@ export class Board {
           enPassantRow = 3
         }
         // EN PASSANT CHECK
-        const minimumTurnNumberForEnPassant = (this.playedMoveList.length > 2)
-        if (minimumTurnNumberForEnPassant){
+        if (fromRow === enPassantRow){
           const lastPlayedMove = this.playedMoveList[this.playedMoveList.length-1]
           const lastMovedPiece = this.squares[lastPlayedMove.toSquare[0]][lastPlayedMove.toSquare[1]].piece.type
-          if (lastMovedPiece === "pawn"){
-            const distancePawnMoved = Math.abs((lastPlayedMove.toSquare[0] -  lastPlayedMove.fromSquare[0]))
-            if(distancePawnMoved === 2){
-              const pawnIsOnSameRow = (fromRow === lastPlayedMove.toSquare[0])
-              const pawnIsOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
-              const pawnIsOnAdjacentSquare = (pawnIsOnSameRow && pawnIsOnAdjacentColumn)
-              if(pawnIsOnAdjacentSquare){
-                const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
-                squareOfCapturedPawn.piece = null
-                this.squares[toRow][toCol].piece = pieceAtFromSquare
-                this.squares[fromRow][fromCol].piece = null
-                this.addMoveToPlayedMoveList(fromSquare, toSquare)
-                return true
-              }
+          const distancePawnMoved = Math.abs((lastPlayedMove.toSquare[0] -  lastPlayedMove.fromSquare[0]))
+          if (lastMovedPiece === "pawn" && distancePawnMoved === 2){
+            const pawnIsOnSameRow = (fromRow === lastPlayedMove.toSquare[0])
+            const pawnIsOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
+            const pawnIsOnAdjacentSquare = (pawnIsOnSameRow && pawnIsOnAdjacentColumn)
+            if(pawnIsOnAdjacentSquare){
+              const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
+              squareOfCapturedPawn.piece = null
+              targetSquare.piece = movingPiece
+              startSquare.piece = null
+              this.addMoveToPlayedMoveList(fromSquare, toSquare)
+              return true
             }
           }
         }
@@ -346,20 +357,24 @@ export class Board {
           if (isOnPromotionRow){
             //queen by default
             let chosenPiece
-            console.log(pieceAtFromSquare)
-            if(pieceAtFromSquare.color === "black"){
+            if(movingPiece.color === "black"){
               chosenPiece = pieces.blackQueen
             }
-            if(pieceAtFromSquare.color === "white"){
+            if(movingPiece.color === "white"){
               chosenPiece = pieces.whiteQueen
             }
-            this.squares[fromRow][fromCol].piece = null
+            startSquare.piece = null
             this.promotePawn(toSquare, chosenPiece)
             this.addMoveToPlayedMoveList(fromSquare, toSquare)
             return true
           }
-          this.squares[toRow][toCol].piece = pieceAtFromSquare
-          this.squares[fromRow][fromCol].piece = null
+          const moveWasACapture = (targetSquare.piece !== null)
+          if(moveWasACapture){
+            const capturedPiece = (targetSquare.piece)
+            this.capturePiece(capturedPiece)
+          }
+          targetSquare.piece = movingPiece
+          startSquare.piece = null
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
