@@ -1,7 +1,8 @@
 import { pieces } from './pieces.js'
 
 export class PlayedMove {
-  constructor(fromSquare, toSquare) {
+  constructor(piece, fromSquare, toSquare) {
+    this.piece = piece
     this.fromSquare = fromSquare
     this.toSquare = toSquare
   }
@@ -48,9 +49,6 @@ export class Board {
     this.squares[7][5].piece = pieces.blackBishop
     this.squares[7][6].piece = pieces.blackKnight
     this.squares[7][7].piece = pieces.blackRook
-
-    this.squares[3][3].piece = pieces.whitePawn
-    this.squares[4][4].piece = pieces.blackPawn
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -96,8 +94,8 @@ export class Board {
     promotedPiece.originallyPawn = true
     this.squares[row][col].piece = promotedPiece
   }
-  addMoveToPlayedMoveList(fromSquare, toSquare) {
-    this.playedMoveList.push(new PlayedMove(fromSquare, toSquare))
+  addMoveToPlayedMoveList(piece, fromSquare, toSquare) {
+    this.playedMoveList.push(new PlayedMove(piece, fromSquare, toSquare))
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -155,7 +153,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
           return true
         } else {
           return false
@@ -193,7 +191,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, movingPiece, fromSquare, toSquare)
           return true
         } else {
           return false
@@ -235,7 +233,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
           return true
         } else {
           return false
@@ -271,7 +269,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
           return true
         } else {
           return false
@@ -307,7 +305,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
           return true
         } else {
           return false
@@ -352,7 +350,7 @@ export class Board {
               const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
               squareOfCapturedPawn.piece = null
               this.updateBoard(startSquare, targetSquare, movingPiece)
-              this.addMoveToPlayedMoveList(fromSquare, toSquare)
+              this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
               return true
             }
           }
@@ -390,7 +388,7 @@ export class Board {
             }
             startSquare.piece = null
             this.promotePawn(toSquare, chosenPiece)
-            this.addMoveToPlayedMoveList(fromSquare, toSquare)
+            this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
             return true
           }
           const moveWasACapture = (targetSquare.piece !== null)
@@ -399,7 +397,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
           return true
         } else {
           return false

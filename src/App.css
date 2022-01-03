@@ -2,20 +2,23 @@ main {
   background-color: aliceblue;
 }
 
-#board, .board-row, .square {
-  border: 1px solid black;
-}
-
 #game-container {
   display: flex;
 }
 
-#board {
+#move-list {
+  margin: 5px;
+  border: 1px solid black;
+  min-width: 100px;
+}
 
+#board, .board-row, .square {
+  
 }
 
 .square {
   width: 40px;
+  border: 1px solid black;
   height: 40px;
   font-size: 30px;
   font-weight: 550;

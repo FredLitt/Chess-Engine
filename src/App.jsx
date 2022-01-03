@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Board } from './chessBoard';
+import MoveList from './MoveList'
 import CapturedPieceContainer from './CapturedPieceContainer'
 import './App.css';
 
-//TODO: Render captured pieces
 //TODO: Move tracking interface
 //TODO: Highlight possible moves
 //TODO: Prevent king from moving into check
@@ -51,6 +51,8 @@ function App() {
   return (
     <main>
       <div id="game-container">
+      <MoveList 
+        moveList={board.playedMoveList}/>
         <table 
           id="board">
           {boardPosition.map((row) =>
