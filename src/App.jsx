@@ -63,17 +63,19 @@ function App() {
                   piece={square.piece}
                   key={square.coordinate} 
                   style={{
-                    backgroundColor: isDarkSquare(square.coordinate[0], square.coordinate[1]) ? 'lightgrey' : 'grey',
+                    backgroundColor: isDarkSquare(square.coordinate[0], square.coordinate[1]) ? 'white' : 'lightgrey',
                   }}
                   onClick={(e) => movePiece(e)}>
                     {square.piece !== null && square.piece.symbol}         
                 </td>)}
           </tr>)}
         </table>
-        <CapturedPieceContainer 
-          capturedPieces={board.blackCapturedPieces}/>
-        <CapturedPieceContainer 
-          capturedPieces={board.whiteCapturedPieces}/>
+        <div id="captured-pieces-wrapper">
+          <CapturedPieceContainer 
+            capturedPieces={board.blackCapturedPieces}/>
+          <CapturedPieceContainer 
+            capturedPieces={board.whiteCapturedPieces}/>
+        </div>
       </div>
     </main>
   );
