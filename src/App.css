@@ -2,8 +2,12 @@
   border: 1px solid black;
 }
 
+#game-container {
+  display: flex;
+}
+
 #board {
-  margin: auto;
+
 }
 
 .square {
@@ -11,4 +15,12 @@
   height: 40px;
   font-size: 30px;
   text-align: center;
+}
+
+.captured-pieces {
+  border: 1px solid black;
+  display: flex;
+  width: 300px;
+  height: 50px;
+  margin: 10px;
 }

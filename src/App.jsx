@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Board } from './chessBoard';
+import CapturedPieceContainer from './CapturedPieceContainer'
 import './App.css';
 
-//TODO: Move tracking interface
 //TODO: Render captured pieces
+//TODO: Move tracking interface
 //TODO: Highlight possible moves
 //TODO: Prevent king from moving into check
 //TODO: Require dealing with check
@@ -18,6 +19,8 @@ board.setToStartPosition()
 function App() {
   
   const [boardPosition, setBoardPosition] = useState(board.squares)
+
+  const [capturedPieces, setCapturedPieces] = useState(board.blackCapturedPieces)
 
   const [movingPieceStartSquare, setMovingPieceStartSquare] = useState(null)
 
@@ -47,7 +50,7 @@ function App() {
 
   return (
     <main>
-      <div>
+      <div id="game-container">
         <table 
           id="board">
           {boardPosition.map((row) =>
@@ -67,6 +70,10 @@ function App() {
                 </td>)}
           </tr>)}
         </table>
+        <CapturedPieceContainer 
+          capturedPieces={board.blackCapturedPieces}/>
+        <CapturedPieceContainer 
+          capturedPieces={board.whiteCapturedPieces}/>
       </div>
     </main>
   );

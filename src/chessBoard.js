@@ -89,8 +89,6 @@ export class Board {
         this.blackCapturedPieces.push(capturedPiece)
         break
     }
-    console.log(this.whiteCapturedPieces)
-    console.log(this.blackCapturedPieces)
   }
   promotePawn(promotionSquare, promotedPiece) {
     // possible issue with captured promoted piece being incorrectly added to captured pieces array
