@@ -75,6 +75,10 @@ export class Board {
       if (this.squaresEqual(moveList[i], square)) { return true }
     }
   }
+  updateBoard(startSquare, endSquare, movedPiece){
+    targetSquare.piece = movingPiece
+    startSquare.piece = null
+  }
   promotePawn(promotionSquare, promotedPiece) {
     // possible issue with captured promoted piece being incorrectly added to captured pieces array
     const [row, col] = promotionSquare
@@ -143,8 +147,7 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          targetSquare.piece = movingPiece
-          startSquare.piece = null
+          this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -177,8 +180,7 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          targetSquare.piece = movingPiece
-          startSquare.piece = null
+          this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -215,8 +217,7 @@ export class Board {
           }
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          targetSquare.piece = movingPiece
-          startSquare.piece = null
+          this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -247,8 +248,7 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          targetSquare.piece = movingPiece
-          startSquare.piece = null
+          this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -279,8 +279,7 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
-          targetSquare.piece = movingPiece
-          startSquare.piece = null
+          this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
@@ -325,8 +324,7 @@ export class Board {
             if(pawnIsOnAdjacentSquare){
               const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
               squareOfCapturedPawn.piece = null
-              targetSquare.piece = movingPiece
-              startSquare.piece = null
+              this.updateBoard(startSquare, targetSquare, movingPiece)
               this.addMoveToPlayedMoveList(fromSquare, toSquare)
               return true
             }
@@ -373,8 +371,7 @@ export class Board {
             const capturedPiece = (targetSquare.piece)
             this.capturePiece(capturedPiece)
           }
-          targetSquare.piece = movingPiece
-          startSquare.piece = null
+          this.updateBoard(startSquare, targetSquare, movingPiece)
           this.addMoveToPlayedMoveList(fromSquare, toSquare)
           return true
         } else {
