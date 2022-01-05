@@ -1,10 +1,11 @@
 import { pieces } from './pieces.js'
 
 export class PlayedMove {
-  constructor(piece, fromSquare, toSquare) {
+  constructor(piece, fromSquare, toSquare, wasAcapture) {
     this.piece = piece
     this.fromSquare = fromSquare
     this.toSquare = toSquare
+    this.wasAcapture = wasAcapture
   }
 }
 // Note about coordinates:
@@ -94,8 +95,8 @@ export class Board {
     promotedPiece.originallyPawn = true
     this.squares[row][col].piece = promotedPiece
   }
-  addMoveToPlayedMoveList(piece, fromSquare, toSquare) {
-    this.playedMoveList.push(new PlayedMove(piece, fromSquare, toSquare))
+  addMoveToPlayedMoveList(piece, fromSquare, toSquare,moveWasACapture){ 
+    this.playedMoveList.push(new PlayedMove(piece, fromSquare, toSquare, moveWasACapture))
   }
   // Request a move from fromSquare to toSquare
   // each square is an array of [x, y] coordinates.
@@ -153,7 +154,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
           return true
         } else {
           return false
@@ -191,7 +192,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(movingPiece, movingPiece, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
           return true
         } else {
           return false
@@ -233,7 +234,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
           return true
         } else {
           return false
@@ -269,7 +270,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
           return true
         } else {
           return false
@@ -305,7 +306,7 @@ export class Board {
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
           return true
         } else {
           return false
@@ -347,10 +348,11 @@ export class Board {
             const pawnIsOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
             const pawnIsOnAdjacentSquare = (pawnIsOnSameRow && pawnIsOnAdjacentColumn)
             if(pawnIsOnAdjacentSquare){
+              let moveWasAcapture = true
               const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
               squareOfCapturedPawn.piece = null
               this.updateBoard(startSquare, targetSquare, movingPiece)
-              this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+              this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
               return true
             }
           }
@@ -388,16 +390,17 @@ export class Board {
             }
             startSquare.piece = null
             this.promotePawn(toSquare, chosenPiece)
-            this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+            this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
             return true
           }
           const moveWasACapture = (targetSquare.piece !== null)
+          console.log(moveWasACapture)
           if(moveWasACapture){
             const capturedPiece = (targetSquare.piece)
             this.capturePiece(capturedPiece)
           }
           this.updateBoard(startSquare, targetSquare, movingPiece)
-          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare)
+          this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
           return true
         } else {
           return false

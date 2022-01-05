@@ -1,5 +1,7 @@
 main {
-  background-color: aliceblue;
+  background-color: rgb(171, 200, 226);
+  height: 100vh;
+  width: 100vw;
 }
 
 #game-container {
@@ -8,17 +10,24 @@ main {
 
 #move-list {
   margin: 5px;
+  padding: 5px;
   border: 1px solid black;
-  min-width: 100px;
+  display: grid;
+  background-color: aliceblue;
+  grid-template-columns: 1.2fr 1fr;
+  align-content: start;
+  min-width: 150px;
+  max-width: 150px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
-#board, .board-row, .square {
-  
+#board {
+  border: 1px solid black;
 }
 
 .square {
-  width: 40px;
-  border: 1px solid black;
+  min-width: 40px;
   height: 40px;
   font-size: 30px;
   font-weight: 550;

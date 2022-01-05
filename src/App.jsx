@@ -54,7 +54,8 @@ function App() {
       <MoveList 
         moveList={board.playedMoveList}/>
         <table 
-          id="board">
+          id="board"
+          cellspacing="0">
           {boardPosition.map((row) =>
             <tr 
               className="board-row">

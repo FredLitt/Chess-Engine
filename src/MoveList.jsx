@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-//TODO: FIX COORDINATE JANKINESS
+//TODO
+// [ ] promotion
+// [ ] check
+// [ ] checkmate
+// [ ] castling
+// [ ] winner
 
 const xAxis = {
   0: 'h',
@@ -29,13 +34,18 @@ const getMoveNumber = (moveList, moveIndex) => {
 }
 
 export default function MoveList({moveList}){
-  console.log(moveList)
-  return(
+
+  return (
     <div id="move-list">
-      {moveList.map((move) => 
-        <div>
-          {moveList.indexOf(move)+1}. 
+      {moveList.map((move) =>
+        <div 
+          className="move-notation">
+          {moveList.indexOf(move) % 2 === 0 && 
+          <span className="move-number">{`${Math.round(moveList.indexOf(move)/2+1)}. `}</span>}
           {pieceLetters[move.piece.type]}
+          {(move.piece.type === 'pawn' && move.wasAcapture) 
+            && <span>{xAxis[move.fromSquare[1]]}</span>}
+          {move.wasAcapture && <span>x</span>}
           {xAxis[move.toSquare[1]]}
           {move.toSquare[0]+1}
         </div>)}
