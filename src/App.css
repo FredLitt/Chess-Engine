@@ -38,6 +38,9 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin: 5px;
+  border: 1px solid black;
+  background-color: aliceblue;
 }
 
 .captured-pieces {

@@ -71,15 +71,23 @@ export class Board {
   }
   moveListContainsSquare(moveList, square){
     for (let i = 0; i < moveList.length; i++){
-      if (this.squaresEqual(moveList[i], square)) { return true }
+      if (this.squaresEqual(moveList[i], square)) { 
+        return true 
+      }
     }
   }
   updateBoard(startSquare, endSquare, movedPiece){
-    endSquare.piece = movedPiece
     startSquare.piece = null
+    endSquare.piece = movedPiece
   }
   capturePiece(capturedPiece){
     const capturedPieceColor = capturedPiece.color
+    if(capturedPiece.originallyPawn && capturedPieceColor === "white"){
+      capturedPiece = pieces.whitePawn
+    }
+    if(capturedPiece.originallyPawn && capturedPieceColor === "black"){
+      capturedPiece = pieces.blackPawn
+    }
     switch(capturedPieceColor){
       case 'white':
         this.whiteCapturedPieces.push(capturedPiece)
@@ -92,10 +100,10 @@ export class Board {
   promotePawn(promotionSquare, promotedPiece) {
     // possible issue with captured promoted piece being incorrectly added to captured pieces array
     const [row, col] = promotionSquare
-    promotedPiece.originallyPawn = true
     this.squares[row][col].piece = promotedPiece
+    promotedPiece.originallyPawn = true
   }
-  addMoveToPlayedMoveList(piece, fromSquare, toSquare,moveWasACapture){ 
+  addMoveToPlayedMoveList(piece, fromSquare, toSquare, moveWasACapture){ 
     this.playedMoveList.push(new PlayedMove(piece, fromSquare, toSquare, moveWasACapture))
   }
   // Request a move from fromSquare to toSquare
@@ -348,11 +356,11 @@ export class Board {
             const pawnIsOnAdjacentColumn = (fromCol === (lastPlayedMove.toSquare[1] + 1) || fromCol === (lastPlayedMove.toSquare[1] - 1))
             const pawnIsOnAdjacentSquare = (pawnIsOnSameRow && pawnIsOnAdjacentColumn)
             if(pawnIsOnAdjacentSquare){
-              let moveWasAcapture = true
+              const moveWasAcapture = true
               const squareOfCapturedPawn = this.squares[enPassantRow][toCol]
               squareOfCapturedPawn.piece = null
               this.updateBoard(startSquare, targetSquare, movingPiece)
-              this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
+              this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasAcapture)
               return true
             }
           }
@@ -379,6 +387,7 @@ export class Board {
           validToSquares.push(possibleSquare)
         }
         if (this.moveListContainsSquare(validToSquares, toSquare)) {
+          const moveWasACapture = (targetSquare.piece !== null)
           if (isOnPromotionRow){
             //queen by default
             let chosenPiece
@@ -393,8 +402,6 @@ export class Board {
             this.addMoveToPlayedMoveList(movingPiece, fromSquare, toSquare, moveWasACapture)
             return true
           }
-          const moveWasACapture = (targetSquare.piece !== null)
-          console.log(moveWasACapture)
           if(moveWasACapture){
             const capturedPiece = (targetSquare.piece)
             this.capturePiece(capturedPiece)

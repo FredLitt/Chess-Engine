@@ -18,7 +18,7 @@ const xAxis = {
   7: 'a'
 }
 
-const pieceLetters = {
+const pieceAbbreviations = {
   'pawn': '',
   'knight': 'N',
   'bishop': 'B',
@@ -28,21 +28,20 @@ const pieceLetters = {
 }
 
 const getMoveNumber = (moveList, moveIndex) => {
-  const moveListIndex = moveList.map(moveIndex)
-  let moveNumber
-  return moveNumber
+  return (Math.round(moveList.indexOf(move)/2+1))
 }
 
 export default function MoveList({moveList}){
 
   return (
     <div id="move-list">
-      {moveList.map((move) =>
+      {moveList.map((move) =>        
         <div 
+          key={moveList.indexOf(move)}
           className="move-notation">
           {moveList.indexOf(move) % 2 === 0 && 
           <span className="move-number">{`${Math.round(moveList.indexOf(move)/2+1)}. `}</span>}
-          {pieceLetters[move.piece.type]}
+          {pieceAbbreviations[move.piece.type]}
           {(move.piece.type === 'pawn' && move.wasAcapture) 
             && <span>{xAxis[move.fromSquare[1]]}</span>}
           {move.wasAcapture && <span>x</span>}

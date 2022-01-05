@@ -4,12 +4,11 @@ import MoveList from './MoveList'
 import CapturedPieceContainer from './CapturedPieceContainer'
 import './App.css';
 
-//TODO: Move tracking interface
 //TODO: Highlight possible moves
 //TODO: Prevent king from moving into check
 //TODO: Require dealing with check
 //TODO: Castling!
-//TODO: Add skip forward and backward buttons below screen
+//TODO: Add skip forward and backward buttons below move list
 //TODO: Allow select piece on pawn promotion
 //TODO: Determine checkmate!
 
@@ -19,8 +18,6 @@ board.setToStartPosition()
 function App() {
   
   const [boardPosition, setBoardPosition] = useState(board.squares)
-
-  const [capturedPieces, setCapturedPieces] = useState(board.blackCapturedPieces)
 
   const [movingPieceStartSquare, setMovingPieceStartSquare] = useState(null)
 
@@ -55,7 +52,7 @@ function App() {
         moveList={board.playedMoveList}/>
         <table 
           id="board"
-          cellspacing="0">
+          cellSpacing="0">
           {boardPosition.map((row) =>
             <tr 
               className="board-row">
