@@ -22,8 +22,8 @@ function App() {
   const [movingPieceStartSquare, setMovingPieceStartSquare] = useState(null)
 
   const getCoordinates = (coordinates) => {
-    const stringArray = coordinates.split(",")
-    return stringArray.map(coordinates => parseInt(coordinates))
+    const stringCoordinates = coordinates.split(",")
+    return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
   const movePiece = (square) => {

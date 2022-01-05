@@ -81,11 +81,11 @@ export class Board {
     endSquare.piece = movedPiece
   }
   capturePiece(capturedPiece){
-    const capturedPieceColor = capturedPiece.color
-    if(capturedPiece.originallyPawn && capturedPieceColor === "white"){
+    capturedPiece.color
+    if(capturedPiece.originallyPawn && capturedPiece.color === "white"){
       capturedPiece = pieces.whitePawn
     }
-    if(capturedPiece.originallyPawn && capturedPieceColor === "black"){
+    if(capturedPiece.originallyPawn && capturedPiece.color === "black"){
       capturedPiece = pieces.blackPawn
     }
     switch(capturedPieceColor){
@@ -98,7 +98,6 @@ export class Board {
     }
   }
   promotePawn(promotionSquare, promotedPiece) {
-    // possible issue with captured promoted piece being incorrectly added to captured pieces array
     const [row, col] = promotionSquare
     this.squares[row][col].piece = promotedPiece
     promotedPiece.originallyPawn = true
