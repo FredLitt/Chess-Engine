@@ -19,7 +19,7 @@ function App() {
   
   const [boardPosition, setBoardPosition] = useState(board.squares)
 
-  const [movingPieceStartSquare, setMovingPieceStartSquare] = useState(null)
+  const [pieceToMove, setPieceToMove] = useState(null)
 
   const getCoordinates = (coordinates) => {
     const stringCoordinates = coordinates.split(",")
@@ -29,20 +29,20 @@ function App() {
   const movePiece = (square) => {
     const clickedSquaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
-    const pieceToMoveNotSelected = (movingPieceStartSquare === null)
-    if (squareHasPiece && pieceToMoveNotSelected){
-      setMovingPieceStartSquare(clickedSquaresCoordinates)
-    }
-    if (!pieceToMoveNotSelected){
-      const endSquare = clickedSquaresCoordinates
-      board.move(movingPieceStartSquare, endSquare)
-      setBoardPosition(board.squares)
-      setMovingPieceStartSquare(null)
+    // if (squareHasPiece && pieceToMove === null){
+      board.selectPieceToMove(clickedSquaresCoordinates)
+      setPieceToMove("selected")
+   // }
+    if (pieceToMove === "selected"){
+      // const endSquare = clickedSquaresCoordinates
+      // board.move(movingPieceStartSquare, endSquare)
+      // setBoardPosition(board.squares)
+      // setMovingPieceStartSquare(null)
     }
   }
 
-  const isDarkSquare = (xCoordinate, yCoordinate) => {
-    return ((xCoordinate + yCoordinate) % 2 === 0)
+  const isDarkSquare = (row, col) => {
+    return ((row + col) % 2 === 0)
   }
 
   return (
