@@ -54,7 +54,7 @@ export class Board {
     // this.squares[7][7].piece = pieces.blackRook
 
     this.squares[1][1].piece = new Pawn("white")
-    this.squares[2][1].piece = new Pawn("black")
+    this.squares[1][2].piece = new Pawn("black")
   }
   movePiece(){
     //see if selected square to move piece to is in possible squares and run updateBoard if so
@@ -121,15 +121,21 @@ export class Board {
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
     this.selectedPiece = pieceToMove
-    this.findPiecesPossibleMoves(pieceToMove, coordinates)
+    this.determinePiecesMoves(pieceToMove, coordinates)
   }
-  
-  findPiecesPossibleMoves(pieceToMove, startSquare){  
+  determinePiecesMoves(pieceToMove, startSquare){  
     const board = this
     const color = pieceToMove.color
 
     const possibleMoves = pieceToMove.findPossibleMoves(board, startSquare)
     console.log(possibleMoves)
+    this.markPossibleMoveSquares(possibleMoves)
+  }  
+  markPossibleMoveSquares(squaresToMark){
+    for (let i = 0; i < squaresToMark.length; i++){
+      const [col, row] = squaresToMark[i]
+      this.squares[col][row].isPossibleMove = true
+    }
   }
   //we will want a function to determine all the squares that our opponent controls in order to determine illegal moves for the king
   //this could work by iterating every one of the opponent's pieces and determining all the controlled squares, which are stored in an array

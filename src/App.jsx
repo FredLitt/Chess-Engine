@@ -32,6 +32,8 @@ function App() {
     // if (squareHasPiece && pieceToMove === null){
       board.selectPieceToMove(clickedSquaresCoordinates)
       setPieceToMove("selected")
+      setBoardPosition(board.squares)
+      console.log(boardPosition)
    // }
     if (pieceToMove === "selected"){
       // const endSquare = clickedSquaresCoordinates
@@ -41,9 +43,10 @@ function App() {
     }
   }
 
-  const isDarkSquare = (row, col) => {
+  const isLightSquare = (row, col) => {
     return ((row + col) % 2 === 0)
   }
+
 
   return (
     <main>
@@ -63,10 +66,11 @@ function App() {
                   piece={square.piece}
                   key={square.coordinate} 
                   style={{
-                    backgroundColor: isDarkSquare(square.coordinate[0], square.coordinate[1]) ? 'white' : 'lightgrey',
+                    backgroundColor: isLightSquare(square.coordinate[0], square.coordinate[1]) ? 'white' : 'lightgrey',
                   }}
                   onClick={(e) => movePiece(e)}>
-                    {square.piece !== null && square.piece.symbol}         
+                    {square.piece !== null && square.piece.symbol}   
+                {square.isPossibleMove && <div className="possible-move"></div>}       
                 </td>)}
           </tr>)}
         </table>

@@ -34,6 +34,14 @@ main {
   text-align: center;
 }
 
+.possible-move {
+  height: 35%;
+  width: 35%;
+  margin: auto;
+  background-color: slategray;
+  border-radius: 50%;
+}
+
 #captured-pieces-wrapper {
   display: flex;
   flex-direction: column;
