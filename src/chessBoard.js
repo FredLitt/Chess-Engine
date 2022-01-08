@@ -127,6 +127,31 @@ export class Board {
       this.squares[col][row].isPossibleMove = true
     }
   }
+  checkIfEnPassantMove(toSquare){
+    const isAPawnMove = (this.selectedPiece.type === "pawn")
+    const [toRow, toCol] = toSquare
+    const [fromRow, fromCol] = this.selectedPiecesSquare
+    const toSquareDoesNotHavePiece = (this.squares[toRow][toCol].piece === null)
+    const pawnIsMovingHorizontally = (fromCol !== toCol)
+    if (isAPawnMove &&pawnIsMovingHorizontally && toSquareDoesNotHavePiece){
+      console.log('en passant')
+      return true
+    }
+  }
+  captureEnPassant(toSquare){
+    const [toRow, toCol] = toSquare
+    const capturingPawnColor = this.selectedPiece.color
+    if (capturingPawnColor === "white"){
+      const capturedPawn = this.squares[toRow-1][toCol].piece
+      this.capturePiece(capturedPawn)
+      this.squares[toRow-1][toCol].piece = null
+    }
+    if (capturingPawnColor === "black"){
+      const capturedPawn = this.squares[toRow+1][toCol].piece
+      this.capturePiece(capturedPawn)
+      this.squares[toRow+1][toCol].piece = null
+    }
+  }
   movePiece(toSquare){
     const fromSquare = this.selectedPiecesSquare
     const [fromRow, fromCol] = fromSquare
@@ -142,6 +167,10 @@ export class Board {
         this.capturePiece(capturedPiece)
       } else {
         additionalMoveData.wasACapture = false
+      }
+      if (this.checkIfEnPassantMove(toSquare)){
+        this.captureEnPassant(toSquare)
+        additionalMoveData.wasACapture = true
       }
       this.updateBoard(startSquare, endSquare)
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
