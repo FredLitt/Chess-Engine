@@ -8,7 +8,7 @@ export default function CapturedPieceContainer({capturedPieces}){
     <div
       className="captured-pieces">
       {capturedPieces.map((piece) => 
-        <div>{piece.symbol}
+        <div key={capturedPieces.indexOf(piece)}>{piece.symbol}
         </div>)}
     </div>)
 }

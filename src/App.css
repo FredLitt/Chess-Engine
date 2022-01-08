@@ -34,6 +34,7 @@ main {
   font-size: 30px;
   font-weight: 550;
   text-align: center;
+  position: relative;
   z-index: 1;
 }
 
@@ -41,7 +42,12 @@ main {
   height: 15px;
   width: 15px;
   margin: auto;
-  background-color: slategray;
+  background-color: rgb(129, 166, 190);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-radius: 50%;
   z-index: 0;
 }
