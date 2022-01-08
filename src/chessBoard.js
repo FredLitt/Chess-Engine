@@ -1,11 +1,11 @@
-import { pieces, Pawn, Knight, Bishop, Rook, Queen, King } from './pieces.js'
+import { Pawn, Knight, Bishop, Rook, Queen, King } from './pieces.js'
 
 export class PlayedMove {
-  constructor(piece, fromSquare, toSquare, wasAcapture) {
+  constructor(piece, fromSquare, toSquare, additionalMoveData) {
     this.piece = piece
     this.fromSquare = fromSquare
     this.toSquare = toSquare
-    this.wasAcapture = wasAcapture
+    this.additionalMoveData = additionalMoveData
   }
 }
 // Note about coordinates:
@@ -36,31 +36,36 @@ export class Board {
     //   this.squares[1][i].piece = new Pawn("white")
     //   this.squares[6][i].piece = new Pawn("black")
     // }
-    // this.squares[0][0].piece = pieces.whiteRook
-    // this.squares[0][1].piece = pieces.whiteKnight
-    // this.squares[0][2].piece = pieces.whiteBishop
-    // this.squares[0][3].piece = pieces.whiteKing
-    // this.squares[0][4].piece = pieces.whiteQueen
-    // this.squares[0][5].piece = pieces.whiteBishop
-    // this.squares[0][6].piece = pieces.whiteKnight
-    // this.squares[0][7].piece = pieces.whiteRook
+    // this.squares[0][0].piece = new Rook("white")
+    // this.squares[0][1].piece = new Knight("white")
+    // this.squares[0][2].piece = new Bishop("white")
+    // this.squares[0][3].piece = new King("white")
+    // this.squares[0][4].piece = new Queen("white")
+    // this.squares[0][5].piece = new Bishop("white")
+    // this.squares[0][6].piece = new Knight("white")
+    // this.squares[0][7].piece = new Rook("white")
 
-    // this.squares[7][0].piece = pieces.blackRook
-    // this.squares[7][1].piece = pieces.blackKnight
-    // this.squares[7][2].piece = pieces.blackBishop
-    // this.squares[7][3].piece = pieces.blackKing
-    // this.squares[7][4].piece = pieces.blackQueen
-    // this.squares[7][5].piece = pieces.blackBishop
-    // this.squares[7][6].piece = pieces.blackKnight
-    // this.squares[7][7].piece = pieces.blackRook
+    // this.squares[7][0].piece = new Rook("black")
+    // this.squares[7][1].piece = new Knight("black")
+    // this.squares[7][2].piece = new Bishop("black")
+    // this.squares[7][3].piece = new King("black")
+    // this.squares[7][4].piece = new Queen("black")
+    // this.squares[7][5].piece = new Bishop("black")
+    // this.squares[7][6].piece = new Knight("black")
+    // this.squares[7][7].piece = new Rook("black")
 
     this.squares[1][1].piece = new Pawn("white")
-    this.squares[2][2].piece = new Pawn("black")
-    this.squares[3][5].piece = new Bishop("black")
-    this.squares[6][6].piece = new Rook("white")
-    this.squares[5][3].piece = new Queen("black")
-    this.squares[7][2].piece = new King("white")
-    this.squares[0][5].piece = new Knight("white")
+    this.squares[4][2].piece = new Pawn("black")
+    // this.squares[3][5].piece = new Bishop("black")
+    // this.squares[6][6].piece = new Rook("white")
+    // this.squares[5][3].piece = new Queen("black")
+    // this.squares[7][2].piece = new King("white")
+    // this.squares[0][5].piece = new Knight("white")
+  }
+  determineWhichPlayersTurn(pieceColor){
+    
+    const isWhitesTurn = (this.playedMoveList.length % 2 === 0)
+    
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -98,21 +103,21 @@ export class Board {
     this.squares[row][col].piece = promotedPiece
     promotedPiece.originallyPawn = true
   }
-  addMoveToPlayedMoveList(fromSquare, toSquare, moveWasACapture){ 
+  addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData){ 
     const movedPiece = this.selectedPiece
-    this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, moveWasACapture))
+    this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, additionalMoveData))
   }
   selectPieceToMove(coordinates){
     this.selectedPiecesSquare = coordinates
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
     this.selectedPiece = pieceToMove
-    this.determinePiecesMoves(pieceToMove, coordinates)
+    this.determinePiecesPossibleMoves(pieceToMove, coordinates)
   }
-  determinePiecesMoves(pieceToMove, fromSquare){  
+  determinePiecesPossibleMoves(pieceToMove, fromSquare){  
     const board = this
-    const color = pieceToMove.color
-    this.selectedPiecesPossibleMoves = pieceToMove.findPossibleMoves(board, fromSquare)
+    const lastPlayedMove = this.playedMoveList[this.playedMoveList.length-1]
+    this.selectedPiecesPossibleMoves = pieceToMove.findPossibleMoves(board, fromSquare, lastPlayedMove)
     this.markPossibleMoveSquares()
   }  
   markPossibleMoveSquares(){
@@ -130,16 +135,16 @@ export class Board {
     if (this.arrayContainsSquare(possibleSquares, toSquare)){
       const startSquare = this.squares[fromRow][fromCol]
       const endSquare = this.squares[toRow][toCol]
-      let moveWasACapture
+      const additionalMoveData = {}
       if (endSquare.piece !== null){
-        moveWasACapture = true
+        additionalMoveData.wasACapture = true
         const capturedPiece = endSquare.piece
         this.capturePiece(capturedPiece)
       } else {
-        moveWasACapture = false
+        additionalMoveData.wasACapture = false
       }
       this.updateBoard(startSquare, endSquare)
-      this.addMoveToPlayedMoveList(fromSquare, toSquare, moveWasACapture)
+      this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }
     this.deselectPiece()
   }
@@ -166,27 +171,5 @@ export class Board {
     this.selectedPiece = null
     this.selectedPiecesSquare = null
     this.selectedPiecesPossibleMoves = null
-  }
-  //we will want a function to determine all the squares that our opponent controls in order to determine illegal moves for the king
-  //this could work by iterating every one of the opponent's pieces and determining all the controlled squares, which are stored in an array
-  move(fromSquare, toSquare) {
-    const [fromRow, fromCol] = fromSquare
-    const [toRow, toCol] = toSquare
-    const startSquare = this.squares[fromRow][fromCol]
-    const targetSquare = this.squares[toRow][toCol]
-
-    const movingPiece = startSquare.piece
-    const movingPieceColor = startSquare.piece.color
-
-    const isWhitesTurn = (this.playedMoveList.length % 2 === 0)
-
-    if (movingPieceColor === "white" && !isWhitesTurn || movingPieceColor === "black" && isWhitesTurn){
-      return 
-    }
-
-    const validToSquares = []
-      
-      
-    
   }
 }

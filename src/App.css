@@ -6,6 +6,7 @@ main {
 
 #game-container {
   display: flex;
+  padding-top: 20px;
 }
 
 #move-list {

@@ -4,7 +4,6 @@ import MoveList from './MoveList'
 import CapturedPieceContainer from './CapturedPieceContainer'
 import './App.css';
 
-//TODO: Highlight possible moves
 //TODO: Prevent king from moving into check
 //TODO: Require dealing with check
 //TODO: Castling!
@@ -67,8 +66,7 @@ function App() {
                   }}
                   onClick={(e) => movePiece(e)}>
                     {square.piece !== null && square.piece.symbol}   
-                {square.isPossibleMove && <div className="possible-move"></div>}       
-                </td>)}
+                    {square.isPossibleMove && <span className="possible-move"></span>}       </td>)}
           </tr>)}
         </table>
         <div id="captured-pieces-wrapper">
