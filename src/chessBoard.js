@@ -54,8 +54,8 @@ export class Board {
     // this.squares[7][6].piece = new Knight("black")
     // this.squares[7][7].piece = new Rook("black")
 
-    this.squares[1][1].piece = new Pawn("white")
-    this.squares[4][2].piece = new Pawn("black")
+    this.squares[4][1].piece = new Pawn("white")
+    this.squares[6][2].piece = new Pawn("black")
     // this.squares[3][5].piece = new Bishop("black")
     // this.squares[6][6].piece = new Rook("white")
     // this.squares[5][3].piece = new Queen("black")

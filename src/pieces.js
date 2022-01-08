@@ -223,19 +223,26 @@ export class Pawn {
   promote(promotionSquare){
 
   }
-  checkIfEnPassantIsPossible(currentSquare, enPassantRow, lastPlayedMove){
+  
+  checkForEnPassantCapture(currentSquare, enPassantRow, lastPlayedMove){
+    let enPassantCaptureSquare
     const [row, col] = currentSquare
     if (row !== enPassantRow || lastPlayedMove.piece.type !== "pawn"){
-      return false 
+      return null 
     }
-    const pawMovedTwoSquares = (Math.abs((lastPlayedMove.toSquare[0] - lastPlayedMove.fromSquare[0])) == 2)
+    const pawnMovedTwoSquares = (Math.abs((lastPlayedMove.toSquare[0] - lastPlayedMove.fromSquare[0])) == 2)
     const pawnIsOnSameRow = (row === lastPlayedMove.toSquare[0])
     const pawnIsOnAdjacentColumn = (col === (lastPlayedMove.toSquare[1] + 1) || col === (lastPlayedMove.toSquare[1] - 1))
     const pawnIsOnAdjacentSquare = (pawnIsOnSameRow && pawnIsOnAdjacentColumn)
-    if(pawnIsOnAdjacentSquare && pawMovedTwoSquares){
-      return true
+    if(pawnIsOnAdjacentSquare && pawnMovedTwoSquares){
+      if(this.color === "black"){
+      enPassantCaptureSquare = [lastPlayedMove.toSquare[0]-1,lastPlayedMove.toSquare[1]]
       }
-      return false
+      if(this.color === "white"){
+        enPassantCaptureSquare = [lastPlayedMove.toSquare[0]+1,lastPlayedMove.toSquare[1]]
+      }
+      return enPassantCaptureSquare
+      }
   }
   findPossibleMoves(board, fromSquare, lastPlayedMove){
     let possibleMoves = []
@@ -266,8 +273,14 @@ export class Pawn {
       enPassantRow = 3
     }
     const isOnStartRow = (fromRow === startRow)
-    if(lastPlayedMove !== undefined){const isEnPassantPossible = this.checkIfEnPassantIsPossible(fromSquare, enPassantRow, lastPlayedMove)
-    console.log(isEnPassantPossible)}
+    let enPassantCaptureSquare = null
+    if(lastPlayedMove !== undefined){
+      enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
+      console.log(enPassantCaptureSquare)
+      }
+    if (enPassantCaptureSquare !== null){
+      possibleMoves.push(enPassantCaptureSquare)
+    }
     for (const move in pawnMoves) {
       const possibleSquare = pawnMoves[move]
       if (move === "ForwardOne") {
