@@ -24,22 +24,26 @@ main {
 
 #board {
   border: 1px solid black;
+  table-layout: fixed;
 }
 
 .square {
   min-width: 40px;
+  max-height: 40px;
   height: 40px;
   font-size: 30px;
   font-weight: 550;
   text-align: center;
+  z-index: 1;
 }
 
 .possible-move {
-  height: 35%;
-  width: 35%;
+  height: 15px;
+  width: 15px;
   margin: auto;
   background-color: slategray;
   border-radius: 50%;
+  z-index: 0;
 }
 
 #captured-pieces-wrapper {
@@ -54,7 +58,7 @@ main {
 .captured-pieces {
   display: flex;
   font-size: 30px;
-  flexwrap: wrap;
+  flex-wrap: wrap;
   width: 300px;
   height: 50px;
   margin: 10px;

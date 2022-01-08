@@ -41,8 +41,8 @@ function App() {
     }
   }
 
-  const isLightSquare = (row, col) => {
-    return ((row + col) % 2 === 0)
+  const isLightSquare = (coordinate) => {
+    return ((coordinate[0] + coordinate[1]) % 2 === 0)
   }
 
   return (
@@ -63,7 +63,7 @@ function App() {
                   piece={square.piece}
                   key={square.coordinate} 
                   style={{
-                    backgroundColor: isLightSquare(square.coordinate[0], square.coordinate[1]) ? 'white' : 'lightgrey',
+                    backgroundColor: isLightSquare(square.coordinate) ? 'white' : 'lightgrey',
                   }}
                   onClick={(e) => movePiece(e)}>
                     {square.piece !== null && square.piece.symbol}   

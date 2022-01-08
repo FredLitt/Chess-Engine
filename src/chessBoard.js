@@ -55,7 +55,7 @@ export class Board {
     // this.squares[7][7].piece = pieces.blackRook
 
     this.squares[1][1].piece = new Pawn("white")
-    this.squares[1][2].piece = new Pawn("black")
+    this.squares[2][2].piece = new Pawn("black")
   }
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -73,14 +73,13 @@ export class Board {
     return "byEnemyPiece"
   }
   capturePiece(capturedPiece){
-    capturedPiece.color
     if(capturedPiece.originallyPawn && capturedPiece.color === "white"){
-      capturedPiece = pieces.whitePawn
+      capturedPiece = new Pawn("white")
     }
     if(capturedPiece.originallyPawn && capturedPiece.color === "black"){
-      capturedPiece = pieces.blackPawn
+      capturedPiece = new Pawn("black")
     }
-    switch(capturedPieceColor){
+    switch(capturedPiece.color){
       case 'white':
         this.whiteCapturedPieces.push(capturedPiece)
         break
@@ -94,8 +93,9 @@ export class Board {
     this.squares[row][col].piece = promotedPiece
     promotedPiece.originallyPawn = true
   }
-  addMoveToPlayedMoveList(piece, fromSquare, toSquare, moveWasACapture){ 
-    this.playedMoveList.push(new PlayedMove(piece, fromSquare, toSquare, moveWasACapture))
+  addMoveToPlayedMoveList(fromSquare, toSquare, moveWasACapture){ 
+    const movedPiece = this.selectedPiece
+    this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, moveWasACapture))
   }
   selectPieceToMove(coordinates){
     this.selectedPiecesSquare = coordinates
@@ -118,13 +118,23 @@ export class Board {
     }
   }
   movePiece(toSquare){
-    const [fromRow, fromCol] = this.selectedPiecesSquare
+    const fromSquare = this.selectedPiecesSquare
+    const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
     const possibleSquares = this.selectedPiecesPossibleMoves
-    if (this.moveListContainsSquare(possibleSquares, toSquare)){
+    if (this.arrayContainsSquare(possibleSquares, toSquare)){
       const startSquare = this.squares[fromRow][fromCol]
       const endSquare = this.squares[toRow][toCol]
+      let moveWasACapture
+      if (endSquare.piece !== null){
+        moveWasACapture = true
+        const capturedPiece = endSquare.piece
+        this.capturePiece(capturedPiece)
+      } else {
+        moveWasACapture = false
+      }
       this.updateBoard(startSquare, endSquare)
+      this.addMoveToPlayedMoveList(fromSquare, toSquare, moveWasACapture)
     }
     this.deselectPiece()
   }
@@ -135,7 +145,7 @@ export class Board {
   squaresEqual(square1, square2) {
     return square1[0] === square2[0] && square1[1] === square2[1]
   }
-  moveListContainsSquare(moveList, square){
+  arrayContainsSquare(moveList, square){
     for (let i = 0; i < moveList.length; i++){
       if (this.squaresEqual(moveList[i], square)) { 
         return true 
