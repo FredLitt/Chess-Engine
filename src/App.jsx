@@ -29,24 +29,21 @@ function App() {
   const movePiece = (square) => {
     const clickedSquaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
-    // if (squareHasPiece && pieceToMove === null){
+    if (squareHasPiece && pieceToMove === null){
       board.selectPieceToMove(clickedSquaresCoordinates)
       setPieceToMove("selected")
-      setBoardPosition(board.squares)
-      console.log(boardPosition)
-   // }
+    }
     if (pieceToMove === "selected"){
-      // const endSquare = clickedSquaresCoordinates
-      // board.move(movingPieceStartSquare, endSquare)
-      // setBoardPosition(board.squares)
-      // setMovingPieceStartSquare(null)
+      const toSquare = clickedSquaresCoordinates
+      board.movePiece(toSquare)
+      setBoardPosition(board.squares)
+      setPieceToMove(null)
     }
   }
 
   const isLightSquare = (row, col) => {
     return ((row + col) % 2 === 0)
   }
-
 
   return (
     <main>

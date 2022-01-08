@@ -28,7 +28,8 @@ export class Board {
     this.blackCapturedPieces = []
     this.whiteCapturedPieces = []
     this.selectedPiece = null
-    this.selectedPiecePossibleMoves = []
+    this.selectedPiecesSquare = null
+    this.selectedPiecesPossibleMoves = []
   }
   setToStartPosition(){
     // for (let i = 0; i < 8; i++){
@@ -56,9 +57,6 @@ export class Board {
     this.squares[1][1].piece = new Pawn("white")
     this.squares[1][2].piece = new Pawn("black")
   }
-  movePiece(){
-    //see if selected square to move piece to is in possible squares and run updateBoard if so
-  }
   isSquareOnBoard(square) {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >= 0 && col >= 0
@@ -73,20 +71,6 @@ export class Board {
       return "byFriendlyPiece"
     }
     return "byEnemyPiece"
-  }
-  squaresEqual(square1, square2) {
-    return square1[0] === square2[0] && square1[1] === square2[1]
-  }
-  moveListContainsSquare(moveList, square){
-    for (let i = 0; i < moveList.length; i++){
-      if (this.squaresEqual(moveList[i], square)) { 
-        return true 
-      }
-    }
-  }
-  updateBoard(startSquare, endSquare, movedPiece){
-    startSquare.piece = null
-    endSquare.piece = movedPiece
   }
   capturePiece(capturedPiece){
     capturedPiece.color
@@ -113,29 +97,60 @@ export class Board {
   addMoveToPlayedMoveList(piece, fromSquare, toSquare, moveWasACapture){ 
     this.playedMoveList.push(new PlayedMove(piece, fromSquare, toSquare, moveWasACapture))
   }
-  // Request a move from fromSquare to toSquare
-  // each square is an array of [x, y] coordinates.
-  // If move is valid, updates the board, adds to played move array and returns true
-  // If not, returns false
   selectPieceToMove(coordinates){
+    this.selectedPiecesSquare = coordinates
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
     this.selectedPiece = pieceToMove
     this.determinePiecesMoves(pieceToMove, coordinates)
   }
-  determinePiecesMoves(pieceToMove, startSquare){  
+  determinePiecesMoves(pieceToMove, fromSquare){  
     const board = this
     const color = pieceToMove.color
-
-    const possibleMoves = pieceToMove.findPossibleMoves(board, startSquare)
-    console.log(possibleMoves)
-    this.markPossibleMoveSquares(possibleMoves)
+    this.selectedPiecesPossibleMoves = pieceToMove.findPossibleMoves(board, fromSquare)
+    this.markPossibleMoveSquares()
   }  
-  markPossibleMoveSquares(squaresToMark){
+  markPossibleMoveSquares(){
+    const squaresToMark = this.selectedPiecesPossibleMoves
     for (let i = 0; i < squaresToMark.length; i++){
       const [col, row] = squaresToMark[i]
       this.squares[col][row].isPossibleMove = true
     }
+  }
+  movePiece(toSquare){
+    const [fromRow, fromCol] = this.selectedPiecesSquare
+    const [toRow, toCol] = toSquare
+    const possibleSquares = this.selectedPiecesPossibleMoves
+    if (this.moveListContainsSquare(possibleSquares, toSquare)){
+      const startSquare = this.squares[fromRow][fromCol]
+      const endSquare = this.squares[toRow][toCol]
+      this.updateBoard(startSquare, endSquare)
+    }
+    this.deselectPiece()
+  }
+  updateBoard(startSquare, endSquare){
+    startSquare.piece = null
+    endSquare.piece = this.selectedPiece
+  }
+  squaresEqual(square1, square2) {
+    return square1[0] === square2[0] && square1[1] === square2[1]
+  }
+  moveListContainsSquare(moveList, square){
+    for (let i = 0; i < moveList.length; i++){
+      if (this.squaresEqual(moveList[i], square)) { 
+        return true 
+      }
+    }
+  }
+  deselectPiece(){
+    const squaresToRemoveMarks = this.selectedPiecesPossibleMoves
+    for (let i = 0; i < squaresToRemoveMarks.length; i++){
+      const [col, row] = squaresToRemoveMarks[i]
+      delete this.squares[col][row].isPossibleMove
+    }
+    this.selectedPiece = null
+    this.selectedPiecesSquare = null
+    this.selectedPiecesPossibleMoves = null
   }
   //we will want a function to determine all the squares that our opponent controls in order to determine illegal moves for the king
   //this could work by iterating every one of the opponent's pieces and determining all the controlled squares, which are stored in an array
