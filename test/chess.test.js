@@ -5,6 +5,7 @@ class Piece {
     this.symbol = symbol
   }
 }
+
 // En Passant must look at last played move
 // Validate that it was a pawn move
 // Validate that distance moved was 2 squares
