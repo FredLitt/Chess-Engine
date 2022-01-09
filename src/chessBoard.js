@@ -32,30 +32,30 @@ export class Board {
     this.selectedPiecesPossibleMoves = []
   }
   setToStartPosition(){
-    // for (let i = 0; i < 8; i++){
-    //   this.squares[1][i].piece = new Pawn("white")
-    //   this.squares[6][i].piece = new Pawn("black")
-    // }
-    // this.squares[0][0].piece = new Rook("white")
-    // this.squares[0][1].piece = new Knight("white")
-    // this.squares[0][2].piece = new Bishop("white")
-    // this.squares[0][3].piece = new King("white")
-    // this.squares[0][4].piece = new Queen("white")
-    // this.squares[0][5].piece = new Bishop("white")
-    // this.squares[0][6].piece = new Knight("white")
-    // this.squares[0][7].piece = new Rook("white")
+    for (let i = 0; i < 8; i++){
+      this.squares[1][i].piece = new Pawn("white")
+      this.squares[6][i].piece = new Pawn("black")
+    }
+    this.squares[0][0].piece = new Rook("white")
+    this.squares[0][1].piece = new Knight("white")
+    this.squares[0][2].piece = new Bishop("white")
+    this.squares[0][3].piece = new King("white")
+    this.squares[0][4].piece = new Queen("white")
+    this.squares[0][5].piece = new Bishop("white")
+    this.squares[0][6].piece = new Knight("white")
+    this.squares[0][7].piece = new Rook("white")
 
-    // this.squares[7][0].piece = new Rook("black")
-    // this.squares[7][1].piece = new Knight("black")
-    // this.squares[7][2].piece = new Bishop("black")
-    // this.squares[7][3].piece = new King("black")
-    // this.squares[7][4].piece = new Queen("black")
-    // this.squares[7][5].piece = new Bishop("black")
-    // this.squares[7][6].piece = new Knight("black")
-    // this.squares[7][7].piece = new Rook("black")
+    this.squares[7][0].piece = new Rook("black")
+    this.squares[7][1].piece = new Knight("black")
+    this.squares[7][2].piece = new Bishop("black")
+    this.squares[7][3].piece = new King("black")
+    this.squares[7][4].piece = new Queen("black")
+    this.squares[7][5].piece = new Bishop("black")
+    this.squares[7][6].piece = new Knight("black")
+    this.squares[7][7].piece = new Rook("black")
 
-    this.squares[4][1].piece = new Pawn("white")
-    this.squares[6][2].piece = new Pawn("black")
+    // this.squares[4][1].piece = new Pawn("white")
+    // this.squares[6][2].piece = new Pawn("black")
     // this.squares[3][5].piece = new Bishop("black")
     // this.squares[6][6].piece = new Rook("white")
     // this.squares[5][3].piece = new Queen("black")

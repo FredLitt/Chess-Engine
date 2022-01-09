@@ -4,11 +4,12 @@ import MoveList from './MoveList'
 import CapturedPieceContainer from './CapturedPieceContainer'
 import './App.css';
 
+//TODO: Fix bug with clicking on piece that can't move and then clicking piece that can
+//TODO: Allow select piece on pawn promotion
 //TODO: Prevent king from moving into check
 //TODO: Require dealing with check
 //TODO: Castling!
 //TODO: Add skip forward and backward buttons below move list
-//TODO: Allow select piece on pawn promotion
 //TODO: Determine checkmate!
 
 const board = new Board()

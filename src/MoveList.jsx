@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 //TODO
+// [ ] helper function for translating move into notation
 // [ ] promotion
 // [ ] check
 // [ ] checkmate

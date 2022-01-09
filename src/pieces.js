@@ -1,5 +1,3 @@
-export const pieces = {}
-
 export class King {
   constructor(color){
     this.type = "king"
@@ -276,7 +274,6 @@ export class Pawn {
     let enPassantCaptureSquare = null
     if(lastPlayedMove !== undefined){
       enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
-      console.log(enPassantCaptureSquare)
       }
     if (enPassantCaptureSquare !== null){
       possibleMoves.push(enPassantCaptureSquare)
