@@ -1,5 +1,72 @@
 main {
+  background-color: rgb(171, 200, 226);
+  height: 100vh;
+  width: 100vw;
+}
+
+#game-container {
+  display: flex;
+  padding-top: 20px;
+}
+
+#move-list {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid black;
+  display: grid;
+  background-color: aliceblue;
+  grid-template-columns: 1.2fr 1fr;
+  align-content: start;
+  min-width: 150px;
+  max-width: 150px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#board {
+  border: 1px solid black;
+  table-layout: fixed;
+}
+
+.square {
+  min-width: 40px;
+  max-height: 40px;
+  height: 40px;
+  font-size: 30px;
+  font-weight: 550;
   text-align: center;
-  vertical-align: center;
-  line-height: 100vh
+  position: relative;
+  z-index: 1;
+}
+
+.possible-move {
+  height: 15px;
+  width: 15px;
+  margin: auto;
+  background-color: rgb(129, 166, 190);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+#captured-pieces-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 5px;
+  border: 1px solid black;
+  background-color: aliceblue;
+}
+
+.captured-pieces {
+  display: flex;
+  font-size: 30px;
+  flex-wrap: wrap;
+  width: 300px;
+  height: 50px;
+  margin: 10px;
 }
