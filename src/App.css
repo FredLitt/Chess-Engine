@@ -29,6 +29,7 @@ main {
 }
 
 .square {
+  box-sizing: border-box;
   min-width: 40px;
   max-height: 40px;
   height: 40px;
@@ -37,6 +38,14 @@ main {
   text-align: center;
   position: relative;
   z-index: 1;
+}
+
+.contains-piece {
+  cursor: pointer;
+}
+
+.contains-piece:hover {
+  opacity: .5;
 }
 
 .possible-move {
@@ -69,4 +78,11 @@ main {
   width: 300px;
   height: 50px;
   margin: 10px;
+}
+
+#promotion-popup {
+  height: 100px;
+  width: 100px;
+  border: 1px solid black;
+  background-color: white;
 }

@@ -242,13 +242,42 @@ export class Pawn {
       return enPassantCaptureSquare
       }
   }
+
+  findPossibleCaptures(board, fromSquare){
+    let possibleCaptures = []
+    const [fromRow, fromCol] = fromSquare
+    let pawnCaptures
+    let rowBeforePromotion
+    if (this.color === "white") {
+      pawnCaptures = {
+        "CaptureWest": [fromRow + 1, fromCol - 1],
+        "CaptureEast": [fromRow + 1, fromCol + 1]
+      }
+      rowBeforePromotion = 6
+    } if (this.color === "black") {
+      pawnCaptures = {
+        "CaptureWest": [fromRow - 1, fromCol + 1],
+        "CaptureEast": [fromRow - 1, fromCol - 1]
+      }
+      rowBeforePromotion = 1
+    }
+    for (const capture in pawnCaptures){
+      let possibleSquare = pawnCaptures[capture]
+      if (capture === "CaptureWest" || capture === "CaptureEast") {
+        const invalidMove = (!board.isSquareOnBoard(possibleSquare) )
+        if (invalidMove) { continue }
+      }
+      possibleCaptures.push(possibleSquare)
+    }
+    return possibleCaptures
+  }
+
   findPossibleMoves(board, fromSquare, lastPlayedMove){
     let possibleMoves = []
     const [fromRow, fromCol] = fromSquare
     let pawnMoves
     let startRow
     let enPassantRow
-    let promotionRow
     if (this.color === "white") {
       pawnMoves = {
         "ForwardOne": [fromRow + 1, fromCol],
@@ -257,7 +286,6 @@ export class Pawn {
         "CaptureEast": [fromRow + 1, fromCol + 1]
       }
       startRow = 1
-      promotionRow = 7
       enPassantRow = 4
     } if (this.color === "black") {
       pawnMoves = {
@@ -267,7 +295,6 @@ export class Pawn {
         "CaptureEast": [fromRow - 1, fromCol - 1]
       }
       startRow = 6
-      promotionRow = 0
       enPassantRow = 3
     }
     const isOnStartRow = (fromRow === startRow)
@@ -301,7 +328,7 @@ export class Pawn {
   }
 }
 
-const pieceSymbols = {
+export const pieceSymbols = {
   whiteKing: '\u2654',
   whiteQueen: '\u2655',
   whiteRook: '\u2656',
