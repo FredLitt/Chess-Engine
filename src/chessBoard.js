@@ -34,8 +34,6 @@ export class Board {
     this.squaresAttackedByBlack = []
     this.whiteKingInCheck = false
     this.blackKingInCheck = false
-    this.isPawnPromoting = false
-    this.promotingPawnColor = null
   }
   
   setToStartPosition(){
@@ -185,7 +183,9 @@ export class Board {
   }
 
   checkForPromotion(toSquare){
-    if (!this.selectedPiece.type === "pawn"){return false}
+    if (this.selectedPiece.type !== "pawn"){
+      return false
+      }
     const [toRow, toCol] = toSquare
 
     let promotionRow
@@ -196,16 +196,15 @@ export class Board {
     if (this.selectedPiece.color === "black"){
       promotionRow = 0
     }
-    if (promotionRow === toRow) { return true }
-    else { return false }
-  }
-
-  choosePromotionPiece(toSquare){
-    this.movePiece(toSquare)
+    if (promotionRow === toRow) { 
+      return true 
+      } else {
+      return false 
+      }
   }
 
   promote(promotionChoice){
-    console.log('woot')
+    
   }
 
   movePiece(toSquare, promotionChoice){
@@ -233,10 +232,13 @@ export class Board {
       //   additionalMoveData.isCheck = true
       // }
       this.updateBoard(startSquare, endSquare)
-      console.log(startSquare)
-      //this.promote(promotionChoice)
+      if (promotionChoice){
+        this.promote(promotionChoice)
+        console.log(promotionChoice.hasOwnProperty("type"))
+        endSquare.piece = promotionChoice
+        additionalMoveData.promotion = true
+      }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
-      console.log(this.playedMoveList)
     }
     this.deselectPiece()
     this.markControlledSquares()

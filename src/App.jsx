@@ -61,10 +61,14 @@ function App() {
     }
   }
 
-  const promote = (toSquare, board) => {
-    board.movePiece(toSquare)
+  const promote = (toSquare, promotionChoice) => {
+    board.movePiece(toSquare, promotionChoice)
     setCurrentBoard(board.squares)
     setPieceToMove(null)
+    setPawnPromotion(
+      {isPromoting: false,
+       color: null,
+       promotionSquare: null})
   }
 
   const isLightSquare = (coordinate) => {
