@@ -35,6 +35,7 @@ export class Board {
     this.whiteKingInCheck = false
     this.blackKingInCheck = false
     this.isPawnPromoting = false
+    this.promotingPawnColor = null
   }
   
   setToStartPosition(){
@@ -61,7 +62,7 @@ export class Board {
     // this.squares[7][7].piece = new Rook("black")
 
     this.squares[6][1].piece = new Pawn("white")
-    // this.squares[6][2].piece = new Pawn("black")
+    this.squares[1][2].piece = new Pawn("black")
     this.squares[3][5].piece = new Bishop("black")
     // this.squares[6][6].piece = new Rook("white")
     // this.squares[5][3].piece = new Queen("black")
@@ -128,18 +129,13 @@ export class Board {
     }
   }
   
-  promotePawn(promotionSquare, promotedPiece) {
-    const [row, col] = promotionSquare
-    this.squares[row][col].piece = promotedPiece
-    promotedPiece.originallyPawn = true
-  }
-
   addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData){ 
     const movedPiece = this.selectedPiece
     this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, additionalMoveData))
   }
 
   selectPieceToMove(coordinates){
+    console.log(coordinates)
     this.selectedPiecesSquare = coordinates
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
@@ -166,10 +162,9 @@ export class Board {
     const isAPawnMove = (this.selectedPiece.type === "pawn")
     const [toRow, toCol] = toSquare
     const [fromRow, fromCol] = this.selectedPiecesSquare
-    const toSquareDoesNotHavePiece = (this.squares[toRow][toCol].piece === null)
-    const pawnIsMovingHorizontally = (fromCol !== toCol)
-    if (isAPawnMove &&pawnIsMovingHorizontally && toSquareDoesNotHavePiece){
-      console.log('en passant')
+    const toSquareHasNoPiece = (this.squares[toRow][toCol].piece === null)
+    const pawnIsCapturing = (fromCol !== toCol)
+    if (isAPawnMove && pawnIsCapturing && toSquareHasNoPiece){
       return true
     }
   }
@@ -189,25 +184,31 @@ export class Board {
     }
   }
 
-  pawnIsBeingPromoted(toSquare){
+  checkForPromotion(toSquare){
+    if (!this.selectedPiece.type === "pawn"){return false}
     const [toRow, toCol] = toSquare
 
     let promotionRow
-    if (this.selectedPiece.type === "pawn" && this.selectedPiece.color === "white"){
+    
+    if (this.selectedPiece.color === "white"){
       promotionRow = 7
     }
-    if (this.selectedPiece.type === "pawn" && this.selectedPiece.color === "black"){
+    if (this.selectedPiece.color === "black"){
       promotionRow = 0
     }
     if (promotionRow === toRow) { return true }
     else { return false }
   }
 
-  displayPromotionChoices(){
-    this.isPawnPromoting = true
+  choosePromotionPiece(toSquare){
+    this.movePiece(toSquare)
   }
 
-  movePiece(toSquare){
+  promote(promotionChoice){
+    console.log('woot')
+  }
+
+  movePiece(toSquare, promotionChoice){
     const fromSquare = this.selectedPiecesSquare
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
@@ -227,18 +228,15 @@ export class Board {
         this.captureEnPassant(toSquare)
         additionalMoveData.wasACapture = true
       }
-      if (this.pawnIsBeingPromoted(toSquare)){
-        console.log('promote')
-        this.displayPromotionChoices()
-        //const chosenPiece = this.choosePromotionPiece()
-        //additionalMoveData.pawnPromotion = chosenPiece
-      }
       // if (this.isMoveACheck()){
       //   // king is in check
       //   additionalMoveData.isCheck = true
       // }
       this.updateBoard(startSquare, endSquare)
+      console.log(startSquare)
+      //this.promote(promotionChoice)
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
+      console.log(this.playedMoveList)
     }
     this.deselectPiece()
     this.markControlledSquares()

@@ -81,8 +81,16 @@ main {
 }
 
 #promotion-popup {
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 220px;
+  display: flex;
+  position: absolute;
+  z-index: 2;
   border: 1px solid black;
   background-color: white;
+  font-size: 50px;
+}
+
+#promotion-popup > div:hover {
+  cursor: pointer;
 }

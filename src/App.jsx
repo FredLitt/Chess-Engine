@@ -19,13 +19,22 @@ board.setToStartPosition()
 
 function App() {
   
-  const [boardPosition, setBoardPosition] = useState(board.squares)
+  const [currentBoard, setCurrentBoard] = useState(board)
 
   const [pieceToMove, setPieceToMove] = useState(null)
+
+  const [pawnPromotion, setPawnPromotion] = 
+    useState({isPromoting: false,
+              color: null,
+              promotionSquare: null})
 
   const getCoordinates = (coordinates) => {
     const stringCoordinates = coordinates.split(",")
     return stringCoordinates.map(coordinates => parseInt(coordinates))
+  }
+
+  const updateBoard = (board) => {
+    setCurrentBoard(board)
   }
 
   const movePiece = (square) => {
@@ -37,10 +46,25 @@ function App() {
     }
     if (pieceToMove === "selected"){
       const toSquare = clickedSquaresCoordinates
+      const pawnWillPromote = board.checkForPromotion(toSquare)
+      if(pawnWillPromote){
+        const pawnColor = board.selectedPiece.color
+        setPawnPromotion(
+          {isPromoting: true,
+          color: pawnColor,
+          promotionSquare: toSquare})
+      } else {
       board.movePiece(toSquare)
-      setBoardPosition(board.squares)
+      setCurrentBoard(board.squares)
       setPieceToMove(null)
+      }
     }
+  }
+
+  const promote = (toSquare, board) => {
+    board.movePiece(toSquare)
+    setCurrentBoard(board.squares)
+    setPieceToMove(null)
   }
 
   const isLightSquare = (coordinate) => {
@@ -72,13 +96,17 @@ function App() {
       <MoveList 
         moveList={board.playedMoveList}/>
         <PromotionPopUp 
-          isPawnPromoting={board.isPawnPromoting}
+          isPawnPromoting={pawnPromotion.isPromoting}
+          pawnColor={pawnPromotion.color}
+          promotionSquare={pawnPromotion.promotionSquare}
+          board={board}
+          promote={promote}
           />
         <table 
           id="board"
           cellSpacing="0">
           <tbody>
-          {boardPosition.map((row, index) =>
+          {board.squares.map((row, index) =>
             <tr 
               className="board-row"
               key={index}>
