@@ -33,10 +33,6 @@ function App() {
     return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
-  const updateBoard = (board) => {
-    setCurrentBoard(board)
-  }
-
   const movePiece = (square) => {
     const clickedSquaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
@@ -100,9 +96,7 @@ function App() {
       <MoveList 
         moveList={board.playedMoveList}/>
         <PromotionPopUp 
-          isPawnPromoting={pawnPromotion.isPromoting}
-          pawnColor={pawnPromotion.color}
-          promotionSquare={pawnPromotion.promotionSquare}
+          promotionData={pawnPromotion}
           board={board}
           promote={promote}
           />

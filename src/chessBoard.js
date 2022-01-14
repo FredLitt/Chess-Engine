@@ -133,7 +133,6 @@ export class Board {
   }
 
   selectPieceToMove(coordinates){
-    console.log(coordinates)
     this.selectedPiecesSquare = coordinates
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
@@ -203,8 +202,9 @@ export class Board {
       }
   }
 
-  promote(promotionChoice){
-    
+  promote(promotionChoice, promotionSquare){
+    promotionSquare.piece = promotionChoice
+    promotionSquare.piece.originallyPawn = true
   }
 
   movePiece(toSquare, promotionChoice){
@@ -233,9 +233,7 @@ export class Board {
       // }
       this.updateBoard(startSquare, endSquare)
       if (promotionChoice){
-        this.promote(promotionChoice)
-        console.log(promotionChoice.hasOwnProperty("type"))
-        endSquare.piece = promotionChoice
+        this.promote(promotionChoice, endSquare)
         additionalMoveData.promotion = true
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)

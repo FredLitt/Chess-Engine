@@ -1,3 +1,5 @@
+export const pieces = {}
+
 export class King {
   constructor(color){
     this.type = "king"
@@ -215,13 +217,6 @@ export class Pawn {
       this.symbol = pieceSymbols.blackPawn
     }
   }
-  displayPromotablePieces(){
-    
-  }
-  promote(promotionSquare){
-
-  }
-  
   checkForEnPassantCapture(currentSquare, enPassantRow, lastPlayedMove){
     let enPassantCaptureSquare
     const [row, col] = currentSquare
@@ -343,3 +338,27 @@ export const pieceSymbols = {
   blackKnight: '\u265E',
   blackPawn: '\u265F'
 } 
+
+const whitePawn = new Pawn("white")
+const whiteKnight = new Knight("white")
+const whiteBishop = new Bishop("white")
+const whiteRook = new Rook("white")
+const whiteQueen = new Queen("white")
+
+const blackPawn = new Pawn("black")
+const blackKnight = new Knight("black")
+const blackBishop = new Bishop("black")
+const blackRook = new Rook("black")
+const blackQueen = new Queen("black")
+
+pieces.whitePawn = whitePawn
+pieces.whiteKnight = whiteKnight
+pieces.whiteBishop = whiteBishop
+pieces.whiteRook = whiteRook
+pieces.whiteQueen = whiteQueen
+
+pieces.blackPawn = blackPawn
+pieces.blackKnight = blackKnight
+pieces.blackBishop = blackBishop
+pieces.blackRook = blackRook
+pieces.blackQueen = blackQueen
