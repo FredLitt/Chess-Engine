@@ -11,4 +11,3 @@ export default function CapturedPieceContainer({capturedPieces}){
         </div>)}
     </div>)
 }
-

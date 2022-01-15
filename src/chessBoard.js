@@ -1,4 +1,4 @@
-import { Pawn, Knight, Bishop, Rook, Queen, King } from './pieces.js'
+import { pieces } from './pieces.js'
 
 export class PlayedMove {
   constructor(piece, fromSquare, toSquare, additionalMoveData) {
@@ -38,40 +38,37 @@ export class Board {
   
   setToStartPosition(){
     // for (let i = 0; i < 8; i++){
-    //   this.squares[1][i].piece = new Pawn("white")
-    //   this.squares[6][i].piece = new Pawn("black")
+    //   this.squares[1][i].piece = pieces.whitePawn
+    //   this.squares[6][i].piece = pieces.blackPawn
     // }
-    // this.squares[0][0].piece = new Rook("white")
-    // this.squares[0][1].piece = new Knight("white")
-    // this.squares[0][2].piece = new Bishop("white")
-    // this.squares[0][3].piece = new King("white")
-    // this.squares[0][4].piece = new Queen("white")
-    // this.squares[0][5].piece = new Bishop("white")
-    // this.squares[0][6].piece = new Knight("white")
-    // this.squares[0][7].piece = new Rook("white")
+    // this.squares[0][0].piece = pieces.whiteRook
+    // this.squares[0][1].piece = pieces.whiteKnight
+    // this.squares[0][2].piece = pieces.whiteBishop
+    // this.squares[0][3].piece = pieces.whiteKing
+    // this.squares[0][4].piece = pieces.whiteQueen
+    // this.squares[0][5].piece = pieces.whiteBishop
+    // this.squares[0][6].piece = pieces.whiteKnight
+    // this.squares[0][7].piece = pieces.whiteRook
 
-    // this.squares[7][0].piece = new Rook("black")
-    // this.squares[7][1].piece = new Knight("black")
-    // this.squares[7][2].piece = new Bishop("black")
-    // this.squares[7][3].piece = new King("black")
-    // this.squares[7][4].piece = new Queen("black")
-    // this.squares[7][5].piece = new Bishop("black")
-    // this.squares[7][6].piece = new Knight("black")
-    // this.squares[7][7].piece = new Rook("black")
+    // this.squares[7][0].piece = pieces.blackRook
+    // this.squares[7][1].piece = pieces.blackKnight
+    // this.squares[7][2].piece = pieces.blackBishop
+    // this.squares[7][3].piece = pieces.blackKing
+    // this.squares[7][4].piece = pieces.blackQueen
+    // this.squares[7][5].piece = pieces.blackBishop
+    // this.squares[7][6].piece = pieces.blackKnight
+    // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[6][1].piece = new Pawn("white")
-    this.squares[1][2].piece = new Pawn("black")
-    this.squares[3][5].piece = new Bishop("black")
-    // this.squares[6][6].piece = new Rook("white")
-    // this.squares[5][3].piece = new Queen("black")
-    // this.squares[7][2].piece = new King("white")
-    // this.squares[6][5].piece = new Rook("black")
+    this.squares[6][1].piece = pieces.whitePawn
+    this.squares[3][3].piece = pieces.blackPawn
+    this.squares[2][2].piece = pieces.whiteRook
+    this.squares[4][5].piece = pieces.whiteQueen
+    this.squares[3][5].piece = pieces.blackBishop
   }
 
   // TODO: REFACTOR THIS GARBAGE
   findControlledSquares(color){
     const attackedSquares = []
-    // pawns must run findPossibleCaptures instead
     for (let i = 0; i < 8; i++){
       for (let j = 0; j < 8; j++){
       if (this.squares[i][j].piece !== null && this.squares[i][j].piece.type !== 'pawn' && this.squares[i][j].piece.color === color){
@@ -90,7 +87,7 @@ export class Board {
   }
 
   determineWhichPlayersTurn(){
-    if (this.playeedMoveList.length % 2 === 0) return "white"
+    if (this.playeedMoveList.length % 2 === 0) { return "white" }
     else { return "black" }
   }
   isSquareOnBoard(square) {
@@ -112,10 +109,10 @@ export class Board {
 
   capturePiece(capturedPiece){
     if(capturedPiece.originallyPawn && capturedPiece.color === "white"){
-      capturedPiece = new Pawn("white")
+      capturedPiece = pieces.whitePawn
     }
     if(capturedPiece.originallyPawn && capturedPiece.color === "black"){
-      capturedPiece = new Pawn("black")
+      capturedPiece = pieces.blackPawn
     }
     switch(capturedPiece.color){
       case 'white':
@@ -182,9 +179,7 @@ export class Board {
   }
 
   checkForPromotion(toSquare){
-    if (this.selectedPiece.type !== "pawn"){
-      return false
-      }
+    if (this.selectedPiece.type !== "pawn"){ return false }
     const [toRow, toCol] = toSquare
 
     let promotionRow
@@ -234,7 +229,7 @@ export class Board {
       this.updateBoard(startSquare, endSquare)
       if (promotionChoice){
         this.promote(promotionChoice, endSquare)
-        additionalMoveData.promotion = true
+        additionalMoveData.promotionChoice = promotionChoice.type
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }

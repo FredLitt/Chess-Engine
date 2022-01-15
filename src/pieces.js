@@ -1,6 +1,6 @@
 export const pieces = {}
 
-export class King {
+class King {
   constructor(color){
     this.type = "king"
     this.color = color
@@ -39,7 +39,7 @@ export class King {
   }
 }
 
-export class Queen {
+class Queen {
   constructor(color){
     this.type = "queen"
     this.color = color
@@ -84,7 +84,7 @@ export class Queen {
   }
 }
 
-export class Bishop {
+class Bishop {
   constructor(color){
     this.type = "bishop"
     this.color = color
@@ -125,7 +125,7 @@ export class Bishop {
     }
 }
 
-export class Rook {
+class Rook {
   constructor(color){
     this.type = "rook"
     this.color = color
@@ -168,7 +168,7 @@ export class Rook {
   }
 }
 
-export class Knight {
+class Knight {
   constructor(color){
     this.type = "knight"
     this.color = color
