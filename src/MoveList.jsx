@@ -34,37 +34,33 @@ const getMoveNumber = (moveList, moveIndex) => {
 
 // NESTING WILL BE USEFUL HERE
 const renderMoveNotation = (move, index) => {
+  let moveNotation
   const pieceAbbreviation = pieceAbbreviations[move.piece.type]
   const endRow = (move.toSquare[0] + 1)
   const endColumn = (xAxis[move.toSquare[1]])
   const capture = move.additionalMoveData.wasACapture
   const promotion = move.additionalMoveData.promotionChoice
-  if(move.piece.type === 'pawn' && capture && promotion){
-    const pawnsStartRow = xAxis[move.fromSquare[1]]
-    const promotedPieceAbbreviation = pieceAbbreviations
-    [promotion]
-    return `${pawnsStartRow}x${endColumn}${endRow}=${promotedPieceAbbreviation}`
-  }
-  if(move.piece.type === 'pawn' && promotion){
-    const pawnsStartRow = xAxis[move.fromSquare[1]]
-    const promotedPieceAbbreviation = pieceAbbreviations
-    [promotion]
-    return `${endColumn}${endRow}=${promotedPieceAbbreviation}`
-  }
-  if(move.piece.type === 'pawn' && capture){
-    const pawnsStartRow = xAxis[move.fromSquare[1]]
-    return `${pawnsStartRow}x${endColumn}${endRow}`
-  }
   if(move.piece.type === 'pawn'){
-    return `${endColumn}${endRow}`
-  }
-  if(move.piece.type !== 'pawn' && capture){
-    return `${pieceAbbreviation}x${endColumn}${endRow}`
+    const pawnsStartRow = xAxis[move.fromSquare[1]]
+    moveNotation = pawnsStartRow
+    if(capture){
+      moveNotation += `x${endColumn}${endRow}`
+    } else {
+      moveNotation += `${endRow}`
+    }
+    if(promotion){
+      moveNotation += `=${pieceAbbreviations[promotion]}`
+    } 
+    return moveNotation
   }
   if(move.piece.type !== 'pawn'){
-    return `${pieceAbbreviation}${endColumn}${endRow}`
-  }
-  
+    moveNotation = pieceAbbreviation
+    if(capture){
+      moveNotation += `x`
+    }
+    moveNotation += `${endColumn}${endRow}`
+    return moveNotation
+  }  
 }
 
 export default function MoveList({moveList}){
