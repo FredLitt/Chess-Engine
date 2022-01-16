@@ -66,30 +66,34 @@ export class Board {
     this.squares[3][5].piece = pieces.blackBishop
   }
 
-  // TODO: REFACTOR THIS GARBAGE
   findControlledSquares(color){
     const attackedSquares = []
     for (let i = 0; i < 8; i++){
       for (let j = 0; j < 8; j++){
-      if (this.squares[i][j].piece !== null && this.squares[i][j].piece.type !== 'pawn' && this.squares[i][j].piece.color === color){
-        attackedSquares.push(...this.squares[i][j].piece.findPossibleMoves(this, this.squares[i][j].coordinate))
+        const currentSquare = this.squares[i][j]
+        const currentSquaresPiece = (currentSquare.piece)
+        const squareIsEmpty = (currentSquaresPiece === null)
+        if(squareIsEmpty || currentSquaresPiece.color !== color) {
+          continue
+        }
+        const squareHasPiece = (currentSquaresPiece.type !== 'pawn')
+        const squareHasPawn = (currentSquaresPiece.type === 'pawn')
+        if(squareHasPiece){
+          attackedSquares.push(...currentSquaresPiece.findPossibleMoves(this, currentSquare.coordinate))
+        }
+        if(squareHasPawn){
+          attackedSquares.push(...currentSquaresPiece.findPossibleCaptures(this, currentSquare.coordinate))
         }
       }
-    for (let i = 0; i < 8; i++){
-      for (let j = 0; j < 8; j++){
-      if(this.squares[i][j].piece !== null && this.squares[i][j].piece.type === 'pawn' && this.squares[i][j].piece.color === color){
-        attackedSquares.push(...this.squares[i][j].piece.findPossibleCaptures(this, this.squares[i][j].coordinate))
-        }
-        }
-        }
-        }
+    }
     return attackedSquares
   }
 
-  determineWhichPlayersTurn(){
+  determineWhoseTurn(){
     if (this.playeedMoveList.length % 2 === 0) { return "white" }
     else { return "black" }
   }
+
   isSquareOnBoard(square) {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >= 0 && col >= 0
@@ -145,7 +149,6 @@ export class Board {
   }  
 
   markPossibleMoveSquares(){
-    console.log(this.selectedPiece)
     const squaresToMark = this.selectedPiecesPossibleMoves
     for (let i = 0; i < squaresToMark.length; i++){
       const [col, row] = squaresToMark[i]
