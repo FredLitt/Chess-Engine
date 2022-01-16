@@ -80,17 +80,21 @@ main {
   margin: 10px;
 }
 
-#promotion-popup {
-  height: 80px;
-  width: 220px;
-  display: flex;
+#promotion-modal {
   position: absolute;
-  z-index: 2;
-  border: 1px solid black;
-  background-color: white;
   font-size: 50px;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
 }
 
-#promotion-popup > div:hover {
+.promotion-pieces {
+  display: flex;
+  background-color: white;
+  border: 1px solid black;
+  width: 220px;
+}
+
+#promotion-modal > div:hover {
   cursor: pointer;
 }

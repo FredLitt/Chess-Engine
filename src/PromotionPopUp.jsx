@@ -3,11 +3,7 @@ import { pieces } from './pieces'
 
 export default function PromotionPopUp({promotionData, board, promote}){
 
-  const {isPromoting, color, promotionSquare} = promotionData
-
-  const whiteIsPromoting = (isPromoting && color === "white")
-
-  const blackIsPromoting = (isPromoting && color === "black")
+  const {pawnIsPromoting, color, promotionSquare} = promotionData
 
   const whitePieces = [
     pieces.whiteKnight,
@@ -22,21 +18,29 @@ export default function PromotionPopUp({promotionData, board, promote}){
     pieces.blackRook,
     pieces.blackQueen
   ]
+  
+  if(pawnIsPromoting){
+    return (
+      <div id="promotion-modal">
 
-  return (
-    <div>
-      {whiteIsPromoting && 
-        <div id="promotion-popup">{whitePieces.map((piece, index) => 
-           <div
-           key={index}
-           onClick={(e) => {promote(promotionSquare, piece)}}>{piece.symbol}</div>)}
-       </div>}
+        {color === "white" ?
+          <div className="promotion-pieces">{whitePieces.map((piece, index) => 
+            <div
+              key={index}
+              onClick={(e) => {promote(promotionSquare, piece)}}>{piece.symbol}
+            </div>)}
+        </div> :
 
-      {blackIsPromoting &&
-        <div id="promotion-popup">{blackPieces.map((piece, index) =>
-          <div
-          key={index}
-          onClick={(e) => {promote(promotionSquare, piece)}}>
-          {piece.symbol}</div>)}
-        </div>}
-    </div>)}
+            <div className="promotion-pieces">{blackPieces.map((piece, index) =>
+              <div
+                key={index}
+                onClick={(e) => {promote(promotionSquare, piece)}}>
+                {piece.symbol}
+              </div>)}
+            </div>}
+      </div>)}
+      
+    else { 
+      return null 
+      }
+  }

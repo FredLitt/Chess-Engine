@@ -24,7 +24,7 @@ function App() {
   const [pieceToMove, setPieceToMove] = useState(null)
 
   const [pawnPromotion, setPawnPromotion] = 
-    useState({isPromoting: false,
+    useState({pawnIsPromoting: false,
               color: null,
               promotionSquare: null})
 
@@ -33,6 +33,8 @@ function App() {
     return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
+
+//SOMETHING WRONG HERE at selectPieceToMove
   const movePiece = (square) => {
     const clickedSquaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
@@ -46,7 +48,7 @@ function App() {
       if(pawnWillPromote){
         const pawnColor = board.selectedPiece.color
         setPawnPromotion(
-          {isPromoting: true,
+          {pawnIsPromoting: true,
           color: pawnColor,
           promotionSquare: toSquare})
       } else {
@@ -54,7 +56,7 @@ function App() {
       setCurrentBoard(board.squares)
       setPieceToMove(null)
       }
-    }
+    } 
   }
 
   const promote = (toSquare, promotionChoice) => {
@@ -62,7 +64,7 @@ function App() {
     setCurrentBoard(board.squares)
     setPieceToMove(null)
     setPawnPromotion(
-      {isPromoting: false,
+      {pawnIsPromoting: false,
        color: null,
        promotionSquare: null})
   }
@@ -92,14 +94,14 @@ function App() {
 
   return (
     <main>
+      <PromotionPopUp 
+        promotionData={pawnPromotion}
+        board={board}
+        promote={promote}
+        />
       <div id="game-container">
       <MoveList 
         moveList={board.playedMoveList}/>
-        <PromotionPopUp 
-          promotionData={pawnPromotion}
-          board={board}
-          promote={promote}
-          />
         <table 
           id="board"
           cellSpacing="0">
@@ -120,7 +122,8 @@ function App() {
                   }}
                   onClick={(e) => movePiece(e)}>
                     {square.piece !== null && square.piece.symbol}   
-                    {square.isPossibleMove && <span className="possible-move"></span>}       </td>)}
+                    {square.isPossibleMove && 
+                      <span className="possible-move"></span>}       </td>)}
           </tr>)}
           </tbody>
         </table>

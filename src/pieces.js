@@ -236,6 +236,9 @@ export class Pawn {
       }
       return enPassantCaptureSquare
       }
+      else { 
+        return null
+      }
   }
 
   findPossibleCaptures(board, fromSquare){
@@ -298,6 +301,7 @@ export class Pawn {
       enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
       }
     if (enPassantCaptureSquare !== null){
+      console.log('wtf')
       possibleMoves.push(enPassantCaptureSquare)
     }
     for (const move in pawnMoves) {
@@ -317,8 +321,10 @@ export class Pawn {
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
         if (invalidMove) { continue }
       }
+      
       possibleMoves.push(possibleSquare)
     }
+    console.log(possibleMoves)
     return possibleMoves
   }
 }

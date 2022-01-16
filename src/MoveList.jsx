@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 //TODO
-// [ ] helper function for translating move into notation
-// [ ] promotion
 // [ ] check
 // [ ] checkmate
 // [ ] castling
@@ -28,7 +26,7 @@ const pieceAbbreviations = {
   'king': 'K'
 }
 
-const getMoveNumber = (moveList, moveIndex) => {
+const getMoveNumber = (moveList, move) => {
   return (Math.round(moveList.indexOf(move)/2+1))
 }
 
@@ -51,7 +49,6 @@ const renderMoveNotation = (move, index) => {
     if(promotion){
       moveNotation += `=${pieceAbbreviations[promotion]}`
     } 
-    return moveNotation
   }
   if(move.piece.type !== 'pawn'){
     moveNotation = pieceAbbreviation
@@ -59,8 +56,8 @@ const renderMoveNotation = (move, index) => {
       moveNotation += `x`
     }
     moveNotation += `${endColumn}${endRow}`
-    return moveNotation
   }  
+  return moveNotation
 }
 
 export default function MoveList({moveList}){
@@ -72,39 +69,9 @@ export default function MoveList({moveList}){
           className="move-notation">
           {index % 2 === 0 && 
           <span className="move-number">
-          {`${Math.round(index/2+1)}. `}</span>}
+          {`${getMoveNumber(moveList, move)}. `}</span>}
           {renderMoveNotation(move, index)}
           </div>)}
       </div>
-
-    // <div>
-    // <div id="move-list">
-    //   {moveList.map((move, index) =>        
-    //     <div 
-    //       key={index}
-    //       className="move-notation">
-    //       {index % 2 === 0 && 
-    //       <span className="move-number">
-    //       {`${Math.round(index/2+1)}. `}</span>}
-    //       {pieceAbbreviations[move.piece.type]}
-    //       {(move.piece.type === 'pawn' && move.additionalMoveData.wasACapture) 
-    //         && <span>{xAxis[move.fromSquare[1]]}</span>}
-    //       {move.additionalMoveData.wasACapture && <span>x</span>}
-    //       {xAxis[move.toSquare[1]]}
-    //       {move.toSquare[0]+1}
-    //     </div>)}
-    // </div>
-    // <div>
-    //   {moveList.map((move, index) =>        
-    //     <div 
-    //       key={index}
-    //       className="move-notation">
-    //       {index % 2 === 0 && 
-    //       <span className="move-number">
-    //       {`${Math.round(index/2+1)}. `}</span>}
-    //       {renderMoveNotation(move, index)}
-    //     </div>)}
-    // </div>
-    //</div>
   )
 }

@@ -145,6 +145,7 @@ export class Board {
   }  
 
   markPossibleMoveSquares(){
+    console.log(this.selectedPiece)
     const squaresToMark = this.selectedPiecesPossibleMoves
     for (let i = 0; i < squaresToMark.length; i++){
       const [col, row] = squaresToMark[i]
@@ -179,7 +180,9 @@ export class Board {
   }
 
   checkForPromotion(toSquare){
-    if (this.selectedPiece.type !== "pawn"){ return false }
+    if (this.selectedPiece === null || this.selectedPiece.type !== "pawn"){
+      return false 
+      }
     const [toRow, toCol] = toSquare
 
     let promotionRow
