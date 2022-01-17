@@ -30,7 +30,6 @@ const getMoveNumber = (moveList, move) => {
   return (Math.round(moveList.indexOf(move)/2+1))
 }
 
-// NESTING WILL BE USEFUL HERE
 const renderMoveNotation = (move, index) => {
   let moveNotation
   const pieceAbbreviation = pieceAbbreviations[move.piece.type]
