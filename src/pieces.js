@@ -9,9 +9,22 @@ class King {
     } else if(color === "black"){
       this.symbol = pieceSymbols.blackKing
     }
+    this.unsafeSquares = null
   }
+
+  findUnsafeSquares(board){
+    if(this.color === "white"){
+      return board.squaresAttackedByBlack
+    }
+    if(this.color === "black") { 
+      return board.squaresAttackedByWhite
+    }
+  }
+
   findPossibleMoves(board, fromSquare){
+      this.unsafeSquares = this.findUnsafeSquares(board)
       const possibleMoves = []
+
       const [fromRow, fromCol] = fromSquare
       const kingDirections = {
         "North": [fromRow - 1, fromCol],
@@ -25,7 +38,8 @@ class King {
       }
       for (const direction in kingDirections) {
         const possibleSquare = kingDirections[direction]
-        if (!board.isSquareOnBoard(possibleSquare)) continue
+        if (board.arrayContainsSquare(this.unsafeSquares, possibleSquare)) { continue }
+        if (!board.isSquareOnBoard(possibleSquare)){ continue }
         if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
           continue
         }
