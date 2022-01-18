@@ -348,21 +348,25 @@ const whiteKnight = new Knight("white")
 const whiteBishop = new Bishop("white")
 const whiteRook = new Rook("white")
 const whiteQueen = new Queen("white")
+const whiteKing = new King("white")
 
 const blackPawn = new Pawn("black")
 const blackKnight = new Knight("black")
 const blackBishop = new Bishop("black")
 const blackRook = new Rook("black")
 const blackQueen = new Queen("black")
+const blackKing = new King("black")
 
 pieces.whitePawn = whitePawn
 pieces.whiteKnight = whiteKnight
 pieces.whiteBishop = whiteBishop
 pieces.whiteRook = whiteRook
 pieces.whiteQueen = whiteQueen
+pieces.whiteKing = whiteKing
 
 pieces.blackPawn = blackPawn
 pieces.blackKnight = blackKnight
 pieces.blackBishop = blackBishop
 pieces.blackRook = blackRook
 pieces.blackQueen = blackQueen
+pieces.blackKing = blackKing

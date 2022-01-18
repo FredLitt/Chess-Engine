@@ -59,18 +59,16 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[6][1].piece = pieces.whitePawn
-    this.squares[3][3].piece = pieces.blackPawn
-    this.squares[2][2].piece = pieces.whiteRook
-    this.squares[4][5].piece = pieces.whiteQueen
-    this.squares[3][5].piece = pieces.blackBishop
-  }
+    this.squares[7][1].piece = pieces.whiteRook
+    this.squares[2][4].piece = pieces.blackKing
+    this.squares[4][7].piece = pieces.whiteKing
+    this.squares[3][5].piece = pieces.blackRook  }
 
   findControlledSquares(color){
     const attackedSquares = []
-    for (let i = 0; i < 8; i++){
-      for (let j = 0; j < 8; j++){
-        const currentSquare = this.squares[i][j]
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        const currentSquare = this.squares[row][col]
         const currentSquaresPiece = (currentSquare.piece)
         const squareIsEmpty = (currentSquaresPiece === null)
         if(squareIsEmpty || currentSquaresPiece.color !== color) {
@@ -207,6 +205,32 @@ export class Board {
     promotionSquare.piece = promotionChoice
     promotionSquare.piece.originallyPawn = true
   }
+  
+  seeIfKingInCheck(){
+    for(const [row, col] of this.squaresAttackedByBlack){
+      const attackedSquare = this.squares[row][col]
+      if(attackedSquare.piece === null) { continue }
+      const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'white')
+      if(attackedSquareHasWhiteKing){
+        this.whiteKingInCheck = true
+        return true
+      } else {
+        return false
+      }
+    }
+
+    for(const [row, col] of this.squaresAttackedByWhite){
+      const attackedSquare = this.squares[row][col]
+      if(attackedSquare.piece === null) { continue }
+      const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'black')
+      if(attackedSquareHasWhiteKing){
+        this.whiteKingInCheck = true
+        return true
+      } else {
+        return false
+      }
+    }
+  }
 
   movePiece(toSquare, promotionChoice){
     const fromSquare = this.selectedPiecesSquare
@@ -228,19 +252,19 @@ export class Board {
         this.captureEnPassant(toSquare)
         additionalMoveData.wasACapture = true
       }
-      // if (this.isMoveACheck()){
-      //   // king is in check
-      //   additionalMoveData.isCheck = true
-      // }
       this.updateBoard(startSquare, endSquare)
       if (promotionChoice){
         this.promote(promotionChoice, endSquare)
         additionalMoveData.promotionChoice = promotionChoice.type
       }
+      this.markControlledSquares()
+      if (this.seeIfKingInCheck()){
+        console.log('check')
+      }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }
     this.deselectPiece()
-    this.markControlledSquares()
+
   }
 
   // Updates board state to remember controlled squares.

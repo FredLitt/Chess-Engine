@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { pieces } from './pieces'
 import PromotionPopUp from './PromotionPopUp'
 
 export default function BoardUI(props){
