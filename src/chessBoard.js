@@ -87,11 +87,6 @@ export class Board {
     return attackedSquares
   }
 
-  determineWhoseTurn(){
-    if (this.playeedMoveList.length % 2 === 0) { return "white" }
-    else { return "black" }
-  }
-
   isSquareOnBoard(square) {
     const [row, col] = square
     return row <= 7 && col <= 7 && row >= 0 && col >= 0
@@ -129,6 +124,11 @@ export class Board {
   addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData){ 
     const movedPiece = this.selectedPiece
     this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, additionalMoveData))
+  }
+
+  getPiecesColor(coordinates){
+    const [row, col] = coordinates
+    return this.squares[row][col].piece.color
   }
 
   selectPieceToMove(coordinates){
@@ -215,6 +215,7 @@ export class Board {
         this.whiteKingInCheck = true
         return true
       } else {
+        this.whiteKingInCheck = false
         return false
       }
     }
@@ -224,12 +225,18 @@ export class Board {
       if(attackedSquare.piece === null) { continue }
       const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'black')
       if(attackedSquareHasWhiteKing){
-        this.whiteKingInCheck = true
+        this.blackKingInCheck = true
         return true
       } else {
+        this.blackKingInCheck = false
         return false
       }
     }
+  }
+
+  determineWhoseTurn(){
+    if (this.playedMoveList.length % 2 === 0) { return "white" }
+    else { return "black" }
   }
 
   movePiece(toSquare, promotionChoice){
@@ -258,13 +265,10 @@ export class Board {
         additionalMoveData.promotionChoice = promotionChoice.type
       }
       this.markControlledSquares()
-      if (this.seeIfKingInCheck()){
-        console.log('check')
-      }
+      this.seeIfKingInCheck()
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }
     this.deselectPiece()
-
   }
 
   // Updates board state to remember controlled squares.

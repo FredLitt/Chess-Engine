@@ -22,6 +22,10 @@ export default function BoardUI(props){
     const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
     if (squareHasPiece && pieceToMove === null){
+      const whoseTurn = boardLogic.determineWhoseTurn()
+      const piecesColor = boardLogic.getPiecesColor(squaresCoordinates)
+      const correctPlayersTurn = (whoseTurn === piecesColor)
+      if (!correctPlayersTurn) { return }
       boardLogic.selectPieceToMove(squaresCoordinates)
       setPieceToMove("selected")
     }
