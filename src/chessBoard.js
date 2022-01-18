@@ -64,24 +64,26 @@ export class Board {
     this.squares[4][7].piece = pieces.whiteKing
     this.squares[3][5].piece = pieces.blackRook  }
 
-  findControlledSquares(color){
+  findAttackedSquares(color){
     const attackedSquares = []
     for (let row = 0; row < 8; row++){
       for (let col = 0; col < 8; col++){
         const currentSquare = this.squares[row][col]
-        const currentSquaresPiece = (currentSquare.piece)
-        const squareIsEmpty = (currentSquaresPiece === null)
-        if(squareIsEmpty || currentSquaresPiece.color !== color) {
+        const squareIsEmpty = (currentSquare.piece === null)
+        if(squareIsEmpty || currentSquare.piece.color !== color) {
           continue
         }
-        const squareHasPiece = (currentSquaresPiece.type !== 'pawn')
-        const squareHasPawn = (currentSquaresPiece.type === 'pawn')
-        if(squareHasPiece){
-          attackedSquares.push(...currentSquaresPiece.findPossibleMoves(this, currentSquare.coordinate))
+        const squareHasKing = (currentSquare.piece.type === 'king')
+        const squareHasPawn = (currentSquare.piece.type === 'pawn')
+        const squareHasOtherPiece = (currentSquare.piece.type !== 'pawn' && currentSquare.piece.type !== 'king')
+
+        if(squareHasPawn || squareHasKing){
+          attackedSquares.push(...currentSquare.piece.findControlledSquares(this, currentSquare.coordinate))
         }
-        if(squareHasPawn){
-          attackedSquares.push(...currentSquaresPiece.findPossibleCaptures(this, currentSquare.coordinate))
+        if(squareHasOtherPiece){
+          attackedSquares.push(...currentSquare.piece.findPossibleMoves(this, currentSquare.coordinate))
         }
+        
       }
     }
     return attackedSquares
@@ -274,8 +276,8 @@ export class Board {
   // Updates board state to remember controlled squares.
   // (Controlled means the player could attack the square.)
   markControlledSquares(){
-    this.squaresAttackedByWhite = this.findControlledSquares("white")
-    this.squaresAttackedByBlack = this.findControlledSquares("black")
+    this.squaresAttackedByWhite = this.findAttackedSquares("white")
+    this.squaresAttackedByBlack = this.findAttackedSquares("black")
 
     //Reset all squares to not be controlled
     for (const row of this.squares) {

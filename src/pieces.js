@@ -12,6 +12,28 @@ class King {
     this.unsafeSquares = null
   }
 
+  findControlledSquares(board, fromSquare){
+     const controlledSquares = []
+
+    const [fromRow, fromCol] = fromSquare
+    const kingDirections = {
+      "North": [fromRow - 1, fromCol],
+      "South": [fromRow + 1, fromCol],
+      "East": [fromRow, fromCol + 1],
+      "West": [fromRow, fromCol - 1],
+      "NorthWest": [fromRow - 1, fromCol - 1],
+      "NorthEast": [fromRow - 1, fromCol + 1],
+      "SouthWest": [fromRow + 1, fromCol - 1],
+      "SouthEast": [fromRow + 1, fromCol + 1]
+    }
+    for (const direction in kingDirections) {
+      const possibleSquare = kingDirections[direction]
+       if (!board.isSquareOnBoard(possibleSquare)){ continue }
+      controlledSquares.push(possibleSquare)
+    }
+    return controlledSquares
+  }
+
   findUnsafeSquares(board){
     if(this.color === "white"){
       return board.squaresAttackedByBlack
@@ -255,8 +277,8 @@ export class Pawn {
       }
   }
 
-  findPossibleCaptures(board, fromSquare){
-    let possibleCaptures = []
+  findControlledSquares(board, fromSquare){
+    let controlledSquares = []
     const [fromRow, fromCol] = fromSquare
     let pawnCaptures
     let rowBeforePromotion
@@ -265,13 +287,11 @@ export class Pawn {
         "CaptureWest": [fromRow + 1, fromCol - 1],
         "CaptureEast": [fromRow + 1, fromCol + 1]
       }
-      rowBeforePromotion = 6
     } if (this.color === "black") {
       pawnCaptures = {
         "CaptureWest": [fromRow - 1, fromCol + 1],
         "CaptureEast": [fromRow - 1, fromCol - 1]
       }
-      rowBeforePromotion = 1
     }
     for (const capture in pawnCaptures){
       let possibleSquare = pawnCaptures[capture]
@@ -279,9 +299,9 @@ export class Pawn {
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) )
         if (invalidMove) { continue }
       }
-      possibleCaptures.push(possibleSquare)
+      controlledSquares.push(possibleSquare)
     }
-    return possibleCaptures
+    return controlledSquares
   }
 
   findPossibleMoves(board, fromSquare, lastPlayedMove){
