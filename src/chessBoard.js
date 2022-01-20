@@ -10,6 +10,7 @@ export class PlayedMove {
 }
 // Note about coordinates:
 // Each square is [row, col], kind of like chess notation
+// TODO: Selectedpiece properties stored in an object
 export class Board {
   constructor() {
     this.squares = []
@@ -59,35 +60,19 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
+    this.squares[1][6].piece = pieces.blackBishop
+    this.squares[3][3].piece = pieces.whitePawn
+    this.squares[5][0].piece = pieces.whiteQueen
+    this.squares[1][6].piece = pieces.blackKnight
     this.squares[7][1].piece = pieces.whiteRook
-    this.squares[2][4].piece = pieces.blackKing
-    this.squares[4][7].piece = pieces.whiteKing
+    this.squares[2][2].piece = pieces.blackKing
+    this.squares[4][6].piece = pieces.whiteKing
     this.squares[3][5].piece = pieces.blackRook  }
 
-  findAttackedSquares(color){
-    const attackedSquares = []
-    for (let row = 0; row < 8; row++){
-      for (let col = 0; col < 8; col++){
-        const currentSquare = this.squares[row][col]
-        const squareIsEmpty = (currentSquare.piece === null)
-        if(squareIsEmpty || currentSquare.piece.color !== color) {
-          continue
-        }
-        const squareHasKing = (currentSquare.piece.type === 'king')
-        const squareHasPawn = (currentSquare.piece.type === 'pawn')
-        const squareHasOtherPiece = (currentSquare.piece.type !== 'pawn' && currentSquare.piece.type !== 'king')
-
-        if(squareHasPawn || squareHasKing){
-          attackedSquares.push(...currentSquare.piece.findControlledSquares(this, currentSquare.coordinate))
-        }
-        if(squareHasOtherPiece){
-          attackedSquares.push(...currentSquare.piece.findPossibleMoves(this, currentSquare.coordinate))
-        }
-        
+  determineWhoseTurn(){
+      if (this.playedMoveList.length % 2 === 0) { return "white" }
+      else { return "black" }
       }
-    }
-    return attackedSquares
-  }
 
   isSquareOnBoard(square) {
     const [row, col] = square
@@ -143,8 +128,7 @@ export class Board {
 
   determinePiecesPossibleMoves(pieceToMove, fromSquare){
     const board = this
-    const lastPlayedMove = this.playedMoveList[this.playedMoveList.length-1]
-    this.selectedPiecesPossibleMoves = pieceToMove.findPossibleMoves(board, fromSquare, lastPlayedMove)
+    this.selectedPiecesPossibleMoves = pieceToMove.findPossibleMoves(board, fromSquare)
     this.markPossibleMoveSquares()
   }  
 
@@ -208,37 +192,12 @@ export class Board {
     promotionSquare.piece.originallyPawn = true
   }
   
-  seeIfKingInCheck(){
-    for(const [row, col] of this.squaresAttackedByBlack){
-      const attackedSquare = this.squares[row][col]
-      if(attackedSquare.piece === null) { continue }
-      const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'white')
-      if(attackedSquareHasWhiteKing){
-        this.whiteKingInCheck = true
-        return true
-      } else {
-        this.whiteKingInCheck = false
-        return false
-      }
-    }
-
-    for(const [row, col] of this.squaresAttackedByWhite){
-      const attackedSquare = this.squares[row][col]
-      if(attackedSquare.piece === null) { continue }
-      const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'black')
-      if(attackedSquareHasWhiteKing){
-        this.blackKingInCheck = true
-        return true
-      } else {
-        this.blackKingInCheck = false
-        return false
-      }
-    }
-  }
-
-  determineWhoseTurn(){
-    if (this.playedMoveList.length % 2 === 0) { return "white" }
-    else { return "black" }
+  determineIfCheckMate(){
+    // runs after a king is placed in check
+    // looks at every possible move for checked king's player
+    // sees if resulting position still leaves king in check
+    // if so return true and run game over
+    // if not then return false and play continues
   }
 
   movePiece(toSquare, promotionChoice){
@@ -268,9 +227,55 @@ export class Board {
       }
       this.markControlledSquares()
       this.seeIfKingInCheck()
+      
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }
     this.deselectPiece()
+  }
+
+  seeIfKingInCheck(){
+    for(const [row, col] of this.squaresAttackedByBlack){
+      const attackedSquare = this.squares[row][col]
+      if(attackedSquare.piece === null) { continue }
+      const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'white')
+      if(attackedSquareHasWhiteKing){
+        this.whiteKingInCheck = true
+        return true
+      } else {
+        this.whiteKingInCheck = false
+        return false
+      }
+    }
+
+    for(const [row, col] of this.squaresAttackedByWhite){
+      const attackedSquare = this.squares[row][col]
+      if(attackedSquare.piece === null) { continue }
+      const attackedSquareHasBlackKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'black')
+      if(attackedSquareHasBlackKing){
+        this.blackKingInCheck = true
+        return true
+      } else {
+        this.blackKingInCheck = false
+        return false
+      }
+    }
+  }
+
+  // change all pieces to use rook example
+  findAttackedSquares(color){
+    const attackedSquares = []
+    const findAllControlledSquares = true
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        const currentSquare = this.squares[row][col]
+        const squareIsEmpty = (currentSquare.piece === null)
+        if(squareIsEmpty || currentSquare.piece.color !== color) {
+          continue
+        }
+        attackedSquares.push(...currentSquare.piece.findPossibleMoves(this, currentSquare.coordinate, findAllControlledSquares))
+      }
+    }
+    return attackedSquares
   }
 
   // Updates board state to remember controlled squares.
@@ -301,16 +306,22 @@ export class Board {
     endSquare.piece = this.selectedPiece
   }
 
-  squaresEqual(square1, square2) {
-    return square1[0] === square2[0] && square1[1] === square2[1]
+  squaresAreEqual(square1, square2) {
+    return (square1[0] === square2[0] && square1[1] === square2[1])
   }
 
-  arrayContainsSquare(moveList, square){
-    for (let i = 0; i < moveList.length; i++){
-      if (this.squaresEqual(moveList[i], square)) { 
+  arrayContainsSquare(listOfSquares, square){
+    if(listOfSquares.length === 0) { return }
+    for (let i = 0; i < listOfSquares.length; i++){
+      if (this.squaresAreEqual(listOfSquares[i], square)) { 
         return true 
       }
     }
+  }
+
+  findLastPlayedMove(){
+    if (this.playedMoveList.length === 0){ return null }
+    else { return this.playedMoveList[this.playedMoveList.length-1] }
   }
 
   deselectPiece(){

@@ -12,28 +12,6 @@ class King {
     this.unsafeSquares = null
   }
 
-  findControlledSquares(board, fromSquare){
-     const controlledSquares = []
-
-    const [fromRow, fromCol] = fromSquare
-    const kingDirections = {
-      "North": [fromRow - 1, fromCol],
-      "South": [fromRow + 1, fromCol],
-      "East": [fromRow, fromCol + 1],
-      "West": [fromRow, fromCol - 1],
-      "NorthWest": [fromRow - 1, fromCol - 1],
-      "NorthEast": [fromRow - 1, fromCol + 1],
-      "SouthWest": [fromRow + 1, fromCol - 1],
-      "SouthEast": [fromRow + 1, fromCol + 1]
-    }
-    for (const direction in kingDirections) {
-      const possibleSquare = kingDirections[direction]
-       if (!board.isSquareOnBoard(possibleSquare)){ continue }
-      controlledSquares.push(possibleSquare)
-    }
-    return controlledSquares
-  }
-
   findUnsafeSquares(board){
     if(this.color === "white"){
       return board.squaresAttackedByBlack
@@ -43,10 +21,9 @@ class King {
     }
   }
 
-  findPossibleMoves(board, fromSquare){
-      this.unsafeSquares = this.findUnsafeSquares(board)
+  findPossibleMoves(board, fromSquare, findingControlledSquares){
       const possibleMoves = []
-
+      
       const [fromRow, fromCol] = fromSquare
       const kingDirections = {
         "North": [fromRow - 1, fromCol],
@@ -60,6 +37,12 @@ class King {
       }
       for (const direction in kingDirections) {
         const possibleSquare = kingDirections[direction]
+
+        if(findingControlledSquares && board.isSquareOnBoard(possibleSquare)){ 
+          possibleMoves.push(possibleSquare)
+          continue 
+        } else {
+          this.unsafeSquares = this.findUnsafeSquares(board)
         if (board.arrayContainsSquare(this.unsafeSquares, possibleSquare)) { continue }
         if (!board.isSquareOnBoard(possibleSquare)){ continue }
         if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
@@ -70,6 +53,7 @@ class King {
           continue
         }
         possibleMoves.push(possibleSquare)
+        }
     }
     return possibleMoves
   }
@@ -85,8 +69,8 @@ class Queen {
       this.symbol = pieceSymbols.blackQueen
     }
   }
-  findPossibleMoves(board, fromSquare){
-    const possibleSquares = []
+  findPossibleMoves(board, fromSquare, findingControlledSquares){
+    const possibleMoves = []
     const [fromRow, fromCol] = fromSquare
     const completedDirections = []
     for (let i = 1; i < 8; i++) {
@@ -103,20 +87,24 @@ class Queen {
       completedDirections.forEach(direction => delete queenDirections[direction])
       for (const direction in queenDirections) {
         const possibleSquare = queenDirections[direction]
+        
         if (!board.isSquareOnBoard(possibleSquare)) continue
         if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
-          completedDirections.push(direction)
-          continue
-        }
+          if (findingControlledSquares){
+              possibleMoves.push(possibleSquare)
+            }
+            completedDirections.push(direction)
+            continue
+          }
         if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
-          possibleSquares.push(possibleSquare)
+          possibleMoves.push(possibleSquare)
           completedDirections.push(direction)
           continue
         }
-        possibleSquares.push(possibleSquare)
+        possibleMoves.push(possibleSquare)
       }
     }
-    return possibleSquares
+    return possibleMoves
   }
 }
 
@@ -130,7 +118,7 @@ class Bishop {
       this.symbol = pieceSymbols.blackBishop
     }
   }
-  findPossibleMoves(board, fromSquare){
+  findPossibleMoves(board, fromSquare, findingControlledSquares){
     let possibleMoves = []
     const [fromRow, fromCol] = fromSquare
     const completedDirections = []
@@ -146,6 +134,9 @@ class Bishop {
           const possibleSquare = bishopDirections[direction]
           if (!board.isSquareOnBoard(possibleSquare)) { continue }
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
+            if (findingControlledSquares){
+              possibleMoves.push(possibleSquare)
+            }
             completedDirections.push(direction)
             continue
           }
@@ -171,7 +162,7 @@ class Rook {
       this.symbol = pieceSymbols.blackRook
     }
   }
-  findPossibleMoves(board, fromSquare){
+  findPossibleMoves(board, fromSquare, findingControlledSquares){
     let possibleMoves = []
     const [fromRow, fromCol] = fromSquare
     const completedDirections = []
@@ -189,8 +180,14 @@ class Rook {
             continue
           }
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
+            if (findingControlledSquares === true){
+              possibleMoves.push(possibleSquare)
+              completedDirections.push(direction)
+              continue
+            } else {
             completedDirections.push(direction)
             continue
+            }
           }
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
             possibleMoves.push(possibleSquare)
@@ -214,7 +211,7 @@ class Knight {
         this.symbol = pieceSymbols.blackKnight
       }
     }
-    findPossibleMoves(board, fromSquare){
+    findPossibleMoves(board, fromSquare, findingControlledSquares){
       const possibleMoves = []
       const [fromRow, fromCol] = fromSquare
       const knightMoves = {
@@ -229,8 +226,12 @@ class Knight {
         }
         for (const move in knightMoves) {
           const possibleSquare = knightMoves[move]
-          if (!board.isSquareOnBoard(possibleSquare)) continue
+          
+          if (!board.isSquareOnBoard(possibleSquare)) { continue }
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
+            if(findingControlledSquares){
+              possibleMoves.push(possibleSquare)
+              }
             continue
           }
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
@@ -277,34 +278,8 @@ export class Pawn {
       }
   }
 
-  findControlledSquares(board, fromSquare){
-    let controlledSquares = []
-    const [fromRow, fromCol] = fromSquare
-    let pawnCaptures
-    let rowBeforePromotion
-    if (this.color === "white") {
-      pawnCaptures = {
-        "CaptureWest": [fromRow + 1, fromCol - 1],
-        "CaptureEast": [fromRow + 1, fromCol + 1]
-      }
-    } if (this.color === "black") {
-      pawnCaptures = {
-        "CaptureWest": [fromRow - 1, fromCol + 1],
-        "CaptureEast": [fromRow - 1, fromCol - 1]
-      }
-    }
-    for (const capture in pawnCaptures){
-      let possibleSquare = pawnCaptures[capture]
-      if (capture === "CaptureWest" || capture === "CaptureEast") {
-        const invalidMove = (!board.isSquareOnBoard(possibleSquare) )
-        if (invalidMove) { continue }
-      }
-      controlledSquares.push(possibleSquare)
-    }
-    return controlledSquares
-  }
-
-  findPossibleMoves(board, fromSquare, lastPlayedMove){
+  findPossibleMoves(board, fromSquare, findingControlledSquares){
+    const lastPlayedMove = board.findLastPlayedMove()
     let possibleMoves = []
     const [fromRow, fromCol] = fromSquare
     let pawnMoves
@@ -331,7 +306,7 @@ export class Pawn {
     }
     const isOnStartRow = (fromRow === startRow)
     let enPassantCaptureSquare = null
-    if(lastPlayedMove !== undefined){
+    if(lastPlayedMove !== null){
       enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
       }
     if (enPassantCaptureSquare !== null){
@@ -340,6 +315,7 @@ export class Pawn {
     for (const move in pawnMoves) {
       const possibleSquare = pawnMoves[move]
       if (move === "ForwardOne") {
+        if(findingControlledSquares){ continue }
         const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)
         if (invalidMove) {
           delete pawnMoves["ForwardTwo"]
@@ -347,6 +323,7 @@ export class Pawn {
         }
       }
       if (move === "ForwardTwo") {
+        if(findingControlledSquares){ continue }
         const invalidMove = (!isOnStartRow || board.isSquareOccupied(fromSquare, possibleSquare))
         if (invalidMove) { continue }
       }
@@ -354,7 +331,6 @@ export class Pawn {
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
         if (invalidMove) { continue }
       }
-      
       possibleMoves.push(possibleSquare)
     }
     return possibleMoves
