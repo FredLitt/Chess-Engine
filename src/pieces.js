@@ -11,20 +11,20 @@ class King {
     }
   }
 
+  //temporarily removes king from board in order to check all of enemy's controlled squares
   isMoveSafe(board, fromSquare, testSquare){
     let opponentsColor
-    if (this.color = "white") { opponentsColor = "black" }
-    if (this.color = "black") { opponentsColor = "white" }
+    if (this.color === "white") { opponentsColor = "black" }
+    if (this.color === "black") { opponentsColor = "white" }
     const [fromRow, fromCol] = fromSquare
     const [testRow, testCol] = testSquare
 
     board.squares[fromRow][fromCol].piece = null
-    const unsafeSquares = board.findAttackedSquares(opponentsColor)
+    let unsafeSquares = board.findAttackedSquares(opponentsColor)
+    board.squares[fromRow][fromCol].piece = this
     if(board.arrayContainsSquare(unsafeSquares, testSquare)){
-      board.squares[fromRow][fromCol].piece = this
       return false
     }
-    board.squares[fromRow][fromCol].piece = this
     return true
   }
 
@@ -53,11 +53,8 @@ class King {
         if(invalidMove) { continue }
         if(this.isMoveSafe(board, fromSquare, possibleSquare)){
           possibleMoves.push(possibleSquare)
-          
           continue
         }
-        
-        //possibleMoves.push(possibleSquare)
         }
     }
     return possibleMoves
