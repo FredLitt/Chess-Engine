@@ -9,16 +9,23 @@ class King {
     } else if(color === "black"){
       this.symbol = pieceSymbols.blackKing
     }
-    this.unsafeSquares = null
   }
 
-  findUnsafeSquares(board){
-    if(this.color === "white"){
-      return board.squaresAttackedByBlack
+  isMoveSafe(board, fromSquare, testSquare){
+    let opponentsColor
+    if (this.color = "white") { opponentsColor = "black" }
+    if (this.color = "black") { opponentsColor = "white" }
+    const [fromRow, fromCol] = fromSquare
+    const [testRow, testCol] = testSquare
+
+    board.squares[fromRow][fromCol].piece = null
+    const unsafeSquares = board.findAttackedSquares(opponentsColor)
+    if(board.arrayContainsSquare(unsafeSquares, testSquare)){
+      board.squares[fromRow][fromCol].piece = this
+      return false
     }
-    if(this.color === "black") { 
-      return board.squaresAttackedByWhite
-    }
+    board.squares[fromRow][fromCol].piece = this
+    return true
   }
 
   findPossibleMoves(board, fromSquare, findingControlledSquares){
@@ -42,17 +49,15 @@ class King {
           possibleMoves.push(possibleSquare)
           continue 
         } else {
-          this.unsafeSquares = this.findUnsafeSquares(board)
-        if (board.arrayContainsSquare(this.unsafeSquares, possibleSquare)) { continue }
-        if (!board.isSquareOnBoard(possibleSquare)){ continue }
-        if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
-          continue
-        }
-        if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
+        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece")
+        if(invalidMove) { continue }
+        if(this.isMoveSafe(board, fromSquare, possibleSquare)){
           possibleMoves.push(possibleSquare)
+          
           continue
         }
-        possibleMoves.push(possibleSquare)
+        
+        //possibleMoves.push(possibleSquare)
         }
     }
     return possibleMoves
