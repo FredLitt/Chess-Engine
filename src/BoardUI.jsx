@@ -4,7 +4,7 @@ import PromotionPopUp from './PromotionPopUp'
 
 export default function BoardUI(props){
 
-  const {board, setBoard, boardLogic} = props
+  const {boardState, setBoardState, board} = props
 
   const [pieceToMove, setPieceToMove] = useState(null)
 
@@ -18,24 +18,30 @@ export default function BoardUI(props){
     return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
+  //const selectPieceToMove = () => {
+  //
+  //}
+
+  //
+
   const movePiece = (square) => {
     const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
     if (squareHasPiece && pieceToMove === null){
-      const whoseTurn = boardLogic.determineWhoseTurn()
-      const piecesColor = boardLogic.getPiecesColor(squaresCoordinates)
+      const whoseTurn = board.determineWhoseTurn()
+      const piecesColor = board.getPiecesColor(squaresCoordinates)
       const correctPlayersTurn = (whoseTurn === piecesColor)
       if (!correctPlayersTurn) { return }
-      boardLogic.selectPieceToMove(squaresCoordinates)
+      board.selectPieceToMove(squaresCoordinates)
       setPieceToMove("selected")
     }
     if (pieceToMove === "selected"){
-      const pawnWillPromote = boardLogic.checkForPromotion(squaresCoordinates)
+      const pawnWillPromote = board.checkForPromotion(squaresCoordinates)
       if(pawnWillPromote){
-        renderPromotionPopUp(boardLogic.selectedPiece.color, squaresCoordinates)
+        renderPromotionPopUp(board.selectedPiece.color, squaresCoordinates)
       } else {
-      boardLogic.movePiece(squaresCoordinates)
-      setBoard({...board})
+      board.movePiece(squaresCoordinates)
+      setBoardState({...boardState})
       setPieceToMove(null)
       }
     } 
@@ -43,14 +49,14 @@ export default function BoardUI(props){
 
   const renderPromotionPopUp = (color, promotionSquare) => {
     setPawnPromotion(
-          {pawnIsPromoting: true,
-          color: color,
-          promotionSquare: promotionSquare})
+      {pawnIsPromoting: true,
+      color: color,
+      promotionSquare: promotionSquare})
   }
 
   const promote = (toSquare, promotionChoice) => {
-    boardLogic.movePiece(toSquare, promotionChoice)
-    setBoard({...board})
+    board.movePiece(toSquare, promotionChoice)
+    setBoardState({...boardState})
     setPieceToMove(null)
     setPawnPromotion(
       {pawnIsPromoting: false,
@@ -81,13 +87,13 @@ export default function BoardUI(props){
     <>
       <PromotionPopUp 
         promotionData={pawnPromotion}
-        board={board}
+        board={boardState}
         promote={promote}/>
       <table 
         id="board"
         cellSpacing="0">
         <tbody>
-        {board.squares.map((row, index) =>
+        {boardState.squares.map((row, index) =>
           <tr 
             className="board-row"
             key={index}>

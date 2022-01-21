@@ -1,5 +1,7 @@
 import { pieces } from './pieces.js'
 
+// EVERY MOVE HAS TO CHECK AND MAKE SURE IT DOESN'T EXPOSE KING
+
 export class PlayedMove {
   constructor(piece, fromSquare, toSquare, additionalMoveData) {
     this.piece = piece
@@ -28,6 +30,11 @@ export class Board {
     this.playedMoveList = []
     this.blackCapturedPieces = []
     this.whiteCapturedPieces = []
+    // this.selectedPiece = {
+    //   piece: null,
+    //   square: null,
+    //   possibleMoves: []
+    // }
     this.selectedPiece = null
     this.selectedPiecesSquare = null
     this.selectedPiecesPossibleMoves = []
@@ -62,6 +69,7 @@ export class Board {
 
     this.squares[1][6].piece = pieces.blackBishop
     this.squares[3][3].piece = pieces.whitePawn
+    this.squares[4][3].piece = pieces.blackPawn
     this.squares[5][0].piece = pieces.whiteQueen
     this.squares[1][6].piece = pieces.blackKnight
     this.squares[7][1].piece = pieces.whiteRook
@@ -128,7 +136,7 @@ export class Board {
 
   determinePiecesPossibleMoves(pieceToMove, fromSquare){
     const board = this
-    this.selectedPiecesPossibleMoves = pieceToMove.findPossibleMoves(board, fromSquare)
+    this.selectedPiecesPossibleMoves = pieceToMove.findSquares(board, fromSquare)
     this.markPossibleMoveSquares()
   }  
 
@@ -166,21 +174,22 @@ export class Board {
     }
   }
 
+  //THIS IS BUGGY IF THERE's A PIECE ON THE TOSQUARE
   checkForPromotion(toSquare){
     if (this.selectedPiece === null || this.selectedPiece.type !== "pawn"){
       return false 
       }
-    const [toRow, toCol] = toSquare
+    const [fromRow, fromCol] = this.selectedPiecesSquare
 
-    let promotionRow
+    let rowBeforePromotion
     
     if (this.selectedPiece.color === "white"){
-      promotionRow = 7
+      rowBeforePromotion = 6
     }
     if (this.selectedPiece.color === "black"){
-      promotionRow = 0
+      rowBeforePromotion = 1
     }
-    if (promotionRow === toRow) { 
+    if (rowBeforePromotion === fromRow) { 
       return true 
       } else {
       return false 
@@ -199,6 +208,26 @@ export class Board {
     // if so return true and run game over
     // if not then return false and play continues
   }
+
+  //checkForMoveLegality()
+
+  //doesMoveExposeKing
+
+  // isMoveSafe(board, fromSquare, testSquare){
+  //   let opponentsColor
+  //   if (this.color === "white") { opponentsColor = "black" }
+  //   if (this.color === "black") { opponentsColor = "white" }
+  //   const [fromRow, fromCol] = fromSquare
+  //   const [testRow, testCol] = testSquare
+
+  //   board.squares[fromRow][fromCol].piece = null
+  //   let unsafeSquares = board.findAttackedSquares(opponentsColor)
+  //   board.squares[fromRow][fromCol].piece = this
+  //   if(board.arrayContainsSquare(unsafeSquares, testSquare)){
+  //     return false
+  //   }
+  //   return true
+  // }
 
   movePiece(toSquare, promotionChoice){
     const fromSquare = this.selectedPiecesSquare
@@ -261,7 +290,6 @@ export class Board {
     }
   }
 
-  // change all pieces to use rook example
   findAttackedSquares(color){
     const attackedSquares = []
     const findAllControlledSquares = true
@@ -272,7 +300,7 @@ export class Board {
         if(squareIsEmpty || currentSquare.piece.color !== color) {
           continue
         }
-        attackedSquares.push(...currentSquare.piece.findPossibleMoves(this, currentSquare.coordinate, findAllControlledSquares))
+        attackedSquares.push(...currentSquare.piece.findSquares(this, currentSquare.coordinate, findAllControlledSquares))
       }
     }
     return attackedSquares
