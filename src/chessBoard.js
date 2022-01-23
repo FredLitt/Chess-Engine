@@ -30,14 +30,11 @@ export class Board {
     this.playedMoveList = []
     this.blackCapturedPieces = []
     this.whiteCapturedPieces = []
-    // this.selectedPiece = {
-    //   piece: null,
-    //   square: null,
-    //   possibleMoves: []
-    // }
-    this.selectedPiece = null
-    this.selectedPiecesSquare = null
-    this.selectedPiecesPossibleMoves = []
+    this.selectedPiece = {
+      piece: null,
+      square: null,
+      possibleMoves: []
+    }
     this.squaresAttackedByWhite = []
     this.squaresAttackedByBlack = []
     this.whiteKingInCheck = false
@@ -68,14 +65,11 @@ export class Board {
     // this.squares[7][7].piece = pieces.blackRook
 
     this.squares[1][6].piece = pieces.blackBishop
-    this.squares[3][3].piece = pieces.whitePawn
     this.squares[4][3].piece = pieces.blackPawn
-    this.squares[5][0].piece = pieces.whiteQueen
-    this.squares[1][6].piece = pieces.blackKnight
-    this.squares[7][1].piece = pieces.whiteRook
-    this.squares[2][2].piece = pieces.blackKing
+    this.squares[5][2].piece = pieces.whiteQueen
+    this.squares[3][4].piece = pieces.blackKing
     this.squares[4][6].piece = pieces.whiteKing
-    this.squares[3][5].piece = pieces.blackRook  }
+      }
 
   determineWhoseTurn(){
       if (this.playedMoveList.length % 2 === 0) { return "white" }
@@ -117,7 +111,7 @@ export class Board {
   }
   
   addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData){ 
-    const movedPiece = this.selectedPiece
+    const movedPiece = this.selectedPiece.piece
     this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, additionalMoveData))
   }
 
@@ -127,21 +121,21 @@ export class Board {
   }
 
   selectPieceToMove(coordinates){
-    this.selectedPiecesSquare = coordinates
+    this.selectedPiece.square = coordinates
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
-    this.selectedPiece = pieceToMove
+    this.selectedPiece.piece = pieceToMove
     this.determinePiecesPossibleMoves(pieceToMove, coordinates)
   }
 
   determinePiecesPossibleMoves(pieceToMove, fromSquare){
     const board = this
-    this.selectedPiecesPossibleMoves = pieceToMove.findSquares(board, fromSquare)
+    this.selectedPiece.possibleMoves = pieceToMove.findSquares(board, fromSquare)
     this.markPossibleMoveSquares()
   }  
 
   markPossibleMoveSquares(){
-    const squaresToMark = this.selectedPiecesPossibleMoves
+    const squaresToMark = this.selectedPiece.possibleMoves
     for (let i = 0; i < squaresToMark.length; i++){
       const [col, row] = squaresToMark[i]
       this.squares[col][row].isPossibleMove = true
@@ -149,9 +143,9 @@ export class Board {
   }
 
   checkIfEnPassantMove(toSquare){
-    const isAPawnMove = (this.selectedPiece.type === "pawn")
+    const isAPawnMove = (this.selectedPiece.piece.type === "pawn")
     const [toRow, toCol] = toSquare
-    const [fromRow, fromCol] = this.selectedPiecesSquare
+    const [fromRow, fromCol] = this.selectedPiece.square
     const toSquareHasNoPiece = (this.squares[toRow][toCol].piece === null)
     const pawnIsCapturing = (fromCol !== toCol)
     if (isAPawnMove && pawnIsCapturing && toSquareHasNoPiece){
@@ -161,7 +155,7 @@ export class Board {
 
   captureEnPassant(toSquare){
     const [toRow, toCol] = toSquare
-    const capturingPawnColor = this.selectedPiece.color
+    const capturingPawnColor = this.selectedPiece.piece.color
     if (capturingPawnColor === "white"){
       const capturedPawn = this.squares[toRow-1][toCol].piece
       this.capturePiece(capturedPawn)
@@ -176,17 +170,17 @@ export class Board {
 
   //THIS IS BUGGY IF THERE's A PIECE ON THE TOSQUARE
   checkForPromotion(toSquare){
-    if (this.selectedPiece === null || this.selectedPiece.type !== "pawn"){
+    if (this.selectedPiece.piece === null || this.selectedPiece.piece.type !== "pawn"){
       return false 
       }
-    const [fromRow, fromCol] = this.selectedPiecesSquare
+    const [fromRow, fromCol] = this.selectedPiece.square
 
     let rowBeforePromotion
     
-    if (this.selectedPiece.color === "white"){
+    if (this.selectedPiece.piece.color === "white"){
       rowBeforePromotion = 6
     }
-    if (this.selectedPiece.color === "black"){
+    if (this.selectedPiece.piece.color === "black"){
       rowBeforePromotion = 1
     }
     if (rowBeforePromotion === fromRow) { 
@@ -213,27 +207,51 @@ export class Board {
 
   //doesMoveExposeKing
 
-  // isMoveSafe(board, fromSquare, testSquare){
-  //   let opponentsColor
-  //   if (this.color === "white") { opponentsColor = "black" }
-  //   if (this.color === "black") { opponentsColor = "white" }
-  //   const [fromRow, fromCol] = fromSquare
-  //   const [testRow, testCol] = testSquare
+  
+  findKingsSquare(color){
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        const squareToCheck = this.squares[row][col]
+        const squareIsEmpty = (squareToCheck.piece === null)
+        if(!squareIsEmpty && squareToCheck.piece.type === "king" && squareToCheck.piece.color === color){
+          return [row, col]
+        }
+      }
+    }
+  }
 
-  //   board.squares[fromRow][fromCol].piece = null
-  //   let unsafeSquares = board.findAttackedSquares(opponentsColor)
-  //   board.squares[fromRow][fromCol].piece = this
-  //   if(board.arrayContainsSquare(unsafeSquares, testSquare)){
-  //     return false
-  //   }
-  //   return true
-  // }
+  // method should test theoretical board position
+  // see if resulting position leaves moving piece king in danger
+  // (contained within the unsafeSquares)
+
+  moveExposesKing(movingPiece, fromSquare, testSquare){
+    let opponent
+    if (movingPiece.color === "white") { opponent = "black" }
+    if (movingPiece.color === "black") { opponent = "white" }
+    const [fromRow, fromCol] = fromSquare
+    const [testRow, testCol] = testSquare
+    const testSquarePiece = this.squares[testRow][testCol].piece
+
+    const kingsSquare = this.findKingsSquare(movingPiece.color)
+    this.squares[fromRow][fromCol].piece = null
+    this.squares[testRow][testCol].piece = movingPiece
+ 
+    let unsafeSquares = this.findAttackedSquares(opponent)
+
+    this.squares[fromRow][fromCol].piece = movingPiece
+    this.squares[testRow][testCol].piece = testSquarePiece
+
+    if(this.arrayContainsSquare(unsafeSquares, kingsSquare)){
+      return false
+    }
+    return true
+  }
 
   movePiece(toSquare, promotionChoice){
-    const fromSquare = this.selectedPiecesSquare
+    const fromSquare = this.selectedPiece.square
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
-    const possibleSquares = this.selectedPiecesPossibleMoves
+    const possibleSquares = this.selectedPiece.possibleMoves
     if (this.arrayContainsSquare(possibleSquares, toSquare)){
       const startSquare = this.squares[fromRow][fromCol]
       const endSquare = this.squares[toRow][toCol]
@@ -255,39 +273,32 @@ export class Board {
         additionalMoveData.promotionChoice = promotionChoice.type
       }
       this.markControlledSquares()
-      this.seeIfKingInCheck()
-      
+      if(this.seeIfKingInCheck(this.selectedPiece.piece)){
+ 
+        additionalMoveData.wasACheck = true
+      }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }
     this.deselectPiece()
   }
 
-  seeIfKingInCheck(){
-    for(const [row, col] of this.squaresAttackedByBlack){
-      const attackedSquare = this.squares[row][col]
-      if(attackedSquare.piece === null) { continue }
-      const attackedSquareHasWhiteKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'white')
-      if(attackedSquareHasWhiteKing){
-        this.whiteKingInCheck = true
-        return true
-      } else {
-        this.whiteKingInCheck = false
-        return false
-      }
+  seeIfKingInCheck(movedPiece){
+    let attackedSquares
+    let enemyKingsSquare
+    let kingToMark
+    if(movedPiece.color === "white"){
+      attackedSquares = this.squaresAttackedByWhite
+      enemyKingsSquare = this.findKingsSquare("black")
     }
-
-    for(const [row, col] of this.squaresAttackedByWhite){
-      const attackedSquare = this.squares[row][col]
-      if(attackedSquare.piece === null) { continue }
-      const attackedSquareHasBlackKing = (attackedSquare.piece.type === 'king' && attackedSquare.piece.color === 'black')
-      if(attackedSquareHasBlackKing){
-        this.blackKingInCheck = true
-        return true
-      } else {
-        this.blackKingInCheck = false
-        return false
-      }
+    if(movedPiece.color === "black"){
+      attackedSquares = this.squaresAttackedByBlack
+      enemyKingsSquare = this.findKingsSquare("white")
     }
+    
+    if(this.arrayContainsSquare(attackedSquares, enemyKingsSquare)){
+      return true
+    }
+    return false
   }
 
   findAttackedSquares(color){
@@ -331,7 +342,7 @@ export class Board {
 
   updateBoard(startSquare, endSquare){
     startSquare.piece = null
-    endSquare.piece = this.selectedPiece
+    endSquare.piece = this.selectedPiece.piece
   }
 
   squaresAreEqual(square1, square2) {
@@ -353,13 +364,15 @@ export class Board {
   }
 
   deselectPiece(){
-    const squaresToRemoveMarks = this.selectedPiecesPossibleMoves
+    const squaresToRemoveMarks = this.selectedPiece.possibleMoves
     for (let i = 0; i < squaresToRemoveMarks.length; i++){
       const [col, row] = squaresToRemoveMarks[i]
       delete this.squares[col][row].isPossibleMove
     }
-    this.selectedPiece = null
-    this.selectedPiecesSquare = null
-    this.selectedPiecesPossibleMoves = null
+    this.selectedPiece = {
+      piece: null,
+      square: null,
+      possibleMoves: []
+    }
   }
 }

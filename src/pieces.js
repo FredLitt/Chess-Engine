@@ -11,51 +11,52 @@ class King {
     }
   }
 
-  //temporarily removes king from board in order to check all of enemy's controlled squares
-  isMoveSafe(board, fromSquare, testSquare){
-    let opponentsColor
-    if (this.color === "white") { opponentsColor = "black" }
-    if (this.color === "black") { opponentsColor = "white" }
-    const [fromRow, fromCol] = fromSquare
-    const [testRow, testCol] = testSquare
-
-    board.squares[fromRow][fromCol].piece = null
-    let unsafeSquares = board.findAttackedSquares(opponentsColor)
-    board.squares[fromRow][fromCol].piece = this
-    if(board.arrayContainsSquare(unsafeSquares, testSquare)){
-      return false
+  findUnsafeSquares(board){
+    if(this.color === "white"){
+      return board.findAttackedSquares("black")
     }
-    return true
+    if(this.color === "black"){
+      return board.findAttackedSquares("white")
+    }
   }
 
   findSquares(board, fromSquare, findingControlledSquares){
-      const possibleSquares = []
-      
-      const [fromRow, fromCol] = fromSquare
-      const kingDirections = {
-        "North": [fromRow - 1, fromCol],
-        "South": [fromRow + 1, fromCol],
-        "East": [fromRow, fromCol + 1],
-        "West": [fromRow, fromCol - 1],
-        "NorthWest": [fromRow - 1, fromCol - 1],
-        "NorthEast": [fromRow - 1, fromCol + 1],
-        "SouthWest": [fromRow + 1, fromCol - 1],
-        "SouthEast": [fromRow + 1, fromCol + 1]
-      }
-      for (const direction in kingDirections) {
-        const possibleSquare = kingDirections[direction]
+    const findingPossibleMoves = (!findingControlledSquares)
+    const possibleSquares = []
+    // const unsafeSquares = this.findUnsafeSquares(board)
 
-        if(findingControlledSquares && board.isSquareOnBoard(possibleSquare)){ 
-          possibleSquares.push(possibleSquare)
-          continue 
-        } else {
-        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece")
-        if(invalidMove) { continue }
-        if(this.isMoveSafe(board, fromSquare, possibleSquare)){
+    const [fromRow, fromCol] = fromSquare
+    const kingDirections = {
+      "North": [fromRow - 1, fromCol],
+      "South": [fromRow + 1, fromCol],
+      "East": [fromRow, fromCol + 1],
+      "West": [fromRow, fromCol - 1],
+      "NorthWest": [fromRow - 1, fromCol - 1],
+      "NorthEast": [fromRow - 1, fromCol + 1],
+      "SouthWest": [fromRow + 1, fromCol - 1],
+      "SouthEast": [fromRow + 1, fromCol + 1]
+    }
+    for (const direction in kingDirections) {
+      const possibleSquare = kingDirections[direction]
+      
+      if(findingControlledSquares){
+        if(board.isSquareOnBoard(possibleSquare)){ 
           possibleSquares.push(possibleSquare)
           continue
         }
-        }
+      } 
+
+      if(findingPossibleMoves){
+        
+        // if(board.arrayContainsSquare(unsafeSquares, possibleSquare){
+        //   continue
+        // }
+        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"))
+        if(invalidMove){ continue }
+
+        
+      possibleSquares.push(possibleSquare)
+      }
     }
     return possibleSquares
   }
@@ -72,6 +73,7 @@ class Queen {
     }
   }
   findSquares(board, fromSquare, findingControlledSquares){
+    const findingPossibleMoves = (!findingControlledSquares)
     const possibleSquares = []
     const [fromRow, fromCol] = fromSquare
     const completedDirections = []
@@ -89,25 +91,35 @@ class Queen {
       completedDirections.forEach(direction => delete queenDirections[direction])
       for (const direction in queenDirections) {
         const possibleSquare = queenDirections[direction]
-        
-        if (!board.isSquareOnBoard(possibleSquare)) continue
-        if (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece") {
-          if (findingControlledSquares){
-              possibleSquares.push(possibleSquare)
-            }
+
+        if(findingControlledSquares){
+          if(!board.isSquareOnBoard(possibleSquare)){
+            continue
+          }
+          if(board.isSquareOccupied(fromSquare, possibleSquare)){
+            possibleSquares.push(possibleSquare)
+            completedDirections.push(direction)
+          }
+          possibleSquares.push(possibleSquare)
+        }
+
+        if(findingPossibleMoves){
+          const invalidMove = (!board.isSquareOnBoard(possibleSquare || board.isSquareOccupied(fromSquare,possibleSquare) === "byFriendlyPiece"))
+          if(invalidMove){ continue }
+          // if(!board.isMoveSafe(fromSquare, possibleSquare)){
+          //   continue
+          // } 
+          if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
+            possibleSquares.push(possibleSquare)
             completedDirections.push(direction)
             continue
           }
-        if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
-          possibleSquares.push(possibleSquare)
-          completedDirections.push(direction)
-          continue
-        }
         possibleSquares.push(possibleSquare)
       }
     }
-    return possibleSquares
   }
+  return possibleSquares
+}
 }
 
 class Bishop {
@@ -316,6 +328,7 @@ export class Pawn {
     }
     for (const move in pawnMoves) {
       const possibleSquare = pawnMoves[move]
+      if(board.moveExposesKing(this, fromSquare, possibleSquare)) { continue }
       if (move === "ForwardOne") {
         if(findingControlledSquares){ continue }
         const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)

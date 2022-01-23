@@ -38,7 +38,7 @@ export default function BoardUI(props){
     if (pieceToMove === "selected"){
       const pawnWillPromote = board.checkForPromotion(squaresCoordinates)
       if(pawnWillPromote){
-        renderPromotionPopUp(board.selectedPiece.color, squaresCoordinates)
+        renderPromotionPopUp(board.selectedPiece.piece.color, squaresCoordinates)
       } else {
       board.movePiece(squaresCoordinates)
       setBoardState({...boardState})
