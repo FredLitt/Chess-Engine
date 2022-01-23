@@ -107,7 +107,9 @@ class Queen {
 
         if (findingPossibleMoves) {
           const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" || board.moveExposesKing(this, fromSquare, possibleSquare))
-          if (invalidMove) { continue }
+          if (invalidMove) {
+            completedDirections.push(direction) 
+            continue }
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
             possibleSquares.push(possibleSquare)
             completedDirections.push(direction)
