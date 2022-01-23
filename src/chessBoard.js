@@ -69,6 +69,7 @@ export class Board {
     this.squares[5][2].piece = pieces.whiteQueen
     this.squares[3][4].piece = pieces.blackKing
     this.squares[4][6].piece = pieces.whiteKing
+    this.squares[1][1].piece = pieces.whiteRook
       }
 
   determineWhoseTurn(){
