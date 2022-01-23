@@ -47,7 +47,9 @@ class King {
       } 
 
       if(findingPossibleMoves){
-        
+        if(board.moveExposesKing(this, fromSquare, possibleSquare)){
+          continue
+        }
         // if(board.arrayContainsSquare(unsafeSquares, possibleSquare){
         //   continue
         // }
@@ -104,11 +106,8 @@ class Queen {
         }
 
         if(findingPossibleMoves){
-          const invalidMove = (!board.isSquareOnBoard(possibleSquare || board.isSquareOccupied(fromSquare,possibleSquare) === "byFriendlyPiece"))
+          const invalidMove = (!board.isSquareOnBoard(possibleSquare || board.isSquareOccupied(fromSquare,possibleSquare) === "byFriendlyPiece" || board.moveExposesKing(this, fromSquare, possibleSquare)))
           if(invalidMove){ continue }
-          // if(!board.isMoveSafe(fromSquare, possibleSquare)){
-          //   continue
-          // } 
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
             possibleSquares.push(possibleSquare)
             completedDirections.push(direction)
@@ -291,6 +290,18 @@ export class Pawn {
         return null
       }
   }
+
+  // REFACTOR IDEAS:
+
+  // different method:
+  // findControlledSquares(board, square)
+
+  // options object:
+  // findSquares({ 
+    // board: board,
+    // fromSquare: square,
+    // squaresToFind: "controlledSquares"
+  // })
 
   findSquares(board, fromSquare, findingControlledSquares){
     const findingPossibleMoves = (!findingControlledSquares)

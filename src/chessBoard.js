@@ -223,6 +223,8 @@ export class Board {
   // method should test theoretical board position
   // see if resulting position leaves moving piece king in danger
   // (contained within the unsafeSquares)
+  // TODO: mutating the board to test a move may have unpredictable results;
+  // would be good to refactor to test the move on a deep-cloned board.
 
   moveExposesKing(movingPiece, fromSquare, testSquare){
     let opponent
@@ -232,10 +234,9 @@ export class Board {
     const [testRow, testCol] = testSquare
     const testSquarePiece = this.squares[testRow][testCol].piece
 
-    const kingsSquare = this.findKingsSquare(movingPiece.color)
     this.squares[fromRow][fromCol].piece = null
     this.squares[testRow][testCol].piece = movingPiece
- 
+    const kingsSquare = this.findKingsSquare(movingPiece.color)
     let unsafeSquares = this.findAttackedSquares(opponent)
 
     this.squares[fromRow][fromCol].piece = movingPiece
