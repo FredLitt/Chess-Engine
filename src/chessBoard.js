@@ -242,9 +242,9 @@ export class Board {
     this.squares[testRow][testCol].piece = testSquarePiece
 
     if(this.arrayContainsSquare(unsafeSquares, kingsSquare)){
-      return false
+      return true
     }
-    return true
+    return false
   }
 
   movePiece(toSquare, promotionChoice){
@@ -274,7 +274,6 @@ export class Board {
       }
       this.markControlledSquares()
       if(this.seeIfKingInCheck(this.selectedPiece.piece)){
- 
         additionalMoveData.wasACheck = true
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)

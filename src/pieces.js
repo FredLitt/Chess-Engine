@@ -293,6 +293,7 @@ export class Pawn {
   }
 
   findSquares(board, fromSquare, findingControlledSquares){
+    const findingPossibleMoves = (!findingControlledSquares)
     const lastPlayedMove = board.findLastPlayedMove()
     let possibleSquares = []
     const [fromRow, fromCol] = fromSquare
@@ -328,25 +329,43 @@ export class Pawn {
     }
     for (const move in pawnMoves) {
       const possibleSquare = pawnMoves[move]
-      if(board.moveExposesKing(this, fromSquare, possibleSquare)) { continue }
-      if (move === "ForwardOne") {
-        if(findingControlledSquares){ continue }
-        const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)
-        if (invalidMove) {
-          delete pawnMoves["ForwardTwo"]
+
+      if(findingControlledSquares){
+        if(move === "ForwardOne" || move === "ForwardTwo"){
           continue
         }
+        possibleSquares.push(possibleSquare)
       }
-      if (move === "ForwardTwo") {
-        if(findingControlledSquares){ continue }
-        const invalidMove = (!isOnStartRow || board.isSquareOccupied(fromSquare, possibleSquare))
-        if (invalidMove) { continue }
+
+      if(findingPossibleMoves){
+        if(board.moveExposesKing(this, fromSquare, possibleSquare)){
+          continue
+          }
+
+        if(move === "ForwardOne"){
+          const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)
+          if(invalidMove){
+            delete pawnMoves["ForwardTwo"]
+            continue
+          }
+        }
+
+        if(move === "ForwardTwo"){
+          const invalidMove = ((!isOnStartRow) || board.isSquareOccupied(fromSquare, possibleSquare))
+          if(invalidMove){
+            delete pawnMoves["ForwardTwo"]
+            continue
+          }
+        }
+        
+        if(move === "CaptureWest" || move === "CaptureEast"){
+          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
+          if(invalidMove) {
+            continue
+          }
+        }
+        possibleSquares.push(possibleSquare)
       }
-      if (move === "CaptureWest" || move === "CaptureEast") {
-        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
-        if (invalidMove) { continue }
-      }
-      possibleSquares.push(possibleSquare)
     }
     return possibleSquares
   }
