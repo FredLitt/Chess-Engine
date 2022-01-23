@@ -1,5 +1,60 @@
 export const pieces = {}
 
+
+
+function findSquaresForLongRange(piece, board, fromSquare, findingControlledSquares, pieceDirections) {
+  const findingPossibleMoves = (!findingControlledSquares)
+    const possibleSquares = []
+    const [fromRow, fromCol] = fromSquare
+    const completedDirections = []
+    
+    for (let i = 1; i < 8; i++) {
+      const allDirections = {
+        "North": [fromRow - i, fromCol],
+        "South": [fromRow + i, fromCol],
+        "East": [fromRow, fromCol + i],
+        "West": [fromRow, fromCol - i],
+        "NorthWest": [fromRow - i, fromCol - i],
+        "NorthEast": [fromRow - i, fromCol + i],
+        "SouthWest": [fromRow + i, fromCol - i],
+        "SouthEast": [fromRow + i, fromCol + i]
+      }
+     
+      for (const direction in allDirections) {
+        if (!pieceDirections.includes(direction) || completedDirections.includes(direction)){
+          continue;
+        }
+
+        const possibleSquare = allDirections[direction]
+
+        if (findingControlledSquares) {
+          if (!board.isSquareOnBoard(possibleSquare)) {
+            continue
+          }
+          if (board.isSquareOccupied(fromSquare, possibleSquare)) {
+            possibleSquares.push(possibleSquare)
+            completedDirections.push(direction)
+          }
+          possibleSquares.push(possibleSquare)
+        }
+
+        if (findingPossibleMoves) {
+          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" || board.moveExposesKing(piece, fromSquare, possibleSquare))
+          if (invalidMove) {
+            completedDirections.push(direction) 
+            continue }
+          if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
+            possibleSquares.push(possibleSquare)
+            completedDirections.push(direction)
+            continue
+          }
+          possibleSquares.push(possibleSquare)
+        }
+      }
+    }
+  return possibleSquares
+}
+
 class King {
   constructor(color) {
     this.type = "king"
@@ -74,54 +129,14 @@ class Queen {
       this.symbol = pieceSymbols.blackQueen
     }
   }
+  
   findSquares(board, fromSquare, findingControlledSquares) {
-    const findingPossibleMoves = (!findingControlledSquares)
-    const possibleSquares = []
-    const [fromRow, fromCol] = fromSquare
-    const completedDirections = []
-    for (let i = 1; i < 8; i++) {
-      const allDirections = {
-        "North": [fromRow - i, fromCol],
-        "South": [fromRow + i, fromCol],
-        "East": [fromRow, fromCol + i],
-        "West": [fromRow, fromCol - i],
-        "NorthWest": [fromRow - i, fromCol - i],
-        "NorthEast": [fromRow - i, fromCol + i],
-        "SouthWest": [fromRow + i, fromCol - i],
-        "SouthEast": [fromRow + i, fromCol + i]
-      }
-      completedDirections.forEach(direction => delete allDirections[direction])
-      for (const direction in allDirections) {
-        const possibleSquare = allDirections[direction]
-
-        if (findingControlledSquares) {
-          if (!board.isSquareOnBoard(possibleSquare)) {
-            continue
-          }
-          if (board.isSquareOccupied(fromSquare, possibleSquare)) {
-            possibleSquares.push(possibleSquare)
-            completedDirections.push(direction)
-          }
-          possibleSquares.push(possibleSquare)
-        }
-
-        if (findingPossibleMoves) {
-          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" || board.moveExposesKing(this, fromSquare, possibleSquare))
-          if (invalidMove) {
-            completedDirections.push(direction) 
-            continue }
-          if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
-            possibleSquares.push(possibleSquare)
-            completedDirections.push(direction)
-            continue
-          }
-          possibleSquares.push(possibleSquare)
-        }
-      }
-    }
-    return possibleSquares
+    const allDirections = ["North", "South", "West", "East", "NorthWest", "NorthEast", "SouthWest", "SouthEast"]
+    return findSquaresForLongRange(this, board, fromSquare, findingControlledSquares, allDirections)
   }
 }
+
+
 
 class Bishop {
   constructor(color) {
@@ -134,58 +149,8 @@ class Bishop {
     }
   }
   findSquares(board, fromSquare, findingControlledSquares) {
-    const findingPossibleMoves = (!findingControlledSquares)
-    let possibleSquares = []
-    const [fromRow, fromCol] = fromSquare
-    const completedDirections = []
-    for (let i = 1; i < 8; i++) {
-      const allDirections = {
-        "NorthWest": [fromRow - i, fromCol - i],
-        "NorthEast": [fromRow - i, fromCol + i],
-        "SouthWest": [fromRow + i, fromCol - i],
-        "SouthEast": [fromRow + i, fromCol + i]
-      }
-      completedDirections.forEach(direction => delete allDirections[direction])
-      for (const direction in allDirections) {
-      
-        const possibleSquare = allDirections[direction]
-
-        if (findingControlledSquares) {
-          if (!board.isSquareOnBoard(possibleSquare)) {
-            continue
-          }
-          if (board.isSquareOccupied(fromSquare, possibleSquare)) {
-            possibleSquares.push(possibleSquare)
-            completedDirections.push(direction)
-          }
-          possibleSquares.push(possibleSquare)
-        }
-
-        if (findingPossibleMoves) {
-          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" || board.moveExposesKing(this, fromSquare, possibleSquare))
-          if(direction === "SouthWest" && board.isSquareOnBoard(possibleSquare)) {
-            console.log({
-              i,
-              isSquareOccupied: board.isSquareOccupied(fromSquare, possibleSquare),
-              invalid: board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece",
-              invalidMove
-            })
-          }
-          if (invalidMove) { 
-            console.log('invalid', { direction, i })
-            completedDirections.push(direction)
-            continue
-          }
-          if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
-            possibleSquares.push(possibleSquare)
-            completedDirections.push(direction)
-            continue
-          }
-          possibleSquares.push(possibleSquare)
-        }
-      }
-    }
-    return possibleSquares
+    const allDirections = ["NorthWest", "NorthEast", "SouthWest", "SouthEast"]
+    return findSquaresForLongRange(this, board, fromSquare, findingControlledSquares, allDirections)
   }
 }
 
@@ -200,48 +165,8 @@ class Rook {
     }
   }
   findSquares(board, fromSquare, findingControlledSquares) {
-    const findingPossibleMoves = (!findingControlledSquares)
-    let possibleSquares = []
-    const [fromRow, fromCol] = fromSquare
-    const completedDirections = []
-    for (let i = 1; i < 8; i++) {
-      const allDirections = {
-        "North": [fromRow - i, fromCol],
-        "South": [fromRow + i, fromCol],
-        "East": [fromRow, fromCol + i],
-        "West": [fromRow, fromCol - i],
-      }
-      completedDirections.forEach(direction => delete allDirections[direction])
-      for (const direction in allDirections) {
-        const possibleSquare = allDirections[direction]
-
-        if (findingControlledSquares) {
-          if (!board.isSquareOnBoard(possibleSquare)) {
-            continue
-          }
-          if (board.isSquareOccupied(fromSquare, possibleSquare)) {
-            possibleSquares.push(possibleSquare)
-            completedDirections.push(direction)
-          }
-          possibleSquares.push(possibleSquare)
-        }
-
-        if (findingPossibleMoves) {
-          const invalidMove =
-            !board.isSquareOnBoard(possibleSquare) ||
-            board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" ||
-            board.moveExposesKing(this, fromSquare, possibleSquare)
-          if (invalidMove) { continue }
-          if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
-            possibleSquares.push(possibleSquare)
-            completedDirections.push(direction)
-            continue
-          }
-          possibleSquares.push(possibleSquare)
-        }
-      }
-    }
-    return possibleSquares
+    const allDirections = ["North", "South", "West", "East"]
+    return findSquaresForLongRange(this, board, fromSquare, findingControlledSquares, allDirections)
   }
 }
 
