@@ -1,8 +1,8 @@
 export const pieces = {}
 
-
-
-function findSquaresForLongRange(piece, board, fromSquare, findingControlledSquares, pieceDirections) {
+// Function takes in directions for long range pieces (queen, rook, bishop)
+// returns either all squares that are controlled by piece or all of piece's legal moves
+function findSquaresForLongRange({piece, board, fromSquare, findingControlledSquares, pieceDirections}) {
   const findingPossibleMoves = (!findingControlledSquares)
     const possibleSquares = []
     const [fromRow, fromCol] = fromSquare
@@ -131,8 +131,13 @@ class Queen {
   }
   
   findSquares(board, fromSquare, findingControlledSquares) {
-    const allDirections = ["North", "South", "West", "East", "NorthWest", "NorthEast", "SouthWest", "SouthEast"]
-    return findSquaresForLongRange(this, board, fromSquare, findingControlledSquares, allDirections)
+    return findSquaresForLongRange({
+      piece: this,
+      pieceDirections: ["North", "South", "West", "East", "NorthWest", "NorthEast", "SouthWest", "SouthEast"],
+      board,
+      fromSquare,
+      findingControlledSquares
+    })
   }
 }
 
@@ -149,8 +154,13 @@ class Bishop {
     }
   }
   findSquares(board, fromSquare, findingControlledSquares) {
-    const allDirections = ["NorthWest", "NorthEast", "SouthWest", "SouthEast"]
-    return findSquaresForLongRange(this, board, fromSquare, findingControlledSquares, allDirections)
+    return findSquaresForLongRange({
+      piece: this,
+      pieceDirections: ["NorthWest", "NorthEast", "SouthWest", "SouthEast"],
+      board,
+      fromSquare,
+      findingControlledSquares
+    })
   }
 }
 
@@ -165,8 +175,13 @@ class Rook {
     }
   }
   findSquares(board, fromSquare, findingControlledSquares) {
-    const allDirections = ["North", "South", "West", "East"]
-    return findSquaresForLongRange(this, board, fromSquare, findingControlledSquares, allDirections)
+    return findSquaresForLongRange({
+      piece: this,
+      pieceDirections: ["North", "South", "West", "East"],
+      board,
+      fromSquare,
+      findingControlledSquares
+    })
   }
 }
 
