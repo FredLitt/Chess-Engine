@@ -65,11 +65,12 @@ export class Board {
     // this.squares[7][7].piece = pieces.blackRook
 
     this.squares[1][6].piece = pieces.blackBishop
+    this.squares[5][0].piece = pieces.blackKnight
     this.squares[4][3].piece = pieces.blackPawn
-    this.squares[5][2].piece = pieces.whiteQueen
-    this.squares[3][4].piece = pieces.blackKing
+    this.squares[6][6].piece = pieces.whiteQueen
+    this.squares[7][2].piece = pieces.blackKing
     this.squares[4][6].piece = pieces.whiteKing
-    this.squares[1][1].piece = pieces.whiteRook
+    this.squares[6][0].piece = pieces.whiteRook
       }
 
   determineWhoseTurn(){
@@ -196,19 +197,6 @@ export class Board {
     promotionSquare.piece.originallyPawn = true
   }
   
-  determineIfCheckMate(){
-    // runs after a king is placed in check
-    // looks at every possible move for checked king's player
-    // sees if resulting position still leaves king in check
-    // if so return true and run game over
-    // if not then return false and play continues
-  }
-
-  //checkForMoveLegality()
-
-  //doesMoveExposeKing
-
-  
   findKingsSquare(color){
     for (let row = 0; row < 8; row++){
       for (let col = 0; col < 8; col++){
@@ -238,12 +226,37 @@ export class Board {
     this.squares[fromRow][fromCol].piece = null
     this.squares[testRow][testCol].piece = movingPiece
     const kingsSquare = this.findKingsSquare(movingPiece.color)
+
     let unsafeSquares = this.findAttackedSquares(opponent)
 
     this.squares[fromRow][fromCol].piece = movingPiece
     this.squares[testRow][testCol].piece = testSquarePiece
 
     if(this.arrayContainsSquare(unsafeSquares, kingsSquare)){
+      return true
+    }
+    return false
+  }
+
+  determineIfCheckMate(attackingPiece){
+    const movesThatProtectKing = []
+    let defendingPlayer
+    if (attackingPiece.color === "white") { defendingPlayer = "black" }
+    if (attackingPiece.color === "black") { defendingPlayer = "white" }
+
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        const currentSquare = this.squares[row][col]
+        const squareIsEmpty = (currentSquare.piece === null)
+        if (squareIsEmpty || currentSquare.piece.color !== defendingPlayer) {
+          continue
+        }
+        console.log(currentSquare.piece)
+        movesThatProtectKing.push(...currentSquare.piece.findSquares(this, currentSquare.coordinate))
+      }
+    }
+    console.log(movesThatProtectKing)
+    if (movesThatProtectKing.length === 0){
       return true
     }
     return false
@@ -277,6 +290,9 @@ export class Board {
       this.markControlledSquares()
       if(this.seeIfKingInCheck(this.selectedPiece.piece)){
         additionalMoveData.wasACheck = true
+        if(this.determineIfCheckMate(this.selectedPiece.piece)){
+          additionalMoveData.checkmate = true
+        }
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
     }
@@ -297,8 +313,12 @@ export class Board {
     }
     
     if(this.arrayContainsSquare(attackedSquares, enemyKingsSquare)){
+      if(movedPiece.color === "white"){ this.blackKingInCheck = true }
+      if(movedPiece.color === "black"){ this.whiteKingInCheck = true }
       return true
     }
+    if(movedPiece.color === "white"){ this.blackKingInCheck = false }
+    if(movedPiece.color === "black"){ this.whiteKingInCheck = false }
     return false
   }
 

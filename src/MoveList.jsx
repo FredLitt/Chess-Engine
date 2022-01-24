@@ -56,6 +56,10 @@ const renderMoveNotation = (move, index) => {
     }
     moveNotation += `${endColumn}${endRow}`
   }  
+  if(move.additionalMoveData.checkmate){
+    moveNotation += '#'
+    return moveNotation
+  }
   if(move.additionalMoveData.wasACheck){
     moveNotation += '+'
   }
