@@ -39,7 +39,6 @@ export class Board {
     this.squaresAttackedByBlack = []
     this.whiteKingInCheck = false
     this.blackKingInCheck = false
-    this.winner = null
   }
   
   setToStartPosition(){
@@ -303,9 +302,7 @@ export class Board {
       if(this.seeIfKingInCheck()){
         additionalMoveData.wasACheck = true
         if(this.determineIfCheckMate()){
-          additionalMoveData.checkmate = true
-          this.winner = this.selectedPiece.piece.color
-          console.log(this.winner)
+          additionalMoveData.winner = this.selectedPiece.piece.color
         }
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)

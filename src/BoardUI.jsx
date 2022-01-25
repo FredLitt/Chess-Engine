@@ -16,6 +16,8 @@ export default function BoardUI({boardState, setBoardState, board}){
     return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
+
+
   const movePiece = (square) => {
     const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)

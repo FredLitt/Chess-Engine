@@ -23,6 +23,14 @@ main {
   overflow-y: auto;
 }
 
+.white-wins-result {
+  text-align: center;
+}
+
+.black-wins-result {
+  text-align: start;  
+}
+
 #board {
   border: 1px solid black;
   table-layout: fixed;

@@ -6,9 +6,8 @@ import CapturedPieceContainer from './CapturedPieceContainer'
 import './App.css';
 
 //TODO: Fix bug with clicking on piece that can't move and then clicking piece that can
-//TODO: Prevent king from moving into check
-//TODO: Require dealing with check
 //TODO: Castling!
+//TODO: New game button upon checkmate
 //TODO: Add skip forward and backward buttons below move list
 //TODO: Determine checkmate!
 //TODO: Better styling and responsiveness
@@ -24,7 +23,7 @@ function App() {
   return (
     <main>
       <div id="game-container">
-      <MoveList moveList={boardState.playedMoveList} winner={boardState.winner}/>
+      <MoveList moveList={boardState.playedMoveList}/>
         <BoardUI boardState={boardState} setBoardState={setBoardState} board={newBoard} />
         <div id="captured-pieces-wrapper">
           <CapturedPieceContainer 
