@@ -3,8 +3,7 @@ export const pieces = {}
 // Function takes in directions for long range pieces (queen, rook, bishop)
 // returns either all squares that are controlled by piece or all of piece's legal moves
 const findSquaresForLongRange = 
-  ({piece, board, fromSquare, findingControlledSquares, pieceDirections}) => {
-  const findingPossibleMoves = !findingControlledSquares
+  ({piece, board, fromSquare, squaresToFind, pieceDirections}) => {
   const possibleSquares = []
   const [fromRow, fromCol] = fromSquare
   const completedDirections = []
@@ -28,7 +27,7 @@ const findSquaresForLongRange =
 
         const possibleSquare = allDirections[direction]
 
-        if (findingControlledSquares) {
+        if (squaresToFind === "controlled squares") {
           if (!board.isSquareOnBoard(possibleSquare)) {
             continue
           }
@@ -39,7 +38,7 @@ const findSquaresForLongRange =
           possibleSquares.push(possibleSquare)
         }
 
-        if (findingPossibleMoves) {
+        if (squaresToFind === "possible moves") {
           const invalidMove = !board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"
           if (invalidMove) {
             completedDirections.push(direction) 
@@ -85,8 +84,7 @@ class King {
     }
   }
 
-  findSquares(board, fromSquare, findingControlledSquares) {
-    const findingPossibleMoves = (!findingControlledSquares)
+  findSquares({board, fromSquare, squaresToFind}) {
     const possibleSquares = []
 
     const [fromRow, fromCol] = fromSquare
@@ -103,15 +101,14 @@ class King {
     for (const direction in kingDirections) {
       const possibleSquare = kingDirections[direction]
 
-      if (findingControlledSquares) {
+      if (squaresToFind === "controlled squares") {
         if (board.isSquareOnBoard(possibleSquare)) {
           possibleSquares.push(possibleSquare)
           continue
         }
       }
 
-      if (findingPossibleMoves) {
-      
+      if (squaresToFind === "possible moves") {
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"))
         if (invalidMove) { continue }
 
@@ -137,13 +134,13 @@ class Queen {
     }
   }
   
-  findSquares(board, fromSquare, findingControlledSquares) {
+  findSquares({board, fromSquare, squaresToFind}) {
     return findSquaresForLongRange({
       piece: this,
       pieceDirections: ["North", "South", "West", "East", "NorthWest", "NorthEast", "SouthWest", "SouthEast"],
       board,
       fromSquare,
-      findingControlledSquares
+      squaresToFind
     })
   }
 }
@@ -158,13 +155,13 @@ class Bishop {
       this.symbol = pieceSymbols.blackBishop
     }
   }
-  findSquares(board, fromSquare, findingControlledSquares) {
+  findSquares({board, fromSquare, squaresToFind}) {
     return findSquaresForLongRange({
       piece: this,
       pieceDirections: ["NorthWest", "NorthEast", "SouthWest", "SouthEast"],
       board,
       fromSquare,
-      findingControlledSquares
+      squaresToFind
     })
   }
 }
@@ -179,13 +176,13 @@ class Rook {
       this.symbol = pieceSymbols.blackRook
     }
   }
-  findSquares(board, fromSquare, findingControlledSquares) {
+  findSquares({board, fromSquare, squaresToFind}) {
     return findSquaresForLongRange({
       piece: this,
       pieceDirections: ["North", "South", "West", "East"],
       board,
       fromSquare,
-      findingControlledSquares
+      squaresToFind
     })
   }
 }
@@ -200,8 +197,7 @@ class Knight {
       this.symbol = pieceSymbols.blackKnight
     }
   }
-  findSquares(board, fromSquare, findingControlledSquares) {
-    const findingPossibleMoves = !findingControlledSquares
+  findSquares({board, fromSquare, squaresToFind}) {
     const possibleSquares = []
     const [fromRow, fromCol] = fromSquare
     const knightMoves = {
@@ -217,13 +213,13 @@ class Knight {
     for (const move in knightMoves) {
       const possibleSquare = knightMoves[move]
 
-      if (findingControlledSquares){
+      if (squaresToFind === "controlled squares"){
         if (board.isSquareOnBoard(possibleSquare)) {
           possibleSquares.push(possibleSquare)
         }
       }
 
-      if (findingPossibleMoves) {
+      if (squaresToFind === "possible moves") {
 
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" )
           if (invalidMove) {
@@ -288,8 +284,7 @@ export class Pawn {
   // squaresToFind: "controlledSquares"
   // })
 
-  findSquares(board, fromSquare, findingControlledSquares) {
-    const findingPossibleMoves = (!findingControlledSquares)
+  findSquares({board, fromSquare, squaresToFind}) {
     const lastPlayedMove = board.findLastPlayedMove()
     let possibleSquares = []
     const [fromRow, fromCol] = fromSquare
@@ -326,14 +321,14 @@ export class Pawn {
     for (const move in pawnMoves) {
       const possibleSquare = pawnMoves[move]
 
-      if (findingControlledSquares) {
+      if (squaresToFind === "controlled squares") {
         if (move === "ForwardOne" || move === "ForwardTwo") {
           continue
         }
         possibleSquares.push(possibleSquare)
       }
 
-      if (findingPossibleMoves) {
+      if (squaresToFind === "possible moves") {
         
         if (move === "ForwardOne") {
           const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)

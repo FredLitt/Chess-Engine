@@ -132,8 +132,13 @@ export class Board {
   }
 
   determinePiecesPossibleMoves(pieceToMove, fromSquare){
-    const board = this
-    this.selectedPiece.possibleMoves = pieceToMove.findSquares(board, fromSquare)
+    const searchOptions = {
+      board: this,
+      fromSquare: fromSquare,
+      squaresToFind: "possible moves"
+    }
+    this.selectedPiece.possibleMoves = pieceToMove.findSquares
+    (searchOptions)
     this.markPossibleMoveSquares()
   }  
 
@@ -253,7 +258,14 @@ export class Board {
         if (squareIsEmpty || currentSquare.piece.color !== defendingPlayer) {
           continue
         }
-        movesThatProtectKing.push(...currentSquare.piece.findSquares(this, currentSquare.coordinate))
+
+        const searchOptions = {
+          board: this,
+          fromSquare: currentSquare.coordinate,
+          squaresToFind: "possible moves"
+        }
+
+        movesThatProtectKing.push(...currentSquare.piece.findSquares(searchOptions))
       }
     }
     if (movesThatProtectKing.length === 0){
@@ -327,7 +339,7 @@ export class Board {
 
   findAttackedSquares(color){
     const attackedSquares = []
-    const findAllControlledSquares = true
+
     for (let row = 0; row < 8; row++){
       for (let col = 0; col < 8; col++){
         const currentSquare = this.squares[row][col]
@@ -335,7 +347,14 @@ export class Board {
         if(squareIsEmpty || currentSquare.piece.color !== color) {
           continue
         }
-        attackedSquares.push(...currentSquare.piece.findSquares(this, currentSquare.coordinate, findAllControlledSquares))
+
+        const searchOptions = {
+          board: this,
+          fromSquare: currentSquare.coordinate,
+          squaresToFind: "controlled squares"
+        }
+
+        attackedSquares.push(...currentSquare.piece.findSquares(searchOptions))
       }
     }
     return attackedSquares
