@@ -34,8 +34,8 @@ export default function MoveList({moveList}){
     const pieceAbbreviation = pieceAbbreviations[move.piece.type]
     const endRow = (move.toSquare[0] + 1)
     const endColumn = (xAxis[move.toSquare[1]])
-    const capture = move.additionalMoveData.wasACapture
-    const promotion = move.additionalMoveData.promotionChoice
+    const capture = move.moveData.wasACapture
+    const promotion = move.moveData.promotionChoice
     if(move.piece.type === 'pawn'){
       const pawnsStartRow = xAxis[move.fromSquare[1]]
       moveNotation = pawnsStartRow
@@ -55,11 +55,11 @@ export default function MoveList({moveList}){
       }
       moveNotation += `${endColumn}${endRow}`
     }  
-    if(move.additionalMoveData.winner){
+    if(move.moveData.winner){
       moveNotation += '#'
       return moveNotation
     }
-    if(move.additionalMoveData.wasACheck){
+    if(move.moveData.wasACheck){
       moveNotation += '+'
     }
     return moveNotation
@@ -75,8 +75,8 @@ export default function MoveList({moveList}){
             <span className="move-number">
             {`${getMoveNumber(moveList, move)}. `}</span>}
             {renderMoveNotation(move, index)}
-            {move.additionalMoveData.winner === "white" && <div className="white-wins-result">1 - 0</div>}
-            {move.additionalMoveData.winner === "black" && <div className="black-wins-result">0 - 1</div>}
+            {move.moveData.winner === "white" && <div className="white-wins-result">1 - 0</div>}
+            {move.moveData.winner === "black" && <div className="black-wins-result">0 - 1</div>}
           </div>)}
         </div>        
   )

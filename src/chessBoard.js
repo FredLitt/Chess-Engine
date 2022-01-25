@@ -3,11 +3,11 @@ import { pieces } from './pieces.js'
 // EVERY MOVE HAS TO CHECK AND MAKE SURE IT DOESN'T EXPOSE KING
 
 export class PlayedMove {
-  constructor(piece, fromSquare, toSquare, additionalMoveData) {
+  constructor(piece, fromSquare, toSquare, moveData) {
     this.piece = piece
     this.fromSquare = fromSquare
     this.toSquare = toSquare
-    this.additionalMoveData = additionalMoveData
+    this.moveData = moveData
   }
 }
 // Note about coordinates:
@@ -112,9 +112,9 @@ export class Board {
     }
   }
   
-  addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData){ 
+  addMoveToPlayedMoveList(fromSquare, toSquare, moveData){ 
     const movedPiece = this.selectedPiece.piece
-    this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, additionalMoveData))
+    this.playedMoveList.push(new PlayedMove(movedPiece, fromSquare, toSquare, moveData))
   }
 
   getPiecesColor(coordinates){
@@ -281,31 +281,31 @@ export class Board {
     if (this.arrayContainsSquare(possibleSquares, toSquare)){
       const startSquare = this.squares[fromRow][fromCol]
       const endSquare = this.squares[toRow][toCol]
-      const additionalMoveData = {}
+      const moveData = {}
       if (endSquare.piece !== null){
-        additionalMoveData.wasACapture = true
+        moveData.wasACapture = true
         const capturedPiece = endSquare.piece
         this.capturePiece(capturedPiece)
       } else {
-        additionalMoveData.wasACapture = false
+        moveData.wasACapture = false
       }
       if (this.checkIfEnPassantMove(toSquare)){
         this.captureEnPassant(toSquare)
-        additionalMoveData.wasACapture = true
+        moveData.wasACapture = true
       }
       this.updateBoard(startSquare, endSquare)
       if (promotionChoice){
         this.promote(promotionChoice, endSquare)
-        additionalMoveData.promotionChoice = promotionChoice.type
+        moveData.promotionChoice = promotionChoice.type
       }
       this.markControlledSquares()
       if(this.seeIfKingInCheck()){
-        additionalMoveData.wasACheck = true
+        moveData.wasACheck = true
         if(this.determineIfCheckMate()){
-          additionalMoveData.winner = this.selectedPiece.piece.color
+          moveData.winner = this.selectedPiece.piece.color
         }
       }
-      this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
+      this.addMoveToPlayedMoveList(fromSquare, toSquare, moveData)
     }
     this.deselectPiece()
   }
