@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 //TODO
-// [ ] check
-// [ ] checkmate
 // [ ] castling
 // [ ] winner
 
-const xAxis = {
+export default function MoveList({moveList, winner}){
+
+  const xAxis = {
   0: 'h',
   1: 'g',
   2: 'f',
@@ -66,18 +66,21 @@ const renderMoveNotation = (move, index) => {
   return moveNotation
 }
 
-export default function MoveList({moveList}){
   return (
-    <div id="move-list">
-      {moveList.map((move, index) => 
-        <div 
-          key={index}
-          className="move-notation">
-          {index % 2 === 0 && 
-          <span className="move-number">
-          {`${getMoveNumber(moveList, move)}. `}</span>}
-          {renderMoveNotation(move, index)}
-          </div>)}
-      </div>
+      <div id="move-list">
+        {moveList.map((move, index) => 
+          <div 
+            key={index}
+            className="move-notation">
+            {index % 2 === 0 && 
+            <span className="move-number">
+            {`${getMoveNumber(moveList, move)}. `}</span>}
+            {renderMoveNotation(move, index)}
+            </div>)}
+            {winner === "white" &&
+              <div>1 - 0</div>}
+            {winner === "black" &&
+              <div>0 - 1</div>}
+        </div>        
   )
 }

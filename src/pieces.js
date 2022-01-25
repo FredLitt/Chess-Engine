@@ -20,7 +20,6 @@ const findSquaresForLongRange =
         "SouthWest": [fromRow + i, fromCol - i],
         "SouthEast": [fromRow + i, fromCol + i]
       }
-     
       for (const direction in allDirections) {
 
         if (!pieceDirections.includes(direction) || completedDirections.includes(direction)){
@@ -41,21 +40,24 @@ const findSquaresForLongRange =
         }
 
         if (findingPossibleMoves) {
-          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" )
+          const invalidMove = !board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"
           if (invalidMove) {
             completedDirections.push(direction) 
-            continue }
-
-          if (board.moveExposesKing(piece, fromSquare, possibleSquare)){
             continue
-          }
+            }
 
           if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
-            possibleSquares.push(possibleSquare)
             completedDirections.push(direction)
+            if (!board.moveExposesKing(piece, fromSquare, possibleSquare)) {
+              possibleSquares.push(possibleSquare)
+              continue
+            }
+          }
+
+          if (board.moveExposesKing(piece, fromSquare, possibleSquare)) {
             continue
           }
-          
+
           possibleSquares.push(possibleSquare)
         }
       }
@@ -222,7 +224,7 @@ class Knight {
       }
 
       if (findingPossibleMoves) {
-        console.log(move)
+
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" )
           if (invalidMove) {
             continue

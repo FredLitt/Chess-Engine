@@ -39,6 +39,7 @@ export class Board {
     this.squaresAttackedByBlack = []
     this.whiteKingInCheck = false
     this.blackKingInCheck = false
+    this.winner = null
   }
   
   setToStartPosition(){
@@ -64,13 +65,13 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[1][6].piece = pieces.blackBishop
+    this.squares[6][0].piece = pieces.blackRook
     this.squares[5][0].piece = pieces.blackKnight
     this.squares[4][3].piece = pieces.blackPawn
-    this.squares[6][6].piece = pieces.whiteQueen
-    this.squares[7][2].piece = pieces.blackKing
-    this.squares[4][6].piece = pieces.whiteKing
-    this.squares[6][0].piece = pieces.whiteRook
+    this.squares[0][0].piece = pieces.whiteQueen
+    this.squares[5][6].piece = pieces.blackKing
+    this.squares[7][6].piece = pieces.whiteKing
+    this.squares[2][2].piece = pieces.whiteRook
       }
 
   determineWhoseTurn(){
@@ -238,7 +239,8 @@ export class Board {
     return false
   }
 
-  determineIfCheckMate(attackingPiece){
+  determineIfCheckMate(){
+    const attackingPiece = this.selectedPiece.piece
     const movesThatProtectKing = []
     let defendingPlayer
     if (attackingPiece.color === "white") { defendingPlayer = "black" }
@@ -251,11 +253,9 @@ export class Board {
         if (squareIsEmpty || currentSquare.piece.color !== defendingPlayer) {
           continue
         }
-        console.log(currentSquare.piece)
         movesThatProtectKing.push(...currentSquare.piece.findSquares(this, currentSquare.coordinate))
       }
     }
-    console.log(movesThatProtectKing)
     if (movesThatProtectKing.length === 0){
       return true
     }
@@ -288,10 +288,12 @@ export class Board {
         additionalMoveData.promotionChoice = promotionChoice.type
       }
       this.markControlledSquares()
-      if(this.seeIfKingInCheck(this.selectedPiece.piece)){
+      if(this.seeIfKingInCheck()){
         additionalMoveData.wasACheck = true
-        if(this.determineIfCheckMate(this.selectedPiece.piece)){
+        if(this.determineIfCheckMate()){
           additionalMoveData.checkmate = true
+          this.winner = this.selectedPiece.piece.color
+          console.log(this.winner)
         }
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, additionalMoveData)
@@ -299,7 +301,8 @@ export class Board {
     this.deselectPiece()
   }
 
-  seeIfKingInCheck(movedPiece){
+  seeIfKingInCheck(){
+    const movedPiece = this.selectedPiece.piece
     let attackedSquares
     let enemyKingsSquare
     let kingToMark

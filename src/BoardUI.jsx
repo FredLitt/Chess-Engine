@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { pieces } from './pieces'
 import PromotionPopUp from './PromotionPopUp'
 
-export default function BoardUI(props){
-
-  const {boardState, setBoardState, board} = props
+export default function BoardUI({boardState, setBoardState, board}){
 
   const [pieceToMove, setPieceToMove] = useState(null)
 

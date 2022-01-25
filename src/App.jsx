@@ -24,7 +24,7 @@ function App() {
   return (
     <main>
       <div id="game-container">
-      <MoveList moveList={boardState.playedMoveList}/>
+      <MoveList moveList={boardState.playedMoveList} winner={boardState.winner}/>
         <BoardUI boardState={boardState} setBoardState={setBoardState} board={newBoard} />
         <div id="captured-pieces-wrapper">
           <CapturedPieceContainer 
