@@ -115,10 +115,10 @@ class King {
 
       if (squaresToFind === "possible moves") {
 
-        if (direction === "Castle Kingside"){
-          // if (board.checkIfCastlingLegal()){
-          //   possibleSquares.push(kingDirections["Castle Kingside"])
-          // }
+        if (direction === "Castle Kingside" || direction === "Castle Queenside"){
+          if (!board.checkIfCastlingPossible(direction)){
+            continue
+          }
         }
 
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"))

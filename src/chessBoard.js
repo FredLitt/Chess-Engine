@@ -64,7 +64,7 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[0][0].piece = pieces.whiteRook
+    this.squares[0][1].piece = pieces.whiteRook
     this.squares[0][7].piece = pieces.whiteRook
     this.squares[0][3].piece = pieces.whiteKing
     this.squares[7][3].piece = pieces.blackKing
@@ -174,26 +174,37 @@ export class Board {
     }
   }
 
-  checkIfCastlingPossible(){
+  checkIfCastlingPossible(castlingDirection){
     // if checks needed:
     // 1. king has not moved
     // 2. kingside rook has not moved
     // 3. king does not pass through check or into check
     // 4. knight and rook are not in way
     // 5. king cannot be in check currently
+    const castlingKingColor = this.selectedPiece.piece.color
     let castlingRook
-    let castlingKing
+    let castlingKingStartSquare
     let castlingPathSquares
     let enemyControlledSquares
-    if (color === "white"){
-      
+  console.log(castlingDirection)
+    //just for kingside first
+    if (castlingKingColor === "white"){
+      castlingKingStartSquare = [0, 3]
+      const playedMoveStartSquares = this.playedMoveList.map(move => move.fromSquare)
+      const kingHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, castlingKingStartSquare))
+      console.log(kingHasMoved)
+      if (kingHasMoved){
+        console.log("can't castle")
+        return false
+      }
       castlingPathSquares = [[0, 1], [0, 2], [0, 3]]
-      enemyControlledSquares = board.findAttackedSquares("black")
+      enemyControlledSquares = this.findAttackedSquares("black")
     }
-    if (color === "black"){
+    if (castlingKingColor === "black"){
       castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
-      enemyControlledSquares = board.findAttackedSquares("white")
+      enemyControlledSquares = this.findAttackedSquares("white")
     }
+    return true
   }
 
   castleKingside(kingColor){
@@ -319,7 +330,7 @@ export class Board {
     if (this.selectedPiece.piece.type !== "king"){
       return false
     }
-    const kingsTargetColumn = parseInt(toSquare[1])
+    const kingsTargetColumn = (toSquare[1])
     const columnForKingsideCastle = 1
     const columnForQueensideCastle = 5
     
