@@ -196,15 +196,26 @@ export class Board {
     }
   }
 
-  castleKingside(color){
-    this.squares[0][0].piece = null
-    this.squares[0][2].piece = pieces.whiteRook
+  castleKingside(kingColor){
+    if (kingColor === "white") {
+      this.squares[0][0].piece = null
+      this.squares[0][2].piece = pieces.whiteRook
+    }
+    if (kingColor === "black"){
+      this.squares[7][0].piece = null
+      this.squares[7][2].piece = pieces.blackRook
+    }
   }
 
-  castleQueenside(color){
-    console.log('queenside')
-    this.squares[0][7].piece = null
-    this.squares[0][4].piece = pieces.whiteRook
+  castleQueenside(kingColor){
+    if (kingColor === "white") {
+      this.squares[0][7].piece = null
+      this.squares[0][4].piece = pieces.whiteRook
+    }
+    if (kingColor === "black"){
+      this.squares[7][7].piece = null
+      this.squares[7][4].piece = pieces.blackRook
+    }
   }
   //THIS IS BUGGY IF THERE's A PIECE ON THE TOSQUARE
   checkForPromotion(toSquare){
@@ -308,8 +319,6 @@ export class Board {
     if (this.selectedPiece.piece.type !== "king"){
       return false
     }
-    console.log(toSquare)
-
     const kingsTargetColumn = parseInt(toSquare[1])
     const columnForKingsideCastle = 1
     const columnForQueensideCastle = 5
@@ -332,11 +341,11 @@ export class Board {
       const endSquare = this.squares[toRow][toCol]
       const moveData = {}
       if (this.wasMoveCastling(fromSquare, toSquare) === "Kingside"){
-        this.castleKingside()
+        this.castleKingside(this.selectedPiece.piece.color)
         moveData.kingsideCastle = true
       }
       if (this.wasMoveCastling(fromSquare, toSquare) === "Queenside"){
-        this.castleQueenside()
+        this.castleQueenside(this.selectedPiece.piece.color)
         moveData.queensideCastle = true
       }
       if (endSquare.piece !== null){
