@@ -96,12 +96,17 @@ class King {
       "NorthWest": [fromRow - 1, fromCol - 1],
       "NorthEast": [fromRow - 1, fromCol + 1],
       "SouthWest": [fromRow + 1, fromCol - 1],
-      "SouthEast": [fromRow + 1, fromCol + 1]
+      "SouthEast": [fromRow + 1, fromCol + 1],
+      "Castle Kingside": [fromRow, fromCol - 2],
+      "Castle Queenside": [fromRow, fromCol + 2]
     }
     for (const direction in kingDirections) {
       const possibleSquare = kingDirections[direction]
 
       if (squaresToFind === "controlled squares") {
+        if (direction === "Castle Kingside" || direction === "Castle Queenside") {
+          continue
+        }
         if (board.isSquareOnBoard(possibleSquare)) {
           possibleSquares.push(possibleSquare)
           continue
@@ -109,6 +114,13 @@ class King {
       }
 
       if (squaresToFind === "possible moves") {
+
+        if (direction === "Castle Kingside"){
+          // if (board.checkIfCastlingLegal()){
+          //   possibleSquares.push(kingDirections["Castle Kingside"])
+          // }
+        }
+
         const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"))
         if (invalidMove) { continue }
 

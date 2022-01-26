@@ -16,7 +16,6 @@ export default function CapturedPieceContainer({capturedPieces}){
     return pieceValues[b.type] - pieceValues[a.type] 
   })
 
-  console.log(sortedPieces)
   return (
     <div
       className="captured-pieces">

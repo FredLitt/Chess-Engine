@@ -30,6 +30,12 @@ export default function MoveList({moveList}){
   }
 
   const renderMoveNotation = (move, index) => {
+    if (move.moveData.kingsideCastle) {
+      return '0 - 0'
+    }
+    if (move.moveData.queensideCastle) {
+      return '0 - 0 - 0'
+    }
     let moveNotation
     const pieceAbbreviation = pieceAbbreviations[move.piece.type]
     const endRow = (move.toSquare[0] + 1)

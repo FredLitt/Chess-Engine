@@ -10,7 +10,6 @@ import './App.css';
 //TODO: Castling!
 //TODO: New game button upon checkmate
 //TODO: Add skip forward and backward buttons below move list
-//TODO: Determine checkmate!
 //TODO: Better styling and responsiveness
 //TODO: 2 player network chess
 

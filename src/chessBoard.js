@@ -64,13 +64,12 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[6][0].piece = pieces.blackRook
-    this.squares[5][0].piece = pieces.blackKnight
-    this.squares[4][3].piece = pieces.blackPawn
-    this.squares[0][0].piece = pieces.whiteQueen
-    this.squares[5][6].piece = pieces.blackKing
-    this.squares[7][6].piece = pieces.whiteKing
-    this.squares[2][2].piece = pieces.whiteRook
+    this.squares[0][0].piece = pieces.whiteRook
+    this.squares[0][7].piece = pieces.whiteRook
+    this.squares[0][3].piece = pieces.whiteKing
+    this.squares[7][3].piece = pieces.blackKing
+    this.squares[7][0].piece = pieces.blackRook
+    this.squares[7][7].piece = pieces.blackRook
       }
 
   determineWhoseTurn(){
@@ -175,6 +174,38 @@ export class Board {
     }
   }
 
+  checkIfCastlingPossible(){
+    // if checks needed:
+    // 1. king has not moved
+    // 2. kingside rook has not moved
+    // 3. king does not pass through check or into check
+    // 4. knight and rook are not in way
+    // 5. king cannot be in check currently
+    let castlingRook
+    let castlingKing
+    let castlingPathSquares
+    let enemyControlledSquares
+    if (color === "white"){
+      
+      castlingPathSquares = [[0, 1], [0, 2], [0, 3]]
+      enemyControlledSquares = board.findAttackedSquares("black")
+    }
+    if (color === "black"){
+      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      enemyControlledSquares = board.findAttackedSquares("white")
+    }
+  }
+
+  castleKingside(color){
+    this.squares[0][0].piece = null
+    this.squares[0][2].piece = pieces.whiteRook
+  }
+
+  castleQueenside(color){
+    console.log('queenside')
+    this.squares[0][7].piece = null
+    this.squares[0][4].piece = pieces.whiteRook
+  }
   //THIS IS BUGGY IF THERE's A PIECE ON THE TOSQUARE
   checkForPromotion(toSquare){
     if (this.selectedPiece.piece === null || this.selectedPiece.piece.type !== "pawn"){
@@ -273,6 +304,24 @@ export class Board {
     return false
   }
 
+  wasMoveCastling(fromSquare, toSquare){
+    if (this.selectedPiece.piece.type !== "king"){
+      return false
+    }
+    console.log(toSquare)
+
+    const kingsTargetColumn = parseInt(toSquare[1])
+    const columnForKingsideCastle = 1
+    const columnForQueensideCastle = 5
+    
+    if (kingsTargetColumn === columnForKingsideCastle){
+      return "Kingside"
+    }
+    if (kingsTargetColumn === columnForQueensideCastle){
+      return "Queenside"
+    }
+  }
+
   movePiece(toSquare, promotionChoice){
     const fromSquare = this.selectedPiece.square
     const [fromRow, fromCol] = fromSquare
@@ -282,6 +331,14 @@ export class Board {
       const startSquare = this.squares[fromRow][fromCol]
       const endSquare = this.squares[toRow][toCol]
       const moveData = {}
+      if (this.wasMoveCastling(fromSquare, toSquare) === "Kingside"){
+        this.castleKingside()
+        moveData.kingsideCastle = true
+      }
+      if (this.wasMoveCastling(fromSquare, toSquare) === "Queenside"){
+        this.castleQueenside()
+        moveData.queensideCastle = true
+      }
       if (endSquare.piece !== null){
         moveData.wasACapture = true
         const capturedPiece = endSquare.piece
