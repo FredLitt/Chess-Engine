@@ -176,33 +176,51 @@ export class Board {
 
   checkIfCastlingPossible(castlingDirection){
     // if checks needed:
-    // 1. king has not moved
     // 2. kingside rook has not moved
     // 3. king does not pass through check or into check
     // 4. knight and rook are not in way
     // 5. king cannot be in check currently
     const castlingKingColor = this.selectedPiece.piece.color
-    let castlingRook
-    let castlingKingStartSquare
+    let castlingRookSquare
+    let kingStartSquare
     let castlingPathSquares
     let enemyControlledSquares
   console.log(castlingDirection)
     //just for kingside first
     if (castlingKingColor === "white"){
-      castlingKingStartSquare = [0, 3]
-      const playedMoveStartSquares = this.playedMoveList.map(move => move.fromSquare)
-      const kingHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, castlingKingStartSquare))
-      console.log(kingHasMoved)
-      if (kingHasMoved){
-        console.log("can't castle")
-        return false
-      }
-      castlingPathSquares = [[0, 1], [0, 2], [0, 3]]
+      kingStartSquare = [0, 3]
       enemyControlledSquares = this.findAttackedSquares("black")
+      
+      if (castlingDirection === "Castle Kingside"){
+      castlingPathSquares = [[0, 1], [0, 2], [0, 3]]
+      castlingRookSquare = [0, 0]
+      }
+
+      if (castlingDirection === "Castle Queenside"){
+      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      castlingRookSquare = [7, 0]
+      }
     }
     if (castlingKingColor === "black"){
-      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      kingStartSquare = [7, 3]
       enemyControlledSquares = this.findAttackedSquares("white")
+
+      if (castlingDirection === "Castle Kingside"){
+      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      castlingRookSquare = [7, 0]
+      }
+
+      if (castlingDirection === "Castle Queenside"){
+      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      castlingRookSquare = [7, 0]
+      }
+    }
+  console.log(castlingRookSquare)
+    const playedMoveStartSquares = this.playedMoveList.map(move => move.fromSquare)
+    const kingHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, kingStartSquare))
+    const castlingRookHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, castlingRookSquare))
+    if (kingHasMoved || castlingRookHasMoved){
+      return false
     }
     return true
   }
