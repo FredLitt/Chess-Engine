@@ -230,23 +230,27 @@ export class Board {
 
   castleKingside(kingColor){
     if (kingColor === "white") {
+      const castlingRook = this.squares[0][0].piece
       this.squares[0][0].piece = null
-      this.squares[0][2].piece = pieces.whiteRook
+      this.squares[0][2].piece = castlingRook
     }
     if (kingColor === "black"){
+      const castlingRook = this.squares[7][0].piece
       this.squares[7][0].piece = null
-      this.squares[7][2].piece = pieces.blackRook
+      this.squares[7][2].piece = castlingRook
     }
   }
 
   castleQueenside(kingColor){
     if (kingColor === "white") {
+      const castlingRook = this.squares[0][7].piece
       this.squares[0][7].piece = null
-      this.squares[0][4].piece = pieces.whiteRook
+      this.squares[0][4].piece = castlingRook
     }
     if (kingColor === "black"){
+      const castlingRook = this.squares[7][7].piece
       this.squares[7][7].piece = null
-      this.squares[7][4].piece = pieces.blackRook
+      this.squares[7][4].piece = castlingRook
     }
   }
   //THIS IS BUGGY IF THERE's A PIECE ON THE TOSQUARE
@@ -348,17 +352,35 @@ export class Board {
   }
 
   wasMoveCastling(fromSquare, toSquare){
-    if (this.selectedPiece.piece.type !== "king"){
+    const movingPiece = this.selectedPiece.piece
+    console.log(movingPiece.color)
+    if (movingPiece.type !== "king"){
       return false
     }
-    const kingsTargetColumn = (toSquare[1])
-    const columnForKingsideCastle = 1
-    const columnForQueensideCastle = 5
+    let castlingSquares
+    if (movingPiece.color === "white"){
+      castlingSquares = {
+        kingStartSquare: [0, 3],
+        kingsideEndSquare: [0, 1],
+        queensideEndSquare: [0, 5]
+      }
+    }
+    if (movingPiece.color === "black"){
+      castlingSquares = {
+        kingStartSquare: [7, 3],
+        kingsideEndSquare: [7, 1],
+        queensideEndSquare: [7, 5]
+      }
+    }
+    console.log(castlingSquares)
+    const kingIsOnStartSquare = this.squaresAreEqual(fromSquare, castlingSquares.kingStartSquare)
+    const kingMovedToKingsideCastleSquare = this.squaresAreEqual(toSquare, castlingSquares.kingsideEndSquare)
+    const kingMovedToQueensideCastleSquare = this.squaresAreEqual(toSquare, castlingSquares.queensideEndSquare)
     
-    if (kingsTargetColumn === columnForKingsideCastle){
+    if (kingIsOnStartSquare && kingMovedToKingsideCastleSquare){
       return "Kingside"
     }
-    if (kingsTargetColumn === columnForQueensideCastle){
+    if (kingIsOnStartSquare && kingMovedToQueensideCastleSquare){
       return "Queenside"
     }
   }
@@ -373,10 +395,14 @@ export class Board {
       const endSquare = this.squares[toRow][toCol]
       const moveData = {}
       if (this.wasMoveCastling(fromSquare, toSquare) === "Kingside"){
+        console.log('castle time')
+
         this.castleKingside(this.selectedPiece.piece.color)
         moveData.kingsideCastle = true
       }
       if (this.wasMoveCastling(fromSquare, toSquare) === "Queenside"){
+        console.log('castle time')
+
         this.castleQueenside(this.selectedPiece.piece.color)
         moveData.queensideCastle = true
       }
