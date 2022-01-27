@@ -64,10 +64,11 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[0][1].piece = pieces.whiteRook
+    this.squares[0][0].piece = pieces.whiteRook
     this.squares[0][7].piece = pieces.whiteRook
     this.squares[0][3].piece = pieces.whiteKing
     this.squares[7][3].piece = pieces.blackKing
+    this.squares[1][5].piece = pieces.blackPawn
     this.squares[7][0].piece = pieces.blackRook
     this.squares[7][7].piece = pieces.blackRook
       }
@@ -176,7 +177,6 @@ export class Board {
 
   checkIfCastlingPossible(castlingDirection){
     // if checks needed:
-    // 2. kingside rook has not moved
     // 3. king does not pass through check or into check
     // 4. knight and rook are not in way
     // 5. king cannot be in check currently
@@ -197,7 +197,7 @@ export class Board {
       }
 
       if (castlingDirection === "Castle Queenside"){
-      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      castlingPathSquares = [[0, 3], [0, 4], [0, 5]]
       castlingRookSquare = [7, 0]
       }
     }
@@ -211,15 +211,18 @@ export class Board {
       }
 
       if (castlingDirection === "Castle Queenside"){
-      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      castlingPathSquares = [[7, 3], [7, 4], [7, 5]]
       castlingRookSquare = [7, 0]
       }
     }
-  console.log(castlingRookSquare)
+
     const playedMoveStartSquares = this.playedMoveList.map(move => move.fromSquare)
     const kingHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, kingStartSquare))
+    const kingWouldPassThroughCheck = 
+      (castlingPathSquares.some(square => this.arrayContainsSquare(enemyControlledSquares, square)))
+
     const castlingRookHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, castlingRookSquare))
-    if (kingHasMoved || castlingRookHasMoved){
+    if (kingHasMoved || castlingRookHasMoved || kingWouldPassThroughCheck){
       return false
     }
     return true
