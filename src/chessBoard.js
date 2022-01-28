@@ -65,6 +65,7 @@ export class Board {
     // this.squares[7][7].piece = pieces.blackRook
 
     this.squares[0][0].piece = pieces.whiteRook
+    this.squares[0][2].piece = pieces.whiteBishop
     this.squares[0][7].piece = pieces.whiteRook
     this.squares[0][3].piece = pieces.whiteKing
     this.squares[7][3].piece = pieces.blackKing
@@ -93,6 +94,23 @@ export class Board {
       return "byFriendlyPiece"
     }
     return "byEnemyPiece"
+  }
+
+  squareIsEmpty(square){
+    const [row, col] = square
+    if(this.squares[row][col].piece === null){
+      return true
+    }
+    return false
+  }
+
+  squaresContainEnemyPieces(square1, square2){
+    const [row1, col1] = square1
+    const [row2, col2] = square2
+    if (this.squares[row1][col1].piece.color === this.squares[row2][col2].piece.color){
+      return false
+    }
+    return true
   }
 
   capturePiece(capturedPiece){
@@ -177,9 +195,7 @@ export class Board {
 
   checkIfCastlingPossible(castlingDirection){
     // if checks needed:
-    // 3. king does not pass through check or into check
-    // 4. knight and rook are not in way
-    // 5. king cannot be in check currently
+    // 1. Path is clear of pieces (all contain piece === null)
     const castlingKingColor = this.selectedPiece.piece.color
     let castlingRookSquare
     let kingStartSquare
@@ -192,13 +208,13 @@ export class Board {
       enemyControlledSquares = this.findAttackedSquares("black")
       
       if (castlingDirection === "Castle Kingside"){
-      castlingPathSquares = [[0, 1], [0, 2], [0, 3]]
+      castlingPathSquares = [[0, 1], [0, 2]]
       castlingRookSquare = [0, 0]
       }
 
       if (castlingDirection === "Castle Queenside"){
-      castlingPathSquares = [[0, 3], [0, 4], [0, 5]]
-      castlingRookSquare = [7, 0]
+      castlingPathSquares = [[0, 4], [0, 5]]
+      castlingRookSquare = [0, 7]
       }
     }
     if (castlingKingColor === "black"){
@@ -206,23 +222,30 @@ export class Board {
       enemyControlledSquares = this.findAttackedSquares("white")
 
       if (castlingDirection === "Castle Kingside"){
-      castlingPathSquares = [[7, 1], [7, 2], [7, 3]]
+      castlingPathSquares = [[7, 1], [7, 2]]
       castlingRookSquare = [7, 0]
       }
 
       if (castlingDirection === "Castle Queenside"){
-      castlingPathSquares = [[7, 3], [7, 4], [7, 5]]
-      castlingRookSquare = [7, 0]
+      castlingPathSquares = [[7, 4], [7, 5]]
+      castlingRookSquare = [7, 7]
       }
     }
 
-    const playedMoveStartSquares = this.playedMoveList.map(move => move.fromSquare)
-    const kingHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, kingStartSquare))
+    const playedMoveStartSquares = 
+      this.playedMoveList.map(move => move.fromSquare)
+    const kingHasMoved = 
+      (this.arrayContainsSquare(playedMoveStartSquares, kingStartSquare))
+    const kingIsInCheck = 
+      (this.arrayContainsSquare(enemyControlledSquares, kingStartSquare))
     const kingWouldPassThroughCheck = 
       (castlingPathSquares.some(square => this.arrayContainsSquare(enemyControlledSquares, square)))
-
-    const castlingRookHasMoved = (this.arrayContainsSquare(playedMoveStartSquares, castlingRookSquare))
-    if (kingHasMoved || castlingRookHasMoved || kingWouldPassThroughCheck){
+    const castlingRookHasMoved = 
+      (this.arrayContainsSquare(playedMoveStartSquares, castlingRookSquare))
+    const castlingPathIsClear = 
+      castlingPathSquares.every(square => this.squareIsEmpty(square))
+    console.log(castlingPathIsClear)
+    if (kingHasMoved || kingIsInCheck || kingWouldPassThroughCheck ||castlingRookHasMoved || !castlingPathIsClear){
       return false
     }
     return true
@@ -372,7 +395,6 @@ export class Board {
         queensideEndSquare: [7, 5]
       }
     }
-    console.log(castlingSquares)
     const kingIsOnStartSquare = this.squaresAreEqual(fromSquare, castlingSquares.kingStartSquare)
     const kingMovedToKingsideCastleSquare = this.squaresAreEqual(toSquare, castlingSquares.kingsideEndSquare)
     const kingMovedToQueensideCastleSquare = this.squaresAreEqual(toSquare, castlingSquares.queensideEndSquare)
@@ -395,14 +417,10 @@ export class Board {
       const endSquare = this.squares[toRow][toCol]
       const moveData = {}
       if (this.wasMoveCastling(fromSquare, toSquare) === "Kingside"){
-        console.log('castle time')
-
         this.castleKingside(this.selectedPiece.piece.color)
         moveData.kingsideCastle = true
       }
       if (this.wasMoveCastling(fromSquare, toSquare) === "Queenside"){
-        console.log('castle time')
-
         this.castleQueenside(this.selectedPiece.piece.color)
         moveData.queensideCastle = true
       }
