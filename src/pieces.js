@@ -334,7 +334,7 @@ export class Pawn {
       const possibleSquare = pawnMoves[move]
 
       if (squaresToFind === "controlled squares") {
-        if (move === "ForwardOne" || move === "ForwardTwo") {
+        if (move === "ForwardOne" || move === "ForwardTwo" || !board.isSquareOnBoard(possibleSquare)) {
           continue
         }
         possibleSquares.push(possibleSquare)
