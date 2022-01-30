@@ -64,11 +64,11 @@ export class Board {
 
     // this.squares[0][0].piece = pieces.whiteRook
     // this.squares[0][2].piece = pieces.whiteBishop
-    this.squares[2][6].piece = pieces.whiteRook
+    this.squares[2][6].piece = pieces.whiteKnight
     this.squares[5][5].piece = pieces.whiteKing
     this.squares[3][3].piece = pieces.blackKing
     // this.squares[1][5].piece = pieces.blackPawn
-    this.squares[1][1].piece = pieces.blackRook
+    this.squares[1][1].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
       }
 

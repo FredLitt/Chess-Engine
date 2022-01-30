@@ -204,8 +204,35 @@ class Knight {
       this.symbol = pieceSymbols.blackKnight
     }
   }
+
+  findControlledSquares(board, fromSquare, knightMoves){
+    const controlledSquares = []
+    for (const move in knightMoves) {
+      const possibleSquare = knightMoves[move]
+      if (board.isSquareOnBoard(possibleSquare)) {
+        controlledSquares.push(possibleSquare)
+      }
+    }
+    return controlledSquares
+  }
+
+  findPossibleMoves(board, fromSquare, knightMoves){
+    const possibleMoves = []
+    for (const move in knightMoves) {
+      const possibleSquare = knightMoves[move]
+        const invalidMove = 
+          !board.isSquareOnBoard(possibleSquare) || 
+          board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece" ||
+          board.moveExposesKing(this, fromSquare, possibleSquare)
+          if (invalidMove) {
+            continue
+          }
+          possibleMoves.push(possibleSquare)
+      }
+      return possibleMoves
+  }
+
   findSquares({board, fromSquare, squaresToFind}) {
-    const possibleSquares = []
     const [fromRow, fromCol] = fromSquare
     const knightMoves = {
       "NorthOneEastTwo": [fromRow - 1, fromCol + 2],
@@ -217,29 +244,13 @@ class Knight {
       "SouthOneWestTwo": [fromRow + 1, fromCol - 2],
       "SouthTwoWestOne": [fromRow + 2, fromCol - 1]
     }
-    for (const move in knightMoves) {
-      const possibleSquare = knightMoves[move]
-
-      if (squaresToFind === "controlled squares"){
-        if (board.isSquareOnBoard(possibleSquare)) {
-          possibleSquares.push(possibleSquare)
-        }
-      }
-
-      if (squaresToFind === "possible moves") {
-
-        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece" )
-          if (invalidMove) {
-            continue
-          }
-
-          if (board.moveExposesKing(this, fromSquare, possibleSquare)) {
-            continue
-          }
-          possibleSquares.push(possibleSquare)
-      }
+    if (squaresToFind === "controlled squares") {
+      return this.findControlledSquares(board, fromSquare, knightMoves)
     }
-    return possibleSquares
+
+    if (squaresToFind === "possible moves") {
+      return this.findPossibleMoves(board, fromSquare, knightMoves)
+    }
   }
 }
 
