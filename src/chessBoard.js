@@ -37,40 +37,38 @@ export class Board {
     }
     this.squaresAttackedByWhite = []
     this.squaresAttackedByBlack = []
-    this.whiteKingInCheck = false
-    this.blackKingInCheck = false
   }
   
   setToStartPosition(){
-    for (let i = 0; i < 8; i++){
-      this.squares[1][i].piece = pieces.whitePawn
-      this.squares[6][i].piece = pieces.blackPawn
-    }
-    this.squares[0][0].piece = pieces.whiteRook
-    this.squares[0][1].piece = pieces.whiteKnight
-    this.squares[0][2].piece = pieces.whiteBishop
-    this.squares[0][3].piece = pieces.whiteKing
-    this.squares[0][4].piece = pieces.whiteQueen
-    this.squares[0][5].piece = pieces.whiteBishop
-    this.squares[0][6].piece = pieces.whiteKnight
-    this.squares[0][7].piece = pieces.whiteRook
+    // for (let i = 0; i < 8; i++){
+    //   this.squares[1][i].piece = pieces.whitePawn
+    //   this.squares[6][i].piece = pieces.blackPawn
+    // }
+    // this.squares[0][0].piece = pieces.whiteRook
+    // this.squares[0][1].piece = pieces.whiteKnight
+    // this.squares[0][2].piece = pieces.whiteBishop
+    // this.squares[0][3].piece = pieces.whiteKing
+    // this.squares[0][4].piece = pieces.whiteQueen
+    // this.squares[0][5].piece = pieces.whiteBishop
+    // this.squares[0][6].piece = pieces.whiteKnight
+    // this.squares[0][7].piece = pieces.whiteRook
 
-    this.squares[7][0].piece = pieces.blackRook
-    this.squares[7][1].piece = pieces.blackKnight
-    this.squares[7][2].piece = pieces.blackBishop
-    this.squares[7][3].piece = pieces.blackKing
-    this.squares[7][4].piece = pieces.blackQueen
-    this.squares[7][5].piece = pieces.blackBishop
-    this.squares[7][6].piece = pieces.blackKnight
-    this.squares[7][7].piece = pieces.blackRook
+    // this.squares[7][0].piece = pieces.blackRook
+    // this.squares[7][1].piece = pieces.blackKnight
+    // this.squares[7][2].piece = pieces.blackBishop
+    // this.squares[7][3].piece = pieces.blackKing
+    // this.squares[7][4].piece = pieces.blackQueen
+    // this.squares[7][5].piece = pieces.blackBishop
+    // this.squares[7][6].piece = pieces.blackKnight
+    // this.squares[7][7].piece = pieces.blackRook
 
     // this.squares[0][0].piece = pieces.whiteRook
     // this.squares[0][2].piece = pieces.whiteBishop
-    // this.squares[0][7].piece = pieces.whiteRook
-    // this.squares[0][3].piece = pieces.whiteKing
-    // this.squares[7][3].piece = pieces.blackKing
+    this.squares[2][6].piece = pieces.whiteRook
+    this.squares[5][5].piece = pieces.whiteKing
+    this.squares[3][3].piece = pieces.blackKing
     // this.squares[1][5].piece = pieces.blackPawn
-    // this.squares[7][0].piece = pieces.blackRook
+    this.squares[1][1].piece = pieces.blackRook
     // this.squares[7][7].piece = pieces.blackRook
       }
 
@@ -91,10 +89,10 @@ export class Board {
       return false
       }
     if (this.squares[row1][col1].piece.color === this.squares[row2][col2].piece.color){
-      return "byFriendlyPiece"
+      return "by Friendly Piece"
+      }
+    return "by Enemy Piece"
     }
-    return "byEnemyPiece"
-  }
 
   squareIsEmpty(square){
     const [row, col] = square
@@ -201,7 +199,6 @@ export class Board {
     let kingStartSquare
     let castlingPathSquares
     let enemyControlledSquares
-  console.log(castlingDirection)
     //just for kingside first
     if (castlingKingColor === "white"){
       kingStartSquare = [0, 3]
@@ -232,19 +229,15 @@ export class Board {
       }
     }
 
-    const playedMoveStartSquares = 
-      this.playedMoveList.map(move => move.fromSquare)
     const kingHasMoved = 
-      (this.arrayContainsSquare(playedMoveStartSquares, kingStartSquare))
+      (this.playedMoveList.includes(move => (move.piece.type === "king" && move.piece.color === castlingKingColor)) || !this.squaresAreEqual(this.selectedPiece.square, kingStartSquare) )
     const kingIsInCheck = 
-      (this.arrayContainsSquare(enemyControlledSquares, kingStartSquare))
+      this.arrayContainsSquare(enemyControlledSquares, kingStartSquare)
     const kingWouldPassThroughCheck = 
       (castlingPathSquares.some(square => this.arrayContainsSquare(enemyControlledSquares, square)))
-    const castlingRookHasMoved = 
-      (this.arrayContainsSquare(playedMoveStartSquares, castlingRookSquare))
+    const castlingRookHasMoved = this.playedMoveList.includes(move => board.squaresAreEqual(move.fromSquare, castlingRookSquare))
     const castlingPathIsClear = 
       castlingPathSquares.every(square => this.squareIsEmpty(square))
-    console.log(castlingPathIsClear)
     if (kingHasMoved || kingIsInCheck || kingWouldPassThroughCheck ||castlingRookHasMoved || !castlingPathIsClear){
       return false
     }
@@ -464,14 +457,9 @@ export class Board {
       attackedSquares = this.squaresAttackedByBlack
       enemyKingsSquare = this.findKingsSquare("white")
     }
-    
     if(this.arrayContainsSquare(attackedSquares, enemyKingsSquare)){
-      if(movedPiece.color === "white"){ this.blackKingInCheck = true }
-      if(movedPiece.color === "black"){ this.whiteKingInCheck = true }
       return true
     }
-    if(movedPiece.color === "white"){ this.blackKingInCheck = false }
-    if(movedPiece.color === "black"){ this.whiteKingInCheck = false }
     return false
   }
 
@@ -503,7 +491,7 @@ export class Board {
   markControlledSquares(){
     this.squaresAttackedByWhite = this.findAttackedSquares("white")
     this.squaresAttackedByBlack = this.findAttackedSquares("black")
-  console.log(this.squaresAttackedByBlack)
+
     //Reset all squares to not be controlled
     for (const row of this.squares) {
       for (const square of row) {

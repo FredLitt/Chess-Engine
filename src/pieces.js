@@ -39,13 +39,13 @@ const findSquaresForLongRange =
         }
 
         if (squaresToFind === "possible moves") {
-          const invalidMove = !board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"
+          const invalidMove = !board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece"
           if (invalidMove) {
             completedDirections.push(direction) 
             continue
             }
 
-          if (board.isSquareOccupied(fromSquare, possibleSquare) === "byEnemyPiece") {
+          if (board.isSquareOccupied(fromSquare, possibleSquare) === "by Enemy Piece") {
             completedDirections.push(direction)
             if (!board.moveExposesKing(piece, fromSquare, possibleSquare)) {
               possibleSquares.push(possibleSquare)
@@ -75,15 +75,45 @@ class King {
     }
   }
 
-  findUnsafeSquares(board) {
-    if (this.color === "white") {
-      return board.findAttackedSquares("black")
+  findControlledSquares(board, fromSquare, kingDirections){
+    const controlledSquares = []
+    for (const direction in kingDirections){
+      const possibleSquare = kingDirections[direction]
+
+      if (direction === "Castle Kingside" || direction === "Castle Queenside") {
+        continue
+        }
+      if (!board.isSquareOnBoard(possibleSquare)) {
+        continue
+        }
+      controlledSquares.push(possibleSquare)
     }
-    if (this.color === "black") {
-      return board.findAttackedSquares("white")
-    }
+    return controlledSquares
   }
 
+  findPossibleMoves(board, fromSquare, kingDirections){
+    const possibleMoves = []
+    for (const direction in kingDirections){
+      const possibleSquare = kingDirections[direction]
+
+      if (direction === "Castle Kingside" || direction === "Castle Queenside"){
+        if (!board.checkIfCastlingPossible(direction)){
+          continue
+          }
+        }
+      const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece"))
+      if (invalidMove) {
+        continue
+        }
+      if (board.moveExposesKing(this, fromSquare, possibleSquare)) {
+        continue
+      }
+      possibleMoves.push(possibleSquare)
+    }
+    return possibleMoves
+  }
+
+  
   findSquares({board, fromSquare, squaresToFind}) {
     const possibleSquares = []
 
@@ -99,39 +129,13 @@ class King {
       "SouthEast": [fromRow + 1, fromCol + 1],
       "Castle Kingside": [fromRow, fromCol - 2],
       "Castle Queenside": [fromRow, fromCol + 2]
+    }    
+    if (squaresToFind === "controlled squares") {
+      return this.findControlledSquares(board, fromSquare, kingDirections)
     }
-    for (const direction in kingDirections) {
-      const possibleSquare = kingDirections[direction]
-
-      if (squaresToFind === "controlled squares") {
-        if (direction === "Castle Kingside" || direction === "Castle Queenside") {
-          continue
-        }
-        if (board.isSquareOnBoard(possibleSquare)) {
-          possibleSquares.push(possibleSquare)
-          continue
-        }
-      }
-
-      if (squaresToFind === "possible moves") {
-
-        if (direction === "Castle Kingside" || direction === "Castle Queenside"){
-          if (!board.checkIfCastlingPossible(direction)){
-            continue
-          }
-        }
-
-        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece"))
-        if (invalidMove) { continue }
-
-        if (board.moveExposesKing(this, fromSquare, possibleSquare)) {
-          continue
-        }
-
-        possibleSquares.push(possibleSquare)
-      }
+    if (squaresToFind === "possible moves") {
+      return this.findPossibleMoves(board, fromSquare, kingDirections)
     }
-    return possibleSquares
   }
 }
 
@@ -233,7 +237,7 @@ class Knight {
 
       if (squaresToFind === "possible moves") {
 
-        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "byFriendlyPiece" )
+        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece" )
           if (invalidMove) {
             continue
           }
@@ -359,7 +363,7 @@ export class Pawn {
         }
 
         if (move === "CaptureWest" || move === "CaptureEast") {
-          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "byEnemyPiece")
+          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "by Enemy Piece")
           if (invalidMove) {
             continue
           }

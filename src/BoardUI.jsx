@@ -65,15 +65,15 @@ export default function BoardUI({boardState, setBoardState, board}){
       return 'square'
   }
 
-  const borderForSquare = (square) => {
-    if(square.isControlledByWhite && square.isControlledByBlack) {
-      return 'solid 1px green'
-    } if (square.isControlledByWhite) {
-      return 'solid 1px red'
-    } if (square.isControlledByBlack) {
-      return 'solid 1px black'
-    } return 'none'
-  }
+  // const borderForSquare = (square) => {
+  //   if(square.isControlledByWhite && square.isControlledByBlack) {
+  //     return 'solid 1px green'
+  //   } if (square.isControlledByWhite) {
+  //     return 'solid 1px red'
+  //   } if (square.isControlledByBlack) {
+  //     return 'solid 1px black'
+  //   } return 'none'
+  // }
 
   return (
     <>
@@ -96,7 +96,7 @@ export default function BoardUI({boardState, setBoardState, board}){
                 piece={square.piece}
                 key={square.coordinate} 
                 style={{
-                  border: borderForSquare(square),
+                  
                   backgroundColor: isLightSquare(square.coordinate) ? 'white' : 'lightgrey'}}
                 onClick={(e) => movePiece(e)}>
                   {square.piece !== null && square.piece.symbol}   
