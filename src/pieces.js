@@ -75,48 +75,7 @@ class King {
     }
   }
 
-  findControlledSquares(board, fromSquare, kingDirections){
-    const controlledSquares = []
-    for (const direction in kingDirections){
-      const possibleSquare = kingDirections[direction]
-
-      if (direction === "Castle Kingside" || direction === "Castle Queenside") {
-        continue
-        }
-      if (!board.isSquareOnBoard(possibleSquare)) {
-        continue
-        }
-      controlledSquares.push(possibleSquare)
-    }
-    return controlledSquares
-  }
-
-  findPossibleMoves(board, fromSquare, kingDirections){
-    const possibleMoves = []
-    for (const direction in kingDirections){
-      const possibleSquare = kingDirections[direction]
-
-      if (direction === "Castle Kingside" || direction === "Castle Queenside"){
-        if (!board.checkIfCastlingPossible(direction)){
-          continue
-          }
-        }
-      const invalidMove = (!board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece"))
-      if (invalidMove) {
-        continue
-        }
-      if (board.moveExposesKing(this, fromSquare, possibleSquare)) {
-        continue
-      }
-      possibleMoves.push(possibleSquare)
-    }
-    return possibleMoves
-  }
-
-  
   findSquares({board, fromSquare, squaresToFind}) {
-    const possibleSquares = []
-
     const [fromRow, fromCol] = fromSquare
     const kingDirections = {
       "North": [fromRow - 1, fromCol],
@@ -136,6 +95,38 @@ class King {
     if (squaresToFind === "possible moves") {
       return this.findPossibleMoves(board, fromSquare, kingDirections)
     }
+  }
+
+  findControlledSquares(board, fromSquare, kingDirections){
+    const controlledSquares = []
+    for (const direction in kingDirections){
+      const possibleSquare = kingDirections[direction]
+
+      if (direction.includes("Castle") || !board.isSquareOnBoard(possibleSquare)) {
+        continue
+        }
+      controlledSquares.push(possibleSquare)
+    }
+    return controlledSquares
+  }
+
+  findPossibleMoves(board, fromSquare, kingDirections){
+    const possibleMoves = []
+    for (const direction in kingDirections){
+      const possibleSquare = kingDirections[direction]
+
+      if (direction.includes("Castle")){
+        if (!board.checkIfCastlingPossible(direction)){
+          continue
+          }
+        }
+      const invalidMove = !board.isSquareOnBoard(possibleSquare) || (board.isSquareOccupied(fromSquare, possibleSquare) === "by Friendly Piece" || board.moveExposesKing(this, fromSquare, possibleSquare))
+      if (invalidMove) {
+        continue
+        }
+      possibleMoves.push(possibleSquare)
+    }
+    return possibleMoves
   }
 }
 
