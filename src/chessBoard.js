@@ -1,7 +1,5 @@
 import { pieces } from './pieces.js'
 
-// EVERY MOVE HAS TO CHECK AND MAKE SURE IT DOESN'T EXPOSE KING
-
 export class PlayedMove {
   constructor(piece, fromSquare, toSquare, moveData) {
     this.piece = piece
@@ -40,35 +38,35 @@ export class Board {
   }
   
   setToStartPosition(){
-    // for (let i = 0; i < 8; i++){
-    //   this.squares[1][i].piece = pieces.whitePawn
-    //   this.squares[6][i].piece = pieces.blackPawn
-    // }
-    // this.squares[0][0].piece = pieces.whiteRook
-    // this.squares[0][1].piece = pieces.whiteKnight
-    // this.squares[0][2].piece = pieces.whiteBishop
-    // this.squares[0][3].piece = pieces.whiteKing
-    // this.squares[0][4].piece = pieces.whiteQueen
-    // this.squares[0][5].piece = pieces.whiteBishop
-    // this.squares[0][6].piece = pieces.whiteKnight
-    // this.squares[0][7].piece = pieces.whiteRook
+    for (let i = 0; i < 8; i++){
+      this.squares[1][i].piece = pieces.whitePawn
+      this.squares[6][i].piece = pieces.blackPawn
+    }
+    this.squares[0][0].piece = pieces.whiteRook
+    this.squares[0][1].piece = pieces.whiteKnight
+    this.squares[0][2].piece = pieces.whiteBishop
+    this.squares[0][3].piece = pieces.whiteKing
+    this.squares[0][4].piece = pieces.whiteQueen
+    this.squares[0][5].piece = pieces.whiteBishop
+    this.squares[0][6].piece = pieces.whiteKnight
+    this.squares[0][7].piece = pieces.whiteRook
 
-    // this.squares[7][0].piece = pieces.blackRook
-    // this.squares[7][1].piece = pieces.blackKnight
-    // this.squares[7][2].piece = pieces.blackBishop
-    // this.squares[7][3].piece = pieces.blackKing
-    // this.squares[7][4].piece = pieces.blackQueen
-    // this.squares[7][5].piece = pieces.blackBishop
-    // this.squares[7][6].piece = pieces.blackKnight
-    // this.squares[7][7].piece = pieces.blackRook
+    this.squares[7][0].piece = pieces.blackRook
+    this.squares[7][1].piece = pieces.blackKnight
+    this.squares[7][2].piece = pieces.blackBishop
+    this.squares[7][3].piece = pieces.blackKing
+    this.squares[7][4].piece = pieces.blackQueen
+    this.squares[7][5].piece = pieces.blackBishop
+    this.squares[7][6].piece = pieces.blackKnight
+    this.squares[7][7].piece = pieces.blackRook
 
-    // this.squares[0][0].piece = pieces.whiteRook
-    // this.squares[0][2].piece = pieces.whiteBishop
-    this.squares[2][6].piece = pieces.whiteKnight
-    this.squares[5][5].piece = pieces.whiteKing
-    this.squares[3][3].piece = pieces.blackKing
+
+    // this.squares[2][6].piece = pieces.whiteKnight
+    // this.squares[5][5].piece = pieces.whitePawn
+    // this.squares[3][3].piece = pieces.blackKing
+
     // this.squares[1][5].piece = pieces.blackPawn
-    this.squares[1][1].piece = pieces.blackKnight
+    //this.squares[1][1].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
       }
 
@@ -100,15 +98,6 @@ export class Board {
       return true
     }
     return false
-  }
-
-  squaresContainEnemyPieces(square1, square2){
-    const [row1, col1] = square1
-    const [row2, col2] = square2
-    if (this.squares[row1][col1].piece.color === this.squares[row2][col2].piece.color){
-      return false
-    }
-    return true
   }
 
   capturePiece(capturedPiece){
@@ -192,8 +181,6 @@ export class Board {
   }
 
   checkIfCastlingPossible(castlingDirection){
-    // if checks needed:
-    // 1. Path is clear of pieces (all contain piece === null)
     const castlingKingColor = this.selectedPiece.piece.color
     let castlingRookSquare
     let kingStartSquare
@@ -269,7 +256,7 @@ export class Board {
       this.squares[7][4].piece = castlingRook
     }
   }
-  //THIS IS BUGGY IF THERE's A PIECE ON THE TOSQUARE
+
   checkForPromotion(toSquare){
     if (this.selectedPiece.piece === null || this.selectedPiece.piece.type !== "pawn"){
       return false 
@@ -448,7 +435,6 @@ export class Board {
     const movedPiece = this.selectedPiece.piece
     let attackedSquares
     let enemyKingsSquare
-    let kingToMark
     if(movedPiece.color === "white"){
       attackedSquares = this.squaresAttackedByWhite
       enemyKingsSquare = this.findKingsSquare("black")

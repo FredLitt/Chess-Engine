@@ -2,6 +2,14 @@ export const pieces = {}
 
 // Function takes in directions for long range pieces (queen, rook, bishop)
 // returns either all squares that are controlled by piece or all of piece's legal moves
+const findPossibleMovesForLongRange = () => {
+
+}
+
+const findControlledSquaresForLongRange = () => {
+
+}
+
 const findSquaresForLongRange = 
   ({piece, board, fromSquare, squaresToFind, pieceDirections}) => {
   const possibleSquares = []
@@ -205,6 +213,26 @@ class Knight {
     }
   }
 
+  findSquares({board, fromSquare, squaresToFind}) {
+    const [fromRow, fromCol] = fromSquare
+    const knightMoves = {
+      "NorthOneEastTwo": [fromRow - 1, fromCol + 2],
+      "NorthTwoEastOne": [fromRow - 2, fromCol + 1],
+      "SouthOneEastTwo": [fromRow + 1, fromCol + 2],
+      "SouthTwoEastOne": [fromRow + 2, fromCol + 1],
+      "NorthOneWestTwo": [fromRow - 1, fromCol - 2],
+      "NorthTwoWestOne": [fromRow - 2, fromCol - 1],
+      "SouthOneWestTwo": [fromRow + 1, fromCol - 2],
+      "SouthTwoWestOne": [fromRow + 2, fromCol - 1]
+    }
+    if (squaresToFind === "controlled squares") {
+      return this.findControlledSquares(board, fromSquare, knightMoves)
+    }
+    if (squaresToFind === "possible moves") {
+      return this.findPossibleMoves(board, fromSquare, knightMoves)
+    }
+  }
+
   findControlledSquares(board, fromSquare, knightMoves){
     const controlledSquares = []
     for (const move in knightMoves) {
@@ -231,27 +259,6 @@ class Knight {
       }
       return possibleMoves
   }
-
-  findSquares({board, fromSquare, squaresToFind}) {
-    const [fromRow, fromCol] = fromSquare
-    const knightMoves = {
-      "NorthOneEastTwo": [fromRow - 1, fromCol + 2],
-      "NorthTwoEastOne": [fromRow - 2, fromCol + 1],
-      "SouthOneEastTwo": [fromRow + 1, fromCol + 2],
-      "SouthTwoEastOne": [fromRow + 2, fromCol + 1],
-      "NorthOneWestTwo": [fromRow - 1, fromCol - 2],
-      "NorthTwoWestOne": [fromRow - 2, fromCol - 1],
-      "SouthOneWestTwo": [fromRow + 1, fromCol - 2],
-      "SouthTwoWestOne": [fromRow + 2, fromCol - 1]
-    }
-    if (squaresToFind === "controlled squares") {
-      return this.findControlledSquares(board, fromSquare, knightMoves)
-    }
-
-    if (squaresToFind === "possible moves") {
-      return this.findPossibleMoves(board, fromSquare, knightMoves)
-    }
-  }
 }
 
 export class Pawn {
@@ -264,6 +271,7 @@ export class Pawn {
       this.symbol = pieceSymbols.blackPawn
     }
   }
+
   checkForEnPassantCapture(currentSquare, enPassantRow, lastPlayedMove) {
     let enPassantCaptureSquare
     const [row, col] = currentSquare
@@ -290,21 +298,59 @@ export class Pawn {
     }
   }
 
-  // REFACTOR IDEAS:
+  findPossibleMoves({board, fromSquare, pawnMoves, onStartRow, enPassantCaptureSquare}){
+    const possibleMoves = []
+    if (enPassantCaptureSquare !== null){
+      possibleMoves.push(enPassantCaptureSquare)
+    }
+    for (const move in pawnMoves){
+      const possibleSquare = pawnMoves[move]
+      if (move === "ForwardOne") {
+        const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)
+        if (invalidMove) {
+          delete pawnMoves["ForwardTwo"]
+          continue
+        }
+      }
 
-  // different method:
-  // findControlledSquares(board, square)
+      if (move === "ForwardTwo") {
+        const invalidMove = ((!onStartRow) || board.isSquareOccupied(fromSquare, possibleSquare))
+        if (invalidMove) {
+          delete pawnMoves["ForwardTwo"]
+          continue
+        }
+      }
 
-  // options object:
-  // findSquares({ 
-  // board: board,
-  // fromSquare: square,
-  // squaresToFind: "controlledSquares"
-  // })
+      if (move === "CaptureWest" || move === "CaptureEast") {
+        const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "by Enemy Piece")
+        if (invalidMove) {
+          continue
+        }
+      }
+
+      if (board.moveExposesKing(this, fromSquare, possibleSquare)) {
+        continue
+      }
+
+      possibleMoves.push(possibleSquare)
+    }
+  return possibleMoves
+}
+
+ findControlledSquares(board, fromSquare, pawnMoves){
+   const controlledSquares = []
+   for (const move in pawnMoves) {
+     const possibleSquare = pawnMoves[move]
+     if (move === "ForwardOne" || move === "ForwardTwo" || !board.isSquareOnBoard(possibleSquare)) {
+        continue
+      }
+    controlledSquares.push(possibleSquare)
+    }
+    return controlledSquares
+  }
 
   findSquares({board, fromSquare, squaresToFind}) {
     const lastPlayedMove = board.findLastPlayedMove()
-    let possibleSquares = []
     const [fromRow, fromCol] = fromSquare
     let pawnMoves
     let startRow
@@ -333,52 +379,20 @@ export class Pawn {
     if (lastPlayedMove !== null) {
       enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
     }
-    if (enPassantCaptureSquare !== null) {
-      possibleSquares.push(enPassantCaptureSquare)
+    if (squaresToFind === "controlled squares") {
+      return this.findControlledSquares(board, fromSquare, pawnMoves)
     }
-    for (const move in pawnMoves) {
-      const possibleSquare = pawnMoves[move]
 
-      if (squaresToFind === "controlled squares") {
-        if (move === "ForwardOne" || move === "ForwardTwo" || !board.isSquareOnBoard(possibleSquare)) {
-          continue
-        }
-        possibleSquares.push(possibleSquare)
+    if (squaresToFind === "possible moves") {
+      const pawnOptions = {
+        board: board,
+        fromSquare: fromSquare,
+        pawnMoves: pawnMoves,
+        onStartRow: isOnStartRow,
+        enPassantCaptureSquare: enPassantCaptureSquare
       }
-
-      if (squaresToFind === "possible moves") {
-        
-        if (move === "ForwardOne") {
-          const invalidMove = board.isSquareOccupied(fromSquare, possibleSquare)
-          if (invalidMove) {
-            delete pawnMoves["ForwardTwo"]
-            continue
-          }
-        }
-
-        if (move === "ForwardTwo") {
-          const invalidMove = ((!isOnStartRow) || board.isSquareOccupied(fromSquare, possibleSquare))
-          if (invalidMove) {
-            delete pawnMoves["ForwardTwo"]
-            continue
-          }
-        }
-
-        if (move === "CaptureWest" || move === "CaptureEast") {
-          const invalidMove = (!board.isSquareOnBoard(possibleSquare) || board.isSquareOccupied(fromSquare, possibleSquare) !== "by Enemy Piece")
-          if (invalidMove) {
-            continue
-          }
-        }
-
-        if (board.moveExposesKing(this, fromSquare, possibleSquare)) {
-          continue
-        }
-
-        possibleSquares.push(possibleSquare)
-      }
+      return this.findPossibleMoves(pawnOptions)
     }
-    return possibleSquares
   }
 }
 
