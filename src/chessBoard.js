@@ -266,12 +266,9 @@ export class Board {
       squaresToFind: "possible moves"
     }
     const pawnsLegalMoves = this.selectedPiece.piece.findSquares(pawnOptions)
-    if(!this.arrayContainsSquare(pawnsLegalMoves, toSquare)){
-      return false
-    }
+    const notLegalMove = !this.arrayContainsSquare(pawnsLegalMoves, toSquare)
  
     const [fromRow, fromCol] = this.selectedPiece.square
-
     let rowBeforePromotion
     
     if (this.selectedPiece.piece.color === "white"){
@@ -280,10 +277,11 @@ export class Board {
     if (this.selectedPiece.piece.color === "black"){
       rowBeforePromotion = 1
     }
-    if (rowBeforePromotion === fromRow) { 
-      return true 
+    const pawnNotGoingToEndRow = (rowBeforePromotion !== fromRow)
+    if (pawnNotGoingToEndRow || notLegalMove) { 
+      return false
       } else {
-      return false 
+      return true 
       }
   }
 
