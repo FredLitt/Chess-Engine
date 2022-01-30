@@ -2,14 +2,7 @@ export const pieces = {}
 
 // Function takes in directions for long range pieces (queen, rook, bishop)
 // returns either all squares that are controlled by piece or all of piece's legal moves
-const findPossibleMovesForLongRange = () => {
-
-}
-
-const findControlledSquaresForLongRange = () => {
-
-}
-
+// TODO: Refactore into 2 methods
 const findSquaresForLongRange = 
   ({piece, board, fromSquare, squaresToFind, pieceDirections}) => {
   const possibleSquares = []
@@ -271,6 +264,52 @@ export class Pawn {
       this.symbol = pieceSymbols.blackPawn
     }
   }
+  
+  findSquares({board, fromSquare, squaresToFind}) {
+    const lastPlayedMove = board.findLastPlayedMove()
+    const [fromRow, fromCol] = fromSquare
+    let pawnMoves
+    let startRow
+    let enPassantRow
+    if (this.color === "white") {
+      pawnMoves = {
+        "ForwardOne": [fromRow + 1, fromCol],
+        "ForwardTwo": [fromRow + 2, fromCol],
+        "CaptureWest": [fromRow + 1, fromCol - 1],
+        "CaptureEast": [fromRow + 1, fromCol + 1]
+      }
+      startRow = 1
+      enPassantRow = 4
+    } if (this.color === "black") {
+      pawnMoves = {
+        "ForwardOne": [fromRow - 1, fromCol],
+        "ForwardTwo": [fromRow - 2, fromCol],
+        "CaptureWest": [fromRow - 1, fromCol + 1],
+        "CaptureEast": [fromRow - 1, fromCol - 1]
+      }
+      startRow = 6
+      enPassantRow = 3
+    }
+    const isOnStartRow = (fromRow === startRow)
+    let enPassantCaptureSquare = null
+    if (lastPlayedMove !== null) {
+      enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
+    }
+    if (squaresToFind === "controlled squares") {
+      return this.findControlledSquares(board, fromSquare, pawnMoves)
+    }
+
+    if (squaresToFind === "possible moves") {
+      const pawnOptions = {
+        board: board,
+        fromSquare: fromSquare,
+        pawnMoves: pawnMoves,
+        onStartRow: isOnStartRow,
+        enPassantCaptureSquare: enPassantCaptureSquare
+      }
+      return this.findPossibleMoves(pawnOptions)
+    }
+  }
 
   checkForEnPassantCapture(currentSquare, enPassantRow, lastPlayedMove) {
     let enPassantCaptureSquare
@@ -347,52 +386,6 @@ export class Pawn {
     controlledSquares.push(possibleSquare)
     }
     return controlledSquares
-  }
-
-  findSquares({board, fromSquare, squaresToFind}) {
-    const lastPlayedMove = board.findLastPlayedMove()
-    const [fromRow, fromCol] = fromSquare
-    let pawnMoves
-    let startRow
-    let enPassantRow
-    if (this.color === "white") {
-      pawnMoves = {
-        "ForwardOne": [fromRow + 1, fromCol],
-        "ForwardTwo": [fromRow + 2, fromCol],
-        "CaptureWest": [fromRow + 1, fromCol - 1],
-        "CaptureEast": [fromRow + 1, fromCol + 1]
-      }
-      startRow = 1
-      enPassantRow = 4
-    } if (this.color === "black") {
-      pawnMoves = {
-        "ForwardOne": [fromRow - 1, fromCol],
-        "ForwardTwo": [fromRow - 2, fromCol],
-        "CaptureWest": [fromRow - 1, fromCol + 1],
-        "CaptureEast": [fromRow - 1, fromCol - 1]
-      }
-      startRow = 6
-      enPassantRow = 3
-    }
-    const isOnStartRow = (fromRow === startRow)
-    let enPassantCaptureSquare = null
-    if (lastPlayedMove !== null) {
-      enPassantCaptureSquare = this.checkForEnPassantCapture(fromSquare, enPassantRow, lastPlayedMove)
-    }
-    if (squaresToFind === "controlled squares") {
-      return this.findControlledSquares(board, fromSquare, pawnMoves)
-    }
-
-    if (squaresToFind === "possible moves") {
-      const pawnOptions = {
-        board: board,
-        fromSquare: fromSquare,
-        pawnMoves: pawnMoves,
-        onStartRow: isOnStartRow,
-        enPassantCaptureSquare: enPassantCaptureSquare
-      }
-      return this.findPossibleMoves(pawnOptions)
-    }
   }
 }
 

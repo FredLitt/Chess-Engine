@@ -38,33 +38,32 @@ export class Board {
   }
   
   setToStartPosition(){
-    for (let i = 0; i < 8; i++){
-      this.squares[1][i].piece = pieces.whitePawn
-      this.squares[6][i].piece = pieces.blackPawn
-    }
-    this.squares[0][0].piece = pieces.whiteRook
-    this.squares[0][1].piece = pieces.whiteKnight
-    this.squares[0][2].piece = pieces.whiteBishop
-    this.squares[0][3].piece = pieces.whiteKing
-    this.squares[0][4].piece = pieces.whiteQueen
-    this.squares[0][5].piece = pieces.whiteBishop
-    this.squares[0][6].piece = pieces.whiteKnight
-    this.squares[0][7].piece = pieces.whiteRook
+    // for (let i = 0; i < 8; i++){
+    //   this.squares[1][i].piece = pieces.whitePawn
+    //   this.squares[6][i].piece = pieces.blackPawn
+    // }
+    // this.squares[0][0].piece = pieces.whiteRook
+    // this.squares[0][1].piece = pieces.whiteKnight
+    // this.squares[0][2].piece = pieces.whiteBishop
+    // this.squares[0][3].piece = pieces.whiteKing
+    // this.squares[0][4].piece = pieces.whiteQueen
+    // this.squares[0][5].piece = pieces.whiteBishop
+    // this.squares[0][6].piece = pieces.whiteKnight
+    // this.squares[0][7].piece = pieces.whiteRook
 
-    this.squares[7][0].piece = pieces.blackRook
-    this.squares[7][1].piece = pieces.blackKnight
-    this.squares[7][2].piece = pieces.blackBishop
-    this.squares[7][3].piece = pieces.blackKing
-    this.squares[7][4].piece = pieces.blackQueen
-    this.squares[7][5].piece = pieces.blackBishop
-    this.squares[7][6].piece = pieces.blackKnight
-    this.squares[7][7].piece = pieces.blackRook
+    // this.squares[7][0].piece = pieces.blackRook
+    // this.squares[7][1].piece = pieces.blackKnight
+    // this.squares[7][2].piece = pieces.blackBishop
+    // this.squares[7][3].piece = pieces.blackKing
+    // this.squares[7][4].piece = pieces.blackQueen
+    // this.squares[7][5].piece = pieces.blackBishop
+    // this.squares[7][6].piece = pieces.blackKnight
+    // this.squares[7][7].piece = pieces.blackRook
 
-
-    // this.squares[2][6].piece = pieces.whiteKnight
-    // this.squares[5][5].piece = pieces.whitePawn
-    // this.squares[3][3].piece = pieces.blackKing
-
+    this.squares[6][6].piece = pieces.whitePawn
+    this.squares[7][6].piece = pieces.blackRook
+    this.squares[3][3].piece = pieces.blackKing
+    this.squares[0][0].piece = pieces.whiteKing
     // this.squares[1][5].piece = pieces.blackPawn
     //this.squares[1][1].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
@@ -258,9 +257,19 @@ export class Board {
   }
 
   checkForPromotion(toSquare){
-    if (this.selectedPiece.piece === null || this.selectedPiece.piece.type !== "pawn"){
+     if (this.selectedPiece.piece === null || this.selectedPiece.piece.type !== "pawn"){
       return false 
       }
+    const pawnOptions = {
+      board: this,
+      fromSquare: this.selectedPiece.square,
+      squaresToFind: "possible moves"
+    }
+    const pawnsLegalMoves = this.selectedPiece.piece.findSquares(pawnOptions)
+    if(!this.arrayContainsSquare(pawnsLegalMoves, toSquare)){
+      return false
+    }
+ 
     const [fromRow, fromCol] = this.selectedPiece.square
 
     let rowBeforePromotion

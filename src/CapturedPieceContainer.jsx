@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-//TODO: Sort captured pieces by value
-
 export default function CapturedPieceContainer({capturedPieces}){
 
   const pieceValues = {
