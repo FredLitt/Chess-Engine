@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { pieces } from './pieces'
-import PromotionPopUp from './PromotionPopUp'
+import React, { useState } from "react";
+import { pieces } from "./pieces"
+import PromotionModal from "./PromotionModal"
+import NewGameModal from "./NewGameModal"
 
 export default function BoardUI({boardState, setBoardState, board}){
 
@@ -17,7 +18,7 @@ export default function BoardUI({boardState, setBoardState, board}){
   }
 
   const movePiece = (square) => {
-    const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute('coordinate'))
+    const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute("coordinate"))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
     if (squareHasPiece && pieceToMove === null){
       const whoseTurn = board.determineWhoseTurn()
@@ -30,7 +31,7 @@ export default function BoardUI({boardState, setBoardState, board}){
     if (pieceToMove === "selected"){
       const pawnWillPromote = board.checkForPromotion(squaresCoordinates)
       if(pawnWillPromote){
-        renderPromotionPopUp(board.selectedPiece.piece.color, squaresCoordinates)
+        renderPromotionModal(board.selectedPiece.piece.color, squaresCoordinates)
       } else {
       board.movePiece(squaresCoordinates)
       setBoardState({...boardState})
@@ -39,7 +40,7 @@ export default function BoardUI({boardState, setBoardState, board}){
     } 
   }
 
-  const renderPromotionPopUp = (color, promotionSquare) => {
+  const renderPromotionModal = (color, promotionSquare) => {
     setPawnPromotion(
       {pawnIsPromoting: true,
       color: color,
@@ -56,31 +57,42 @@ export default function BoardUI({boardState, setBoardState, board}){
        promotionSquare: null})
   }
 
+  const createNewGame = () => {
+    board.startNewGame()
+    setBoardState({...board})
+    console.log(board.gameResult)
+  }
+
   const isLightSquare = (coordinate) => {
     return ((coordinate[0] + coordinate[1]) % 2 === 0)
   }
 
-  const findSquaresClasses = (square) => {
-    if(square.piece !== null){ return 'square contains-piece' }
-      return 'square'
+  const getSquaresClass = (square) => {
+    if (square.piece !== null) { 
+      return "square contains-piece" 
+      }
+      return "square"
   }
 
   // const borderForSquare = (square) => {
   //   if(square.isControlledByWhite && square.isControlledByBlack) {
-  //     return 'solid 1px green'
+  //     return "solid 1px green"
   //   } if (square.isControlledByWhite) {
-  //     return 'solid 1px red'
+  //     return "solid 1px red"
   //   } if (square.isControlledByBlack) {
-  //     return 'solid 1px black'
-  //   } return 'none'
+  //     return "solid 1px black"
+  //   } return "none"
   // }
 
   return (
     <>
-      <PromotionPopUp 
+      <PromotionModal
         promotionData={pawnPromotion}
         board={boardState}
         promote={promote}/>
+      <NewGameModal 
+        gameResult={boardState.gameResult}
+        startNewGame={createNewGame}/>
       <table 
         id="board"
         cellSpacing="0">
@@ -91,13 +103,12 @@ export default function BoardUI({boardState, setBoardState, board}){
             key={index}>
             {row.map((square) => 
               <td 
-                className={findSquaresClasses(square)}
+                className={getSquaresClass(square)}
                 coordinate={square.coordinate}
                 piece={square.piece}
                 key={square.coordinate} 
                 style={{
-                  
-                  backgroundColor: isLightSquare(square.coordinate) ? 'white' : 'lightgrey'}}
+                  backgroundColor: isLightSquare(square.coordinate) ? "white" : "lightgrey"}}
                 onClick={(e) => movePiece(e)}>
                   {square.piece !== null && square.piece.symbol}   
                   {square.isPossibleMove && 

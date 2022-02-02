@@ -35,6 +35,7 @@ export class Board {
     }
     this.squaresAttackedByWhite = []
     this.squaresAttackedByBlack = []
+    this.gameResult = "undecided"
   }
   
   setToStartPosition(){
@@ -60,10 +61,10 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[6][6].piece = pieces.whitePawn
-    this.squares[7][6].piece = pieces.blackRook
-    this.squares[3][3].piece = pieces.blackKing
-    this.squares[0][0].piece = pieces.whiteKing
+    this.squares[6][2].piece = pieces.whiteQueen
+    this.squares[7][7].piece = pieces.blackKing
+    this.squares[5][5].piece = pieces.whiteKing
+
     // this.squares[1][5].piece = pieces.blackPawn
     //this.squares[1][1].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
@@ -331,6 +332,37 @@ export class Board {
     return false
   }
 
+  isGameOver(){
+    const lastPlayerToMove = this.selectedPiece.piece
+    const possibleResponses = []
+    let respondingPlayer
+    if (lastPlayerToMove.color === "white") { respondingPlayer = "black" }
+    if (lastPlayerToMove.color === "black") { respondingPlayer = "white" }
+
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        const currentSquare = this.squares[row][col]
+        const squareIsEmpty = (currentSquare.piece === null)
+        if (squareIsEmpty || currentSquare.piece.color !== respondingPlayer) {
+          continue
+        }
+
+        const searchOptions = {
+          board: this,
+          fromSquare: currentSquare.coordinate,
+          squaresToFind: "possible moves"
+        }
+
+        possibleResponses.push(...currentSquare.piece.findSquares(searchOptions))
+      }
+    }
+    if (possibleResponses.length === 0){
+      //this.gameResult = `${this.selectedPiece.piece.color} wins`
+      return true
+    }
+    return false
+  }
+
   determineIfCheckMate(){
     const attackingPiece = this.selectedPiece.piece
     const movesThatProtectKing = []
@@ -356,6 +388,37 @@ export class Board {
       }
     }
     if (movesThatProtectKing.length === 0){
+      this.gameResult = `${this.selectedPiece.piece.color} wins`
+      return true
+    }
+    return false
+  }
+
+  determineIfStaleMate(lastMovesColor){
+    const everyPossibleMoveResponse = []
+    let respondingPlayer
+    if (lastMovesColor === "white") { respondingPlayer = "black" }
+    if (lastMovesColor === "black") { respondingPlayer = "white" }
+
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        const currentSquare = this.squares[row][col]
+        const squareIsEmpty = (currentSquare.piece === null)
+        if (squareIsEmpty || currentSquare.piece.color !== respondingPlayer) {
+          continue
+        }
+
+        const searchOptions = {
+          board: this,
+          fromSquare: currentSquare.coordinate,
+          squaresToFind: "possible moves"
+        }
+
+        everyPossibleMoveResponse.push(...currentSquare.piece.findSquares(searchOptions))
+      }
+    }
+    if (everyPossibleMoveResponse.length === 0){
+      this.gameResult = "stalemate"
       return true
     }
     return false
@@ -395,6 +458,7 @@ export class Board {
 
   movePiece(toSquare, promotionChoice){
     const fromSquare = this.selectedPiece.square
+    const playersColor = this.selectedPiece.piece.color
     const [fromRow, fromCol] = fromSquare
     const [toRow, toCol] = toSquare
     const possibleSquares = this.selectedPiece.possibleMoves
@@ -403,11 +467,11 @@ export class Board {
       const endSquare = this.squares[toRow][toCol]
       const moveData = {}
       if (this.wasMoveCastling(fromSquare, toSquare) === "Kingside"){
-        this.castleKingside(this.selectedPiece.piece.color)
+        this.castleKingside(playersColor)
         moveData.kingsideCastle = true
       }
       if (this.wasMoveCastling(fromSquare, toSquare) === "Queenside"){
-        this.castleQueenside(this.selectedPiece.piece.color)
+        this.castleQueenside(playersColor)
         moveData.queensideCastle = true
       }
       if (endSquare.piece !== null){
@@ -427,18 +491,26 @@ export class Board {
         moveData.promotionChoice = promotionChoice.type
       }
       this.markControlledSquares()
-      if(this.seeIfKingInCheck()){
+      if(this.isKingInCheck()){
         moveData.wasACheck = true
-        if(this.determineIfCheckMate()){
-          moveData.winner = this.selectedPiece.piece.color
-        }
+      }
+      if (this.isGameOver()){
+        this.gameResult = this.findGameResult(moveData.wasACheck)
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, moveData)
     }
     this.deselectPiece()
   }
 
-  seeIfKingInCheck(){
+  findGameResult(isKingInCheck){
+    const lastPlayerToMove = this.selectedPiece.piece.color
+    if (isKingInCheck){
+      return `${lastPlayerToMove} wins`
+    }
+    return "stalemate"
+  }
+
+  isKingInCheck(){
     const movedPiece = this.selectedPiece.piece
     let attackedSquares
     let enemyKingsSquare
@@ -521,8 +593,30 @@ export class Board {
   }
 
   findLastPlayedMove(){
-    if (this.playedMoveList.length === 0){ return null }
-    else { return this.playedMoveList[this.playedMoveList.length-1] }
+    if (this.playedMoveList.length === 0) { 
+      return null 
+      }
+    return this.playedMoveList[this.playedMoveList.length-1]
+  }
+
+  startNewGame(){
+    this.clearBoard()
+    this.setToStartPosition()
+    this.deselectPiece()
+    this.playedMoveList = []
+    this.blackCapturedPieces = []
+    this.whiteCapturedPieces = []
+    this.squaresAttackedByWhite = []
+    this.squaresAttackedByBlack = []
+    this.gameResult = "undecided"
+  }
+
+  clearBoard(){
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        this.squares[row][col].piece = null
+      }
+    }
   }
 
   deselectPiece(){

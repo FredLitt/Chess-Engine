@@ -1,7 +1,7 @@
 export const pieces = {}
 
 // Function takes in directions for long range pieces (queen, rook, bishop)
-// returns either all squares that are controlled by piece or all of piece's legal moves
+// returns either all squares that are controlled by piece or all of piece"s legal moves
 // TODO: Refactore into 2 methods
 const findSquaresForLongRange = 
   ({piece, board, fromSquare, squaresToFind, pieceDirections}) => {
@@ -390,19 +390,19 @@ export class Pawn {
 }
 
 export const pieceSymbols = {
-  whiteKing: '\u2654',
-  whiteQueen: '\u2655',
-  whiteRook: '\u2656',
-  whiteBishop: '\u2657',
-  whiteKnight: '\u2658',
-  whitePawn: '\u2659',
+  whiteKing: "\u2654",
+  whiteQueen: "\u2655",
+  whiteRook: "\u2656",
+  whiteBishop: "\u2657",
+  whiteKnight: "\u2658",
+  whitePawn: "\u2659",
 
-  blackKing: '\u265A',
-  blackQueen: '\u265B',
-  blackRook: '\u265C',
-  blackBishop: '\u265D',
-  blackKnight: '\u265E',
-  blackPawn: '\u265F'
+  blackKing: "\u265A",
+  blackQueen: "\u265B",
+  blackRook: "\u265C",
+  blackBishop: "\u265D",
+  blackKnight: "\u265E",
+  blackPawn: "\u265F"
 }
 
 const whitePawn = new Pawn("white")

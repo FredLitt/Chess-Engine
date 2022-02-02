@@ -1,28 +1,25 @@
-import React, { useState } from 'react';
-
-//TODO
-// [ ] castling
+import React, { useState } from "react";
 
 export default function MoveList({moveList}){
 
   const xAxis = {
-    0: 'h',
-    1: 'g',
-    2: 'f',
-    3: 'e',
-    4: 'd',
-    5: 'c',
-    6: 'b',
-    7: 'a'
+    0: "h",
+    1: "g",
+    2: "f",
+    3: "e",
+    4: "d",
+    5: "c",
+    6: "b",
+    7: "a"
   }
 
   const pieceAbbreviations = {
-    'pawn': '',
-    'knight': 'N',
-    'bishop': 'B',
-    'rook': 'R',
-    'queen': 'Q',
-    'king': 'K'
+    "pawn": "",
+    "knight": "N",
+    "bishop": "B",
+    "rook": "R",
+    "queen": "Q",
+    "king": "K"
   }
 
   const getMoveNumber = (moveList, move) => {
@@ -30,19 +27,30 @@ export default function MoveList({moveList}){
   }
 
   const renderMoveNotation = (move, index) => {
+    let moveNotation
     if (move.moveData.kingsideCastle) {
-      return '0 - 0'
+      moveNotation += "0 - 0"
     }
     if (move.moveData.queensideCastle) {
-      return '0 - 0 - 0'
+      moveNotation += "0 - 0 - 0"
     }
-    let moveNotation
+    const wasCastling = (move.moveData.queensideCastle || move.moveData.kingsideCastle)
+    if (wasCastling) {
+      if (move.moveData.winner) {
+        moveNotation += "#"
+        return moveNotation
+      }
+      if (move.moveData.wasACheck) {
+        moveNotation += "+"
+      }
+      return moveNotation
+    }
     const pieceAbbreviation = pieceAbbreviations[move.piece.type]
     const endRow = (move.toSquare[0] + 1)
     const endColumn = (xAxis[move.toSquare[1]])
     const capture = move.moveData.wasACapture
     const promotion = move.moveData.promotionChoice
-    if(move.piece.type === 'pawn'){
+    if(move.piece.type === "pawn"){
       const pawnsStartRow = xAxis[move.fromSquare[1]]
       moveNotation = pawnsStartRow
       if(capture){
@@ -54,19 +62,19 @@ export default function MoveList({moveList}){
         moveNotation += `=${pieceAbbreviations[promotion]}`
       } 
     }
-    if(move.piece.type !== 'pawn'){
+    if(move.piece.type !== "pawn"){
       moveNotation = pieceAbbreviation
       if(capture){
-        moveNotation += `x`
+        moveNotation += "x"
       }
       moveNotation += `${endColumn}${endRow}`
     }  
     if(move.moveData.winner){
-      moveNotation += '#'
+      moveNotation += "#"
       return moveNotation
     }
     if(move.moveData.wasACheck){
-      moveNotation += '+'
+      moveNotation += "+"
     }
     return moveNotation
   }

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { pieces } from './pieces'
+import React, { useState } from "react";
+import { pieces } from "./pieces"
 
 export default function PromotionPopUp({promotionData, board, promote}){
 
-  const {pawnIsPromoting, color, promotionSquare} = promotionData
+  const { pawnIsPromoting, color, promotionSquare } = promotionData
 
   const whitePieces = [
     pieces.whiteKnight,
