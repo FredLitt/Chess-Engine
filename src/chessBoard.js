@@ -61,13 +61,13 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[6][2].piece = pieces.whiteQueen
-    this.squares[7][7].piece = pieces.blackKing
-    this.squares[5][5].piece = pieces.whiteKing
+    this.squares[6][2].piece = pieces.blackQueen
+    this.squares[7][7].piece = pieces.whiteKing
+    this.squares[5][5].piece = pieces.blackKing
 
-    // this.squares[1][5].piece = pieces.blackPawn
-    //this.squares[1][1].piece = pieces.blackKnight
-    // this.squares[7][7].piece = pieces.blackRook
+    // this.squares[6][2].piece = pieces.whiteQueen
+    // this.squares[7][7].piece = pieces.blackKing
+    // this.squares[5][5].piece = pieces.whiteKing
       }
 
   determineWhoseTurn(){
@@ -132,10 +132,10 @@ export class Board {
     const [row, col] = coordinates
     const pieceToMove = this.squares[row][col].piece
     this.selectedPiece.piece = pieceToMove
-    this.determinePiecesPossibleMoves(pieceToMove, coordinates)
+    this.getPossibleMoves(pieceToMove, coordinates)
   }
 
-  determinePiecesPossibleMoves(pieceToMove, fromSquare){
+  getPossibleMoves(pieceToMove, fromSquare){
     const searchOptions = {
       board: this,
       fromSquare: fromSquare,
@@ -158,9 +158,9 @@ export class Board {
     const isAPawnMove = (this.selectedPiece.piece.type === "pawn")
     const [toRow, toCol] = toSquare
     const [fromRow, fromCol] = this.selectedPiece.square
-    const toSquareHasNoPiece = (this.squares[toRow][toCol].piece === null)
+    const toSquareIsEmpty = (this.squares[toRow][toCol].piece === null)
     const pawnIsCapturing = (fromCol !== toCol)
-    if (isAPawnMove && pawnIsCapturing && toSquareHasNoPiece){
+    if (isAPawnMove && pawnIsCapturing && toSquareIsEmpty){
       return true
     }
   }
@@ -334,7 +334,7 @@ export class Board {
 
   isGameOver(){
     const lastPlayerToMove = this.selectedPiece.piece
-    const possibleResponses = []
+    const everyPossibleMove = []
     let respondingPlayer
     if (lastPlayerToMove.color === "white") { respondingPlayer = "black" }
     if (lastPlayerToMove.color === "black") { respondingPlayer = "white" }
@@ -353,72 +353,11 @@ export class Board {
           squaresToFind: "possible moves"
         }
 
-        possibleResponses.push(...currentSquare.piece.findSquares(searchOptions))
+        everyPossibleMove.push(...currentSquare.piece.findSquares(searchOptions))
       }
     }
-    if (possibleResponses.length === 0){
-      //this.gameResult = `${this.selectedPiece.piece.color} wins`
-      return true
-    }
-    return false
-  }
-
-  determineIfCheckMate(){
-    const attackingPiece = this.selectedPiece.piece
-    const movesThatProtectKing = []
-    let defendingPlayer
-    if (attackingPiece.color === "white") { defendingPlayer = "black" }
-    if (attackingPiece.color === "black") { defendingPlayer = "white" }
-
-    for (let row = 0; row < 8; row++){
-      for (let col = 0; col < 8; col++){
-        const currentSquare = this.squares[row][col]
-        const squareIsEmpty = (currentSquare.piece === null)
-        if (squareIsEmpty || currentSquare.piece.color !== defendingPlayer) {
-          continue
-        }
-
-        const searchOptions = {
-          board: this,
-          fromSquare: currentSquare.coordinate,
-          squaresToFind: "possible moves"
-        }
-
-        movesThatProtectKing.push(...currentSquare.piece.findSquares(searchOptions))
-      }
-    }
-    if (movesThatProtectKing.length === 0){
-      this.gameResult = `${this.selectedPiece.piece.color} wins`
-      return true
-    }
-    return false
-  }
-
-  determineIfStaleMate(lastMovesColor){
-    const everyPossibleMoveResponse = []
-    let respondingPlayer
-    if (lastMovesColor === "white") { respondingPlayer = "black" }
-    if (lastMovesColor === "black") { respondingPlayer = "white" }
-
-    for (let row = 0; row < 8; row++){
-      for (let col = 0; col < 8; col++){
-        const currentSquare = this.squares[row][col]
-        const squareIsEmpty = (currentSquare.piece === null)
-        if (squareIsEmpty || currentSquare.piece.color !== respondingPlayer) {
-          continue
-        }
-
-        const searchOptions = {
-          board: this,
-          fromSquare: currentSquare.coordinate,
-          squaresToFind: "possible moves"
-        }
-
-        everyPossibleMoveResponse.push(...currentSquare.piece.findSquares(searchOptions))
-      }
-    }
-    if (everyPossibleMoveResponse.length === 0){
-      this.gameResult = "stalemate"
+    const noPossibleMoves = (everyPossibleMove.length === 0)
+    if (noPossibleMoves){
       return true
     }
     return false
@@ -495,14 +434,15 @@ export class Board {
         moveData.wasACheck = true
       }
       if (this.isGameOver()){
-        this.gameResult = this.findGameResult(moveData.wasACheck)
+        this.gameResult = this.getGameResult(moveData.wasACheck)
+        moveData.gameResult = this.gameResult
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, moveData)
     }
     this.deselectPiece()
   }
 
-  findGameResult(isKingInCheck){
+  getGameResult(isKingInCheck){
     const lastPlayerToMove = this.selectedPiece.piece.color
     if (isKingInCheck){
       return `${lastPlayerToMove} wins`

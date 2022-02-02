@@ -5,12 +5,16 @@ import NewGameModal from "./NewGameModal"
 
 export default function BoardUI({boardState, setBoardState, board}){
 
+  // TODO: Put conditional for promotionmodal outside component
+
   const [pieceToMove, setPieceToMove] = useState(null)
 
   const [pawnPromotion, setPawnPromotion] = 
     useState({pawnIsPromoting: false,
               color: null,
               promotionSquare: null})
+
+  const [ gameResult, setGameResult ] = useState("undecided")
 
   const getCoordinates = (coordinates) => {
     const stringCoordinates = coordinates.split(",")
@@ -37,6 +41,10 @@ export default function BoardUI({boardState, setBoardState, board}){
       setBoardState({...boardState})
       setPieceToMove(null)
       }
+      const gameIsOver = (board.gameResult !== "undecided")
+      if (gameIsOver){
+        setGameResult(board.gameResult)
+      }
     } 
   }
 
@@ -59,8 +67,8 @@ export default function BoardUI({boardState, setBoardState, board}){
 
   const createNewGame = () => {
     board.startNewGame()
-    setBoardState({...board})
-    console.log(board.gameResult)
+    setBoardState({...boardState})
+    setGameResult("undecided")
   }
 
   const isLightSquare = (coordinate) => {
@@ -90,9 +98,10 @@ export default function BoardUI({boardState, setBoardState, board}){
         promotionData={pawnPromotion}
         board={boardState}
         promote={promote}/>
+      {board.gameResult !== "undecided" && 
       <NewGameModal 
-        gameResult={boardState.gameResult}
-        startNewGame={createNewGame}/>
+        gameResult={gameResult}
+        startNewGame={createNewGame}/>}
       <table 
         id="board"
         cellSpacing="0">

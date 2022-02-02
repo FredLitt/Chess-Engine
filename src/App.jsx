@@ -24,13 +24,13 @@ function App() {
     <main>
     <h1 id="littchess">littchess.org</h1>
       <div id="game-container">
-      <MoveList moveList={boardState.playedMoveList}/>
+      <MoveList moveList={newBoard.playedMoveList}/>
       <BoardUI boardState={boardState} setBoardState={setBoardState} board={newBoard}/>
       <div id="captured-pieces-wrapper">
         <CapturedPieceContainer 
-          capturedPieces={boardState.blackCapturedPieces}/>
+          capturedPieces={newBoard.blackCapturedPieces}/>
         <CapturedPieceContainer 
-          capturedPieces={boardState.whiteCapturedPieces}/>
+          capturedPieces={newBoard.whiteCapturedPieces}/>
       </div>
       </div>
     </main>

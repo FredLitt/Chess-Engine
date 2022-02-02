@@ -69,8 +69,10 @@ export default function MoveList({moveList}){
       }
       moveNotation += `${endColumn}${endRow}`
     }  
-    if(move.moveData.winner){
+    if(move.moveData.gameResult){
+      if (move.moveData.gameResult.includes("wins")){
       moveNotation += "#"
+      }
       return moveNotation
     }
     if(move.moveData.wasACheck){
@@ -89,8 +91,8 @@ export default function MoveList({moveList}){
             <span className="move-number">
             {`${getMoveNumber(moveList, move)}. `}</span>}
             {renderMoveNotation(move, index)}
-            {move.moveData.winner === "white" && <div className="white-wins-result">1 - 0</div>}
-            {move.moveData.winner === "black" && <div className="black-wins-result">0 - 1</div>}
+            {move.moveData.gameResult === "white wins" && <div className="white-wins-result">1 - 0</div>}
+            {move.moveData.gameResult === "black wins" && <div className="black-wins-result">0 - 1</div>}
           </div>)}
         </div>        
   )

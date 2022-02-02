@@ -2,9 +2,6 @@ import React, { useState } from "react";
 
 export default function NewGameModal({gameResult, startNewGame}){
 
-if (gameResult === "undecided"){
-  return null
-  } 
 if (gameResult === "white wins"){
   return (
     <div id="new-game-modal">
@@ -29,4 +26,7 @@ if (gameResult === "stalemate") {
         onClick={() => startNewGame()}>New Game
       </button>
     </div>)}
+  return (
+    null
+  )
 }
