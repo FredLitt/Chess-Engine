@@ -10,7 +10,6 @@ export class PlayedMove {
 }
 // Note about coordinates:
 // Each square is [row, col], kind of like chess notation
-// TODO: Selectedpiece properties stored in an object
 export class Board {
   constructor() {
     this.squares = []
@@ -61,13 +60,14 @@ export class Board {
     // this.squares[7][6].piece = pieces.blackKnight
     // this.squares[7][7].piece = pieces.blackRook
 
-    this.squares[6][2].piece = pieces.blackQueen
-    this.squares[7][7].piece = pieces.whiteKing
-    this.squares[5][5].piece = pieces.blackKing
+    // this.squares[6][2].piece = pieces.blackQueen
+    // this.squares[7][7].piece = pieces.whiteKing
+    // this.squares[5][5].piece = pieces.blackKing
 
-    // this.squares[6][2].piece = pieces.whiteQueen
-    // this.squares[7][7].piece = pieces.blackKing
-    // this.squares[5][5].piece = pieces.whiteKing
+    this.squares[1][4].piece = pieces.blackPawn
+    this.squares[6][2].piece = pieces.whiteQueen
+    this.squares[7][7].piece = pieces.blackKing
+    this.squares[5][5].piece = pieces.whiteKing
       }
 
   determineWhoseTurn(){
@@ -186,7 +186,7 @@ export class Board {
     let kingStartSquare
     let castlingPathSquares
     let enemyControlledSquares
-    //just for kingside first
+
     if (castlingKingColor === "white"){
       kingStartSquare = [0, 3]
       enemyControlledSquares = this.findAttackedSquares("black")
@@ -439,6 +439,7 @@ export class Board {
       }
       this.addMoveToPlayedMoveList(fromSquare, toSquare, moveData)
     }
+    this.highlightLastPlayedMove()
     this.deselectPiece()
   }
 
@@ -537,6 +538,24 @@ export class Board {
       return null 
       }
     return this.playedMoveList[this.playedMoveList.length-1]
+  }
+
+  highlightLastPlayedMove(){
+    const lastMove = this.findLastPlayedMove()
+    const [fromRow, fromCol] = lastMove.fromSquare
+    const [toRow, toCol] = lastMove.toSquare
+
+    // First clear from previous move
+    for (let row = 0; row < 8; row++){
+      for (let col = 0; col < 8; col++){
+        if (this.squares[row][col].hasOwnProperty("isLastPlayedMove")){
+          delete this.squares[row][col].isLastPlayedMove
+        }
+      }
+    }
+
+    this.squares[fromRow][fromCol].isLastPlayedMove = true
+    this.squares[toRow][toCol].isLastPlayedMove = true
   }
 
   startNewGame(){

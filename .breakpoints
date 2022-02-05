@@ -3,15 +3,15 @@
     "src/App.css": [
       {
         "id": "d92bc672-f5f5-415e-9556-0451db35cda3",
-        "line": 23,
-        "version": 5665,
-        "index": 338
+        "line": 17,
+        "version": 8571,
+        "index": 233
       },
       {
         "id": "5ffb96b9-e0ea-42d6-8cd0-f8ba908f82d1",
-        "line": 94,
-        "version": 5665,
-        "index": 1318
+        "line": 102,
+        "version": 8571,
+        "index": 1488
       }
     ]
   }

@@ -6,6 +6,7 @@ import NewGameModal from "./NewGameModal"
 export default function BoardUI({boardState, setBoardState, board}){
 
   // TODO: Put conditional for promotionmodal outside component
+  // TODO: custom board colors
 
   const [pieceToMove, setPieceToMove] = useState(null)
 
@@ -21,7 +22,15 @@ export default function BoardUI({boardState, setBoardState, board}){
     return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
-  const movePiece = (square) => {
+  const selectPiece = () => {
+
+  }
+
+  const movePiece = () => {
+
+  }
+
+  const move = (square) => {
     const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute("coordinate"))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
     if (squareHasPiece && pieceToMove === null){
@@ -82,15 +91,9 @@ export default function BoardUI({boardState, setBoardState, board}){
       return "square"
   }
 
-  // const borderForSquare = (square) => {
-  //   if(square.isControlledByWhite && square.isControlledByBlack) {
-  //     return "solid 1px green"
-  //   } if (square.isControlledByWhite) {
-  //     return "solid 1px red"
-  //   } if (square.isControlledByBlack) {
-  //     return "solid 1px black"
-  //   } return "none"
-  // }
+  const lightSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--light-square")
+
+  const darkSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--dark-square")
 
   return (
     <>
@@ -117,8 +120,10 @@ export default function BoardUI({boardState, setBoardState, board}){
                 piece={square.piece}
                 key={square.coordinate} 
                 style={{
-                  backgroundColor: isLightSquare(square.coordinate) ? "white" : "lightgrey"}}
-                onClick={(e) => movePiece(e)}>
+                  backgroundColor: isLightSquare(square.coordinate) ? lightSquareColor : darkSquareColor,
+                  opacity: square.isLastPlayedMove ? 0.5 : 1.0
+                  }}
+                onClick={(e) => move(e)}>
                   {square.piece !== null && square.piece.symbol}   
                   {square.isPossibleMove && 
                     <span className="possible-move"></span>}       </td>)}

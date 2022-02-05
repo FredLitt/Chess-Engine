@@ -6,11 +6,9 @@ import CapturedPieceContainer from "./CapturedPieceContainer"
 import "./App.css";
 
 //TODO: Fix bug with clicking on piece that can"t move and then clicking piece that can
+//TODO: Highlight last played move from and to squares
 //TODO: Custom board colors and piece designs
-//TODO: Stalemate
-//TODO: New game button upon checkmate
 //TODO: Add skip forward and backward buttons on move list
-//TODO: Better styling and responsiveness
 //TODO: 2 player network chess
 
 const newBoard = new Board()
@@ -22,13 +20,12 @@ function App() {
 
   return (
     <main>
-    <h1 id="littchess">littchess.org</h1>
-      <div id="game-container">
-      <MoveList moveList={newBoard.playedMoveList}/>
+      <div id="game-container">  
       <BoardUI boardState={boardState} setBoardState={setBoardState} board={newBoard}/>
-      <div id="captured-pieces-wrapper">
+      <div id="move-list-captured-pieces-wrapper">
         <CapturedPieceContainer 
           capturedPieces={newBoard.blackCapturedPieces}/>
+        <MoveList moveList={newBoard.playedMoveList}/>
         <CapturedPieceContainer 
           capturedPieces={newBoard.whiteCapturedPieces}/>
       </div>

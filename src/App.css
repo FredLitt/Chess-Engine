@@ -1,31 +1,18 @@
+:root {
+  background-color: rgba(0, 0, 0, 0.85);
+  --light-square: #EDD2B0;
+  --dark-square: #B4946C;
+}
+
 main {
-  background-color: rgb(171, 200, 226);
   height: 100vh;
   width: 100vw;
 }
 
-#littchess {
-  margin: 0px;
-  padding: 10px 20px;
-  font-weight: 250;
-}
-
 #game-container {
   display: flex;
-  padding: 20px;
-}
-
-#move-list {
-  margin: 5px;
-  padding: 5px;
-  display: grid;
-  background-color: aliceblue;
-  grid-template-columns: 1.2fr 1fr;
-  align-content: start;
-  min-width: 150px;
-  max-width: 150px;
-  max-height: 300px;
-  overflow-y: auto;
+  justify-content: center;
+  padding-top: 2rem;
 }
 
 .white-wins-result {
@@ -37,16 +24,16 @@ main {
 }
 
 #board {
-
   table-layout: fixed;
 }
 
 .square {
   box-sizing: border-box;
-  height: 50px;
-  min-width: 50px;
-  font-size: 35px;
-  font-weight: 550;
+  height: 3rem;
+  max-height: 3rem;
+  max-width: 3rem;
+  min-width: 3rem;
+  font-size: 2.25rem;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -61,10 +48,10 @@ main {
 }
 
 .possible-move {
-  height: 15px;
-  width: 15px;
+  height: 1rem;
+  width: 1rem;
   margin: auto;
-  background-color: rgb(129, 166, 190);
+  background-color: rgb(216, 207, 155);
   position: absolute;
   top: 0;
   left: 0;
@@ -74,26 +61,48 @@ main {
   z-index: 0;
 }
 
-#captured-pieces-wrapper {
+#move-list-captured-pieces-wrapper {
+  padding-left: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin: 5px;
-  background-color: aliceblue;
+  min-width: 12rem;
+  height: 16rem;
+  align-self: center;
+}
+
+#move-list {
+  display: grid;
+  background-color: black;
+  grid-template-columns: 1fr 1fr;
+  color: lightgrey;
+  align-content: start;
+  height: 60%;
+  min-width: 100%;
+  overflow-y: auto;
+}
+
+#move-list::-webkit-scrollbar {
+  display: none;
+}
+
+#move-list > div {
+  padding: .5rem .5rem .1rem 1rem;
 }
 
 .captured-pieces {
   display: flex;
-  font-size: 30px;
+  font-size: 2em;
   flex-wrap: wrap;
-  width: 300px;
-  height: 50px;
-  margin: 10px;
+  align-content: center;
+  width: 100%;
+  min-height: 20%;
+  background-color: rgb(175, 159, 159);
 }
 
 #promotion-modal {
   position: absolute;
-  font-size: 50px;
+  top: calc(50% - 6rem);
+  left: calc(50% - 2rem);
   height: 100%;
   width: 100%;
   z-index: 2;
@@ -101,40 +110,129 @@ main {
 
 .promotion-pieces {
   display: flex;
-  background-color: white;
-  border: 1px solid black;
-  width: 220px;
+  justify-content: center;
+  flex-direction: column;
+  background-color: slategray;
+  width: 4rem;
+  font-size: 3rem;
+}
+
+.promotion-pieces > div {
+  min-width: 25%;
+  background-color: lightgrey;
+  border-radius: 50%;
+  text-align: center;
 }
 
 #promotion-modal > div:hover {
   cursor: pointer;
 }
 
-.game-over-message {
-  
-}
-
 #new-game-modal {
-  border: 1px solid black;
+  
   background-color: white;
   position: absolute;
-  display: grid;
+  top: calc(50% - 1.5rem);
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 150px;
-  width: 250px;
-  border-radius: 5px;
+  height: 8rem;
+  width: 15rem;
+  border-radius: .25em;
   z-index: 2;
 }
 
 #new-game-modal > div {
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 1rem;
+  padding: 1rem;
 }
 
 #new-game-modal > button {
-  padding: 10px;
+  padding: .5rem;
+  font-size: 1rem;
   background-color: green;
   color: white;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  #move-list-captured-pieces-wrapper {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  html {
+    font-size: 1.5em;
+  }
+
+  #new-game-modal {
+    top: calc(50% - 4rem);
+    left: calc(50% - 12.25rem);
+    width: 12rem;
+    height: 7rem;
+  }
+
+  main {
+    height: 70vh;
+  }
+
+  #new-game-modal > button {
+    font-size: .75rem;
+  }
+
+   #promotion-modal {
+     top: calc(50% - 6rem);
+     left: calc(50% - 8rem);
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  html {
+    font-size: 1.5em;
+  }
+
+  main {
+    height: 70vh;
+  }
+
+  #new-game-modal {
+    top: calc(50% - 4rem);
+    left: calc(50% - 12.5rem);
+    width: 12rem;
+    height: 7rem;
+  }
+
+  #promotion-modal {
+    top: calc(50% - 8rem);
+    left: calc(50% - 8rem);
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  html {
+    font-size: 1.75em;
+  }
+
+  main {
+    height: 70vh;
+  }
+
+  #game-container {
+  padding-top: 4rem;
+}
+
+  #new-game-modal {
+    top: calc(50% - 4rem);
+    left: calc(50% - 12.5rem);
+    width: 12rem;
+    height: 7rem;
+  }
+
+  #promotion-modal {
+    top: calc(50% - 8rem);
+    left: calc(50% - 8rem);
+  }
 }

@@ -6,17 +6,17 @@ export default function PromotionPopUp({promotionData, board, promote}){
   const { pawnIsPromoting, color, promotionSquare } = promotionData
 
   const whitePieces = [
-    pieces.whiteKnight,
-    pieces.whiteBishop,
+    pieces.whiteQueen,
     pieces.whiteRook,
-    pieces.whiteQueen
+    pieces.whiteBishop,
+    pieces.whiteKnight,  
   ]
 
   const blackPieces = [
-    pieces.blackKnight,
-    pieces.blackBishop,
+    pieces.blackQueen,
     pieces.blackRook,
-    pieces.blackQueen
+    pieces.blackBishop,
+    pieces.blackKnight
   ]
   
   if(pawnIsPromoting){
