@@ -1,7 +1,11 @@
 :root {
-  background-color: rgba(0, 0, 0, 0.85);
+  --main-bg-color: rgba(0, 0, 0, 0.85);
   --light-square: #EDD2B0;
   --dark-square: #B4946C;
+}
+
+html {
+  background-color: var(--main-bg-color);
 }
 
 main {
@@ -51,7 +55,7 @@ main {
   height: 1rem;
   width: 1rem;
   margin: auto;
-  background-color: rgb(216, 207, 155);
+  background-color: rgb(212, 166, 105);
   position: absolute;
   top: 0;
   left: 0;
@@ -65,8 +69,9 @@ main {
   padding-left: 1rem;
   display: flex;
   flex-direction: column;
-  min-width: 12rem;
-  height: 16rem;
+  min-width: 14rem;
+  max-width: 14rem;
+  height: 18rem;
   align-self: center;
 }
 
@@ -91,12 +96,18 @@ main {
 
 .captured-pieces {
   display: flex;
-  font-size: 2em;
-  flex-wrap: wrap;
-  align-content: center;
-  width: 100%;
-  min-height: 20%;
-  background-color: rgb(175, 159, 159);
+  flex-flow: row wrap;
+  justify-content: start;
+  font-size: 1.8em;
+  max-width: 100%;
+  min-height: 26%;
+  background-color: var(--dark-square);
+}
+
+.captured-pieces > div {
+  min-width: 0;
+  max-height: 1.5em;
+  max-width: 12.5%;
 }
 
 #promotion-modal {
@@ -112,7 +123,7 @@ main {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background-color: slategray;
+  background-color: var(--main-bg-color);
   width: 4rem;
   font-size: 3rem;
 }
@@ -129,7 +140,6 @@ main {
 }
 
 #new-game-modal {
-  
   background-color: white;
   position: absolute;
   top: calc(50% - 1.5rem);
@@ -165,7 +175,7 @@ main {
 
 @media only screen and (min-width: 768px) {
   html {
-    font-size: 1.5em;
+    font-size: 1.25em;
   }
 
   #new-game-modal {
@@ -214,10 +224,6 @@ main {
 @media only screen and (min-width: 1600px) {
   html {
     font-size: 1.75em;
-  }
-
-  main {
-    height: 70vh;
   }
 
   #game-container {

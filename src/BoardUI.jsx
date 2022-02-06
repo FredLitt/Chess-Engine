@@ -22,14 +22,6 @@ export default function BoardUI({boardState, setBoardState, board}){
     return stringCoordinates.map(coordinates => parseInt(coordinates))
   }
 
-  const selectPiece = () => {
-
-  }
-
-  const movePiece = () => {
-
-  }
-
   const move = (square) => {
     const squaresCoordinates = getCoordinates(square.currentTarget.getAttribute("coordinate"))
     const squareHasPiece = (square.currentTarget.getAttribute("piece") !== null)
@@ -39,6 +31,8 @@ export default function BoardUI({boardState, setBoardState, board}){
       const correctPlayersTurn = (whoseTurn === piecesColor)
       if (!correctPlayersTurn) { return }
       board.selectPieceToMove(squaresCoordinates)
+      const clickedPiecesMoves = board.selectedPiece.possibleMoves
+      if (clickedPiecesMoves.length === 0) { return }
       setPieceToMove("selected")
     }
     if (pieceToMove === "selected"){
@@ -97,10 +91,10 @@ export default function BoardUI({boardState, setBoardState, board}){
 
   return (
     <>
-      <PromotionModal
+      {pawnPromotion.pawnIsPromoting && <PromotionModal
         promotionData={pawnPromotion}
         board={boardState}
-        promote={promote}/>
+        promote={promote}/>}
       {board.gameResult !== "undecided" && 
       <NewGameModal 
         gameResult={gameResult}
@@ -121,7 +115,7 @@ export default function BoardUI({boardState, setBoardState, board}){
                 key={square.coordinate} 
                 style={{
                   backgroundColor: isLightSquare(square.coordinate) ? lightSquareColor : darkSquareColor,
-                  opacity: square.isLastPlayedMove ? 0.5 : 1.0
+                  opacity: square.isLastPlayedMove ? 0.6 : 1.0
                   }}
                 onClick={(e) => move(e)}>
                   {square.piece !== null && square.piece.symbol}   

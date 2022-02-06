@@ -19,7 +19,7 @@ export default function PromotionPopUp({promotionData, board, promote}){
     pieces.blackKnight
   ]
   
-  if(pawnIsPromoting){
+  
     return (
       <div id="promotion-modal">
 
@@ -40,7 +40,5 @@ export default function PromotionPopUp({promotionData, board, promote}){
             </div>}
       </div>)}
       
-    else { 
-      return null 
-      }
-  }
+    
+  

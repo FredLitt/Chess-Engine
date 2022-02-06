@@ -29,10 +29,10 @@ export default function MoveList({moveList}){
   const renderMoveNotation = (move, index) => {
     let moveNotation
     if (move.moveData.kingsideCastle) {
-      moveNotation += "0 - 0"
+      moveNotation = "0 - 0"
     }
     if (move.moveData.queensideCastle) {
-      moveNotation += "0 - 0 - 0"
+      moveNotation = "0 - 0 - 0"
     }
     const wasCastling = (move.moveData.queensideCastle || move.moveData.kingsideCastle)
     if (wasCastling) {

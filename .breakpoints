@@ -3,15 +3,21 @@
     "src/App.css": [
       {
         "id": "d92bc672-f5f5-415e-9556-0451db35cda3",
-        "line": 17,
-        "version": 8571,
-        "index": 233
+        "line": 20,
+        "version": 9800,
+        "index": 282
       },
       {
         "id": "5ffb96b9-e0ea-42d6-8cd0-f8ba908f82d1",
-        "line": 102,
-        "version": 8571,
-        "index": 1488
+        "line": 101,
+        "version": 9800,
+        "index": 1469
+      },
+      {
+        "id": "adfffc4c-c1ef-4664-9d5e-67cef2bbe94d",
+        "line": 111,
+        "version": 9800,
+        "index": 1652
       }
     ]
   }
