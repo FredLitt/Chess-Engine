@@ -15,8 +15,6 @@ export default function BoardUI({board, setBoard}){
               color: null,
               promotionSquare: null})
 
-  const [ gameResult, setGameResult ] = useState("undecided")
-
   const getCoordinates = (coordinates) => {
     const stringCoordinates = coordinates.split(",")
     return stringCoordinates.map(coordinates => parseInt(coordinates))
@@ -45,10 +43,6 @@ export default function BoardUI({board, setBoard}){
       setBoard(board.clone())
       setPieceToMove(null)
       }
-      const gameIsOver = (board.gameResult !== "undecided")
-      if (gameIsOver){
-        setGameResult(board.gameResult)
-      }
     } 
   }
 
@@ -72,7 +66,6 @@ export default function BoardUI({board, setBoard}){
   const createNewGame = () => {
     board.startNewGame()
     setBoard(board.clone())
-    setGameResult("undecided")
   }
 
   const isLightSquare = (coordinate) => {
@@ -98,7 +91,7 @@ export default function BoardUI({board, setBoard}){
         promote={promote}/>}
       {board.gameResult !== "undecided" && 
       <NewGameModal 
-        gameResult={gameResult}
+        gameResult={board.gameResult}
         startNewGame={createNewGame}/>}
       <table 
         id="board"

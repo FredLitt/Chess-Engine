@@ -9,12 +9,14 @@ import "./App.css";
 //TODO: Add skip forward and backward buttons on move list
 //TODO: 2 player network chess
 
-const newBoard = new Board()
-newBoard.setToStartPosition()
+const createNewBoard = () => {
+  const newBoard = new Board()
+  newBoard.setToStartPosition()
+  return newBoard
+}
 
 function App() {
-  
-  const [board, setBoard] = useState(newBoard)
+  const [board, setBoard] = useState(createNewBoard)
 
   return (
     <main>
