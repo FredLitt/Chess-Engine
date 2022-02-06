@@ -3,7 +3,7 @@ import { pieces } from "./pieces"
 import PromotionModal from "./PromotionModal"
 import NewGameModal from "./NewGameModal"
 
-export default function BoardUI({boardState, setBoardState, board}){
+export default function BoardUI({board, setBoard}){
 
   // TODO: Put conditional for promotionmodal outside component
   // TODO: custom board colors
@@ -41,7 +41,8 @@ export default function BoardUI({boardState, setBoardState, board}){
         renderPromotionModal(board.selectedPiece.piece.color, squaresCoordinates)
       } else {
       board.movePiece(squaresCoordinates)
-      setBoardState({...boardState})
+      
+      setBoard(board.clone())
       setPieceToMove(null)
       }
       const gameIsOver = (board.gameResult !== "undecided")
@@ -60,7 +61,7 @@ export default function BoardUI({boardState, setBoardState, board}){
 
   const promote = (toSquare, promotionChoice) => {
     board.movePiece(toSquare, promotionChoice)
-    setBoardState({...boardState})
+    setBoard(board.clone())
     setPieceToMove(null)
     setPawnPromotion(
       {pawnIsPromoting: false,
@@ -70,7 +71,7 @@ export default function BoardUI({boardState, setBoardState, board}){
 
   const createNewGame = () => {
     board.startNewGame()
-    setBoardState({...boardState})
+    setBoard(board.clone())
     setGameResult("undecided")
   }
 
@@ -93,7 +94,7 @@ export default function BoardUI({boardState, setBoardState, board}){
     <>
       {pawnPromotion.pawnIsPromoting && <PromotionModal
         promotionData={pawnPromotion}
-        board={boardState}
+        board={board}
         promote={promote}/>}
       {board.gameResult !== "undecided" && 
       <NewGameModal 
@@ -103,7 +104,7 @@ export default function BoardUI({boardState, setBoardState, board}){
         id="board"
         cellSpacing="0">
         <tbody>
-        {boardState.squares.map((row, index) =>
+        {board.squares.map((row, index) =>
           <tr 
             className="board-row"
             key={index}>

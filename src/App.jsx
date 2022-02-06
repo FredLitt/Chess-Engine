@@ -14,18 +14,18 @@ newBoard.setToStartPosition()
 
 function App() {
   
-  const [boardState, setBoardState] = useState(newBoard)
+  const [board, setBoard] = useState(newBoard)
 
   return (
     <main>
       <div id="game-container">  
-      <BoardUI boardState={boardState} setBoardState={setBoardState} board={newBoard}/>
+      <BoardUI setBoard={setBoard} board={board}/>
       <div id="move-list-captured-pieces-wrapper">
         <CapturedPieceContainer 
-          capturedPieces={newBoard.blackCapturedPieces}/>
-        <MoveList moveList={newBoard.playedMoveList}/>
+          capturedPieces={board.blackCapturedPieces}/>
+        <MoveList moveList={board.playedMoveList}/>
         <CapturedPieceContainer 
-          capturedPieces={newBoard.whiteCapturedPieces}/>
+          capturedPieces={board.whiteCapturedPieces}/>
       </div>
       </div>
     </main>

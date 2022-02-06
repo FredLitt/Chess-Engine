@@ -73,6 +73,14 @@ export class Board {
     // this.squares[5][5].piece = pieces.whiteKing
       }
 
+  clone(){
+    let newBoard = new Board()
+    for (const property in this){
+      newBoard[property] = this[property]
+    }
+    return newBoard
+  }
+
   determineWhoseTurn(){
       if (this.playedMoveList.length % 2 === 0) { return "white" }
       else { return "black" }
