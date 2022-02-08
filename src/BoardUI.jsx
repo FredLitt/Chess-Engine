@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { pieces } from "./pieces"
 import PromotionModal from "./PromotionModal"
-import NewGameModal from "./NewGameModal"
 
 export default function BoardUI({board, setBoard}){
 
-  // TODO: Put conditional for promotionmodal outside component
   // TODO: custom board colors
 
   const [pieceToMove, setPieceToMove] = useState(null)
@@ -39,7 +37,6 @@ export default function BoardUI({board, setBoard}){
         renderPromotionModal(board.selectedPiece.piece.color, squaresCoordinates)
       } else {
       board.movePiece(squaresCoordinates)
-      
       setBoard(board.clone())
       setPieceToMove(null)
       }
@@ -89,10 +86,7 @@ export default function BoardUI({board, setBoard}){
         promotionData={pawnPromotion}
         board={board}
         promote={promote}/>}
-      {board.gameResult !== "undecided" && 
-      <NewGameModal 
-        gameResult={board.gameResult}
-        startNewGame={createNewGame}/>}
+      
       <table 
         id="board"
         cellSpacing="0">

@@ -3,11 +3,14 @@ import { Board } from "./chessBoard";
 import BoardUI from "./BoardUI"
 import MoveList from "./MoveList"
 import CapturedPieceContainer from "./CapturedPieceContainer"
+import NewGameModal from "./NewGameModal"
 import "./App.css";
 
+//TODO: Flip board option
+//TODO: Reset game button
+//TODO: 2 player network chess
 //TODO: Custom board colors and piece designs
 //TODO: Add skip forward and backward buttons on move list
-//TODO: 2 player network chess
 
 const createNewBoard = () => {
   const newBoard = new Board()
@@ -18,8 +21,17 @@ const createNewBoard = () => {
 function App() {
   const [board, setBoard] = useState(createNewBoard)
 
+  const createNewGame = () => {
+    board.startNewGame()
+    setBoard(board.clone())
+  }
+
   return (
     <main>
+      {board.gameResult !== "undecided" && 
+      <NewGameModal 
+        gameResult={board.gameResult}
+        createNewGame={createNewGame}/>}
       <div id="game-container">  
       <BoardUI setBoard={setBoard} board={board}/>
       <div id="move-list-captured-pieces-wrapper">

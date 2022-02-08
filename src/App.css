@@ -1,7 +1,14 @@
 :root {
   --main-bg-color: rgba(0, 0, 0, 0.85);
-  --light-square: #EDD2B0;
-  --dark-square: #B4946C;
+  --light-square: hsl(33, 63%, 81%);
+  --dark-square: hsl(33, 32%, 56%);
+  --piece-size: calc(16px + 2vw);
+  --square-length: calc(1.5 * var(--piece-size));
+  --board-length: calc(8 * var(--square-length));
+  --side-panel-height: calc(.8 * var(--board-length));
+  --side-panel-width: calc(.7 * var(--board-length));
+  --new-game-modal-height: calc(.25 * var(--board-length));
+  --new-game-modal-width: calc(.5 * var(--board-length))
 }
 
 html {
@@ -9,14 +16,14 @@ html {
 }
 
 main {
-  height: 100vh;
+  height: 90vh;
   width: 100vw;
 }
 
 #game-container {
   display: flex;
   justify-content: center;
-  padding-top: 2rem;
+  margin-top: calc(0.5 * (100vh - var(--board-length)));
 }
 
 .white-wins-result {
@@ -27,17 +34,11 @@ main {
   text-align: start;  
 }
 
-#board {
-  table-layout: fixed;
-}
-
 .square {
   box-sizing: border-box;
-  height: 3rem;
-  max-height: 3rem;
-  max-width: 3rem;
-  min-width: 3rem;
-  font-size: 2.25rem;
+  height: var(--square-length);
+  width: var(--square-length);
+  font-size: var(--piece-size);
   text-align: center;
   position: relative;
   z-index: 1;
@@ -52,10 +53,10 @@ main {
 }
 
 .possible-move {
-  height: 1rem;
-  width: 1rem;
+  height: calc(0.5 * var(--piece-size));
+  width: calc(0.5 * var(--piece-size));
   margin: auto;
-  background-color: rgb(212, 166, 105);
+  background-color: rgb(134, 102, 60);
   position: absolute;
   top: 0;
   left: 0;
@@ -66,12 +67,14 @@ main {
 }
 
 #move-list-captured-pieces-wrapper {
-  padding-left: 1rem;
+  padding: 2%;
+  box-sizing: border-box;
+  font-size: calc(0.5 * var(--piece-size));
   display: flex;
   flex-direction: column;
-  min-width: 14rem;
-  max-width: 14rem;
-  height: 18rem;
+  min-width: var(--side-panel-width);
+  max-width: var(--side-panel-width);
+  height: var(--side-panel-height);
   align-self: center;
 }
 
@@ -98,7 +101,7 @@ main {
   display: flex;
   flex-flow: row wrap;
   justify-content: start;
-  font-size: 1.8em;
+  font-size: var(--piece-size);
   max-width: 100%;
   min-height: 26%;
   background-color: var(--dark-square);
@@ -112,25 +115,27 @@ main {
 
 #promotion-modal {
   position: absolute;
-  top: calc(50% - 6rem);
-  left: calc(50% - 2rem);
   height: 100%;
   width: 100%;
   z-index: 2;
 }
 
 .promotion-pieces {
+  position: relative;
   display: flex;
+  top: calc(50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
   justify-content: center;
   flex-direction: column;
   background-color: var(--main-bg-color);
-  width: 4rem;
-  font-size: 3rem;
+  width: calc(2 * (var(--piece-size)));
+  font-size: calc(1.5 * (var(--piece-size)));
 }
 
 .promotion-pieces > div {
   min-width: 25%;
-  background-color: lightgrey;
+  background-color: var(--light-square);
   border-radius: 50%;
   text-align: center;
 }
@@ -139,106 +144,55 @@ main {
   cursor: pointer;
 }
 
-#new-game-modal {
+#new-game-modal > div {
   background-color: white;
   position: absolute;
-  top: calc(50% - 1.5rem);
+  top: calc(50% - calc(.5 * var(--new-game-modal-height)));
+  left: calc(50% - calc(.5 * (var(--new-game-modal-width) + var(--side-panel-width))));
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 8rem;
-  width: 15rem;
-  border-radius: .25em;
+  justify-content: space-evenly;
+  height: var(--new-game-modal-height);
+  width: var(--new-game-modal-width);
+  border-radius: 1rem;
+  border: solid black;
+  box-sizing: border-box;
+  font-size: calc(1/2 * var(--piece-size));
   z-index: 2;
 }
 
-#new-game-modal > div {
+#new-game-modal > div > div {
   font-weight: bold;
   border-radius: 1rem;
   padding: 1rem;
 }
 
-#new-game-modal > button {
-  padding: .5rem;
-  font-size: 1rem;
+#new-game-modal > div > button {
+  font-size: .75em;
+  width: calc(3 * var(--piece-size));
+  height: var(--piece-size);
+  border-radius: .5rem;
   background-color: green;
   color: white;
   cursor: pointer;
 }
 
 @media only screen and (max-width: 600px) {
-  #move-list-captured-pieces-wrapper {
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  html {
-    font-size: 1.25em;
-  }
-
-  #new-game-modal {
-    top: calc(50% - 4rem);
-    left: calc(50% - 12.25rem);
-    width: 12rem;
-    height: 7rem;
-  }
-
-  main {
-    height: 70vh;
-  }
-
-  #new-game-modal > button {
-    font-size: .75rem;
-  }
-
-   #promotion-modal {
-     top: calc(50% - 6rem);
-     left: calc(50% - 8rem);
-  }
-}
-
-@media only screen and (min-width: 992px) {
-  html {
-    font-size: 1.5em;
-  }
-
-  main {
-    height: 70vh;
-  }
-
-  #new-game-modal {
-    top: calc(50% - 4rem);
-    left: calc(50% - 12.5rem);
-    width: 12rem;
-    height: 7rem;
-  }
-
-  #promotion-modal {
-    top: calc(50% - 8rem);
-    left: calc(50% - 8rem);
-  }
-}
-
-@media only screen and (min-width: 1600px) {
-  html {
-    font-size: 1.75em;
-  }
-
   #game-container {
-  padding-top: 4rem;
-}
+    flex-direction: column;
+    align-items: center;
+  }
 
   #new-game-modal {
-    top: calc(50% - 4rem);
-    left: calc(50% - 12.5rem);
-    width: 12rem;
-    height: 7rem;
+    top: calc(50% - (0.5 * (var(--board-length) + var(--side-panel-height)));
+    left: calc(50vw - (1.3 * var(--new-game-modal-width)));
   }
 
-  #promotion-modal {
-    top: calc(50% - 8rem);
-    left: calc(50% - 8rem);
+  #move-list-captured-pieces-wrapper {
+    margin: 1rem;
+    min-width: 50%;
+    max-width: 50%;
   }
 }
+

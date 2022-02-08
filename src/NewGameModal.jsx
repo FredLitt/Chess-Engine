@@ -1,32 +1,23 @@
 import React, { useState } from "react";
 
-export default function NewGameModal({gameResult, startNewGame}){
+export default function NewGameModal({gameResult, createNewGame}){
 
-if (gameResult === "white wins"){
-  return (
+
+return (
+  <div className="overlay">
     <div id="new-game-modal">
-      <div className="game-over-message">White wins! 1-0 </div>
-      <button 
-        onClick={() => {startNewGame()}}>New Game
+    <div>
+      {gameResult === "white wins" &&
+      <div className="game-over-message">White Wins! 1-0</div>
+      }
+      {gameResult === "black wins" &&
+      <div className="game-over-message">Black Wins! 0-1</div>}
+      {gameResult === "stalemate" &&
+      <div className="game-over-message">Stalemate! 1/2-1/2</div>}
+      <button
+        onClick={() => {createNewGame()}}>New Game
       </button>
-    </div>)}
-if (gameResult === "black wins") {   
-  return (
-    <div id="new-game-modal">
-      <div className="game-over-message">Black wins! 0-1</div>
-      <button 
-        onClick={() => startNewGame()}>New Game
-      </button>
-    </div>)}
-if (gameResult === "stalemate") {
-  return (
-    <div id="new-game-modal">
-      <div className="game-over-message">Stalemate! 1/2-1/2</div>
-      <button 
-        onClick={() => startNewGame()}>New Game
-      </button>
-    </div>)}
-  return (
-    null
-  )
-}
+      </div>
+    </div>
+  </div>
+)}
