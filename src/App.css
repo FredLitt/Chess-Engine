@@ -5,8 +5,8 @@
   --piece-size: calc(16px + 2vw);
   --square-length: calc(1.5 * var(--piece-size));
   --board-length: calc(8 * var(--square-length));
-  --side-panel-height: calc(.8 * var(--board-length));
-  --side-panel-width: calc(.7 * var(--board-length));
+  --move-list-height: calc(.8 * var(--board-length));
+  --move-list-width: calc(.7 * var(--board-length));
   --new-game-modal-height: calc(.25 * var(--board-length));
   --new-game-modal-width: calc(.5 * var(--board-length));
   --promotion-pieces-width: calc(2 * var(--piece-size));
@@ -74,9 +74,9 @@ main {
   font-size: calc(0.5 * var(--piece-size));
   display: flex;
   flex-direction: column;
-  min-width: var(--side-panel-width);
-  max-width: var(--side-panel-width);
-  height: var(--side-panel-height);
+  min-width: var(--move-list-width);
+  max-width: var(--move-list-width);
+  height: var(--move-list-height);
   align-self: center;
 }
 
@@ -116,18 +116,18 @@ main {
 }
 
 #promotion-modal {
-  position: fixed;
+  position: absolute;
   height: 100%;
   width: 100%;
   z-index: 2;
 }
 
 .promotion-pieces {
-  position: relative;
   display: flex;
-  top: calc(50% - (0.45 * var(--board-length)));
-  left: calc(0.5 * var(--board-length));
-  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 36%;
+  transform: translate(-50%, -50%);
   flex-direction: column;
   background-color: var(--main-bg-color);
   width: var(--promotion-pieces-width);
@@ -149,7 +149,7 @@ main {
   background-color: white;
   position: absolute;
   top: calc(50% - calc(.5 * var(--new-game-modal-height)));
-  left: calc(0.5 * (100vw - (0.5 * var(--board-length) + var(--side-panel-width))));
+  left: calc(0.5 * (100vw - (0.5 * var(--board-length) + var(--move-list-width))));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -193,9 +193,11 @@ main {
     margin: 0;
   }
 
-  #promotion-modal {
+  .promotion-pieces {
+    position: fixed;
+    top: calc(0.25 * var(--board-length));
     left: 50%;
-    top: 50%;
+    transform: translate(-50%);
   }
 }
 
