@@ -86,7 +86,6 @@ export default function BoardUI({board, setBoard}){
         promotionData={pawnPromotion}
         board={board}
         promote={promote}/>}
-      
       <table 
         id="board"
         cellSpacing="0">

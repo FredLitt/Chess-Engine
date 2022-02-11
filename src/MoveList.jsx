@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 export default function MoveList({moveList}){
+
+  useEffect(() => {
+    scrollToBottom()
+  });
 
   const xAxis = {
     0: "h",
@@ -22,8 +26,16 @@ export default function MoveList({moveList}){
     "king": "K"
   }
 
-  const getMoveNumber = (moveList, move) => {
-    return (Math.round(moveList.indexOf(move)/2+1))
+  const moveListContainer = document.querySelector("#move-list")
+
+  const scrollToBottom = () => {
+    if (moveList.length > 8) {
+      moveListContainer.scrollTop = moveListContainer.scrollHeight
+    }
+  }
+
+  const getMoveNumber = (index) => {
+    return Math.round(index/2+1)
   }
 
   const renderMoveNotation = (move, index) => {
@@ -82,14 +94,15 @@ export default function MoveList({moveList}){
   }
 
   return (
-      <div id="move-list">
+      <div 
+        id="move-list">
         {moveList.map((move, index) => 
           <div 
             key={index}
             className="move-notation">
             {index % 2 === 0 && 
             <span className="move-number">
-            {`${getMoveNumber(moveList, move)}. `}</span>}
+            {`${getMoveNumber(index)}. `}</span>}
             {renderMoveNotation(move, index)}
             {move.moveData.gameResult === "white wins" && <div className="white-wins-result">1 - 0</div>}
             {move.moveData.gameResult === "black wins" && <div className="black-wins-result">0 - 1</div>}
