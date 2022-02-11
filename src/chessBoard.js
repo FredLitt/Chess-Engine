@@ -39,38 +39,37 @@ export class Board {
   }
   
   setToStartPosition(){
-    for (let i = 0; i < 8; i++){
-      this.squares[1][i].piece = pieces.whitePawn
-      this.squares[6][i].piece = pieces.blackPawn
-    }
-    this.squares[0][0].piece = pieces.whiteRook
-    this.squares[0][1].piece = pieces.whiteKnight
-    this.squares[0][2].piece = pieces.whiteBishop
-    this.squares[0][3].piece = pieces.whiteKing
-    this.squares[0][4].piece = pieces.whiteQueen
-    this.squares[0][5].piece = pieces.whiteBishop
-    this.squares[0][6].piece = pieces.whiteKnight
-    this.squares[0][7].piece = pieces.whiteRook
+    // for (let i = 0; i < 8; i++){
+    //   this.squares[1][i].piece = pieces.whitePawn
+    //   this.squares[6][i].piece = pieces.blackPawn
+    // }
+    // this.squares[0][0].piece = pieces.whiteRook
+    // this.squares[0][1].piece = pieces.whiteKnight
+    // this.squares[0][2].piece = pieces.whiteBishop
+    // this.squares[0][3].piece = pieces.whiteKing
+    // this.squares[0][4].piece = pieces.whiteQueen
+    // this.squares[0][5].piece = pieces.whiteBishop
+    // this.squares[0][6].piece = pieces.whiteKnight
+    // this.squares[0][7].piece = pieces.whiteRook
 
-    this.squares[7][0].piece = pieces.blackRook
-    this.squares[7][1].piece = pieces.blackKnight
-    this.squares[7][2].piece = pieces.blackBishop
-    this.squares[7][3].piece = pieces.blackKing
-    this.squares[7][4].piece = pieces.blackQueen
-    this.squares[7][5].piece = pieces.blackBishop
-    this.squares[7][6].piece = pieces.blackKnight
-    this.squares[7][7].piece = pieces.blackRook
-
-    //this.placePiece()
+    // this.squares[7][0].piece = pieces.blackRook
+    // this.squares[7][1].piece = pieces.blackKnight
+    // this.squares[7][2].piece = pieces.blackBishop
+    // this.squares[7][3].piece = pieces.blackKing
+    // this.squares[7][4].piece = pieces.blackQueen
+    // this.squares[7][5].piece = pieces.blackBishop
+    // this.squares[7][6].piece = pieces.blackKnight
+    // this.squares[7][7].piece = pieces.blackRook
 
     // this.squares[6][2].piece = pieces.blackQueen
     // this.squares[7][7].piece = pieces.whiteKing
     // this.squares[5][5].piece = pieces.blackKing
 
     // this.squares[1][4].piece = pieces.blackPawn
-    // this.squares[6][2].piece = pieces.whiteQueen
-    // this.squares[7][7].piece = pieces.blackKing
-    // this.squares[5][5].piece = pieces.whiteKing
+    this.squares[4][4].piece = pieces.whiteRook
+    this.squares[3][4].piece = pieces.blackKnight
+    this.squares[2][4].piece = pieces.blackKing
+    this.squares[5][2].piece = pieces.whiteKing
       }
 
   clone(){

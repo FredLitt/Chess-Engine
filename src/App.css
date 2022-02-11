@@ -28,10 +28,6 @@ main {
   margin-top: calc(0.5 * (100vh - var(--board-length)));
 }
 
-.white-wins-result {
-  text-align: center;
-}
-
 .black-wins-result {
   text-align: start;  
 }

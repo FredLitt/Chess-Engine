@@ -104,8 +104,10 @@ export default function MoveList({moveList}){
             <span className="move-number">
             {`${getMoveNumber(index)}. `}</span>}
             {renderMoveNotation(move, index)}
-            {move.moveData.gameResult === "white wins" && <div className="white-wins-result">1 - 0</div>}
+            {move.moveData.gameResult === "white wins" && <div>1 - 0</div>}
             {move.moveData.gameResult === "black wins" && <div className="black-wins-result">0 - 1</div>}
+            {move.moveData.gameResult === "stalemate" && <div>
+            1/2 - 1/2</div>}
           </div>)}
         </div>        
   )
