@@ -87,6 +87,13 @@ main {
   overflow-y: auto;
 }
 
+#playback-btn-container {
+  display: flex;
+  padding: 0.25rem;
+  background-color: var(--main-bg-color);
+  justify-content: center;
+}
+
 #move-list::-webkit-scrollbar {
   display: none;
 }

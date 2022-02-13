@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Board } from "./chessBoard";
 import BoardUI from "./BoardUI"
 import MoveList from "./MoveList"
+import PlaybackButtons from "./PlaybackButtons"
 import CapturedPieceContainer from "./CapturedPieceContainer"
 import NewGameModal from "./NewGameModal"
 import "./App.css";
 
-//TODO: Flip board option
-//TODO: Reset game button
+//TODO: Promotion modal looks jank on mobile
 //TODO: 2 player network chess
 //TODO: Custom board colors and piece designs
 //TODO: Add skip forward and backward buttons on move list
@@ -38,6 +38,7 @@ function App() {
         <CapturedPieceContainer 
           capturedPieces={board.blackCapturedPieces}/>
         <MoveList moveList={board.playedMoveList}/>
+        <PlaybackButtons/>
         <CapturedPieceContainer 
           capturedPieces={board.whiteCapturedPieces}/>
       </div>
