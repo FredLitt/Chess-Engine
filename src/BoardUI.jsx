@@ -8,10 +8,16 @@ export default function BoardUI({board, setBoard}){
 
   const [pieceToMove, setPieceToMove] = useState(null)
 
+  const [gamePerspective, setGamePerspective] = 
+    useState({
+      playerPerspective: "black", 
+      boardPosition: board.squares})
+
   const [pawnPromotion, setPawnPromotion] = 
-    useState({pawnIsPromoting: false,
-              color: null,
-              promotionSquare: null})
+    useState({
+      pawnIsPromoting: false,
+      color: null,
+      promotionSquare: null})
 
   const getCoordinates = (coordinates) => {
     const stringCoordinates = coordinates.split(",")
@@ -80,17 +86,57 @@ export default function BoardUI({board, setBoard}){
 
   const darkSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--dark-square")
 
+  const flipBoard = () => {
+    const updatedPosition = {}
+    const boardToFlip = board.squares
+    const flippedBoard = []
+    if (gamePerspective.playerPerspective === "black"){
+      for (let row = 7; row >= 0; row--){
+        const boardRow = []
+        for (let col = 7; col >= 0; col --){
+          boardRow.push(boardToFlip[row][col])
+        }
+        flippedBoard.push(boardRow)
+      }
+      updatedPosition.playerPerspective = "white"
+      updatedPosition.boardPosition = flippedBoard
+      setGamePerspective(updatedPosition)
+      return
+    }
+    if(gamePerspective.playerPerspective === "white"){
+      for (let row = 0; row <= 7; row++){
+        const boardRow = []
+        for (let col = 0; col <= 7; col++){
+          boardRow.push(boardToFlip[row][col])
+        }
+        flippedBoard.push(boardRow)
+      }
+      updatedPosition.playerPerspective = "black"
+      updatedPosition.boardPosition = flippedBoard
+      setGamePerspective(updatedPosition)
+      return
+    }
+  }
+
   return (
     <>
       {pawnPromotion.pawnIsPromoting && <PromotionModal
         promotionData={pawnPromotion}
         board={board}
         promote={promote}/>}
+      <button 
+        id="flip-board-btn"
+        onClick={() => {flipBoard()}}
+        >Flip Board</button>
+      <button
+        id="new-game-btn"
+        onClick={() => {createNewGame()}}
+        >New Game</button>
       <table 
         id="board"
         cellSpacing="0">
         <tbody>
-        {board.squares.map((row, index) =>
+        {gamePerspective.boardPosition.map((row, index) =>
           <tr 
             className="board-row"
             key={index}>
