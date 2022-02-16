@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { pieces } from "./pieces"
+import { pieces, findPiece } from "./pieces"
+import GameOptionsBar from "./GameOptionsBar"
 import PromotionModal from "./PromotionModal"
 
 export default function BoardUI({board, setBoard}){
@@ -8,7 +9,7 @@ export default function BoardUI({board, setBoard}){
 
   const [pieceToMove, setPieceToMove] = useState(null)
 
-  const [gamePerspective, setGamePerspective] = 
+  const [game, setGame] = 
     useState({
       playerPerspective: "black", 
       boardPosition: board.squares})
@@ -90,7 +91,7 @@ export default function BoardUI({board, setBoard}){
     const updatedPosition = {}
     const boardToFlip = board.squares
     const flippedBoard = []
-    if (gamePerspective.playerPerspective === "black"){
+    if (game.playerPerspective === "black"){
       for (let row = 7; row >= 0; row--){
         const boardRow = []
         for (let col = 7; col >= 0; col --){
@@ -100,10 +101,10 @@ export default function BoardUI({board, setBoard}){
       }
       updatedPosition.playerPerspective = "white"
       updatedPosition.boardPosition = flippedBoard
-      setGamePerspective(updatedPosition)
+      setGame(updatedPosition)
       return
     }
-    if(gamePerspective.playerPerspective === "white"){
+    if(game.playerPerspective === "white"){
       for (let row = 0; row <= 7; row++){
         const boardRow = []
         for (let col = 0; col <= 7; col++){
@@ -113,30 +114,45 @@ export default function BoardUI({board, setBoard}){
       }
       updatedPosition.playerPerspective = "black"
       updatedPosition.boardPosition = flippedBoard
-      setGamePerspective(updatedPosition)
+      setGame(updatedPosition)
       return
+    }
+  }
+
+  const takeback = () => {
+    const movesToPlayBack = board.playedMoveList.slice(0, -1)
+    console.log(movesToPlayBack)
+    createNewGame()
+    for (let i = 0; i < movesToPlayBack.length; i++){
+      board.selectPieceToMove(movesToPlayBack[i].fromSquare)
+      const targetSquare = movesToPlayBack[i].toSquare
+      if (movesToPlayBack[i].moveData.promotionChoice){
+        const pieceType = movesToPlayBack[i].moveData.promotionChoice
+        const pieceColor = movesToPlayBack[i].piece.color
+        const promotionChoice = findPiece(pieceColor, pieceType)
+        return board.movePiece(targetSquare, promotionChoice)
+      }
+      board.movePiece(targetSquare)
     }
   }
 
   return (
     <>
+      <GameOptionsBar 
+        createNewGame={createNewGame}
+        flipBoard={flipBoard} 
+        takeback={takeback}/>
+
       {pawnPromotion.pawnIsPromoting && <PromotionModal
         promotionData={pawnPromotion}
         board={board}
         promote={promote}/>}
-      <button 
-        id="flip-board-btn"
-        onClick={() => {flipBoard()}}
-        >Flip Board</button>
-      <button
-        id="new-game-btn"
-        onClick={() => {createNewGame()}}
-        >New Game</button>
+      
       <table 
         id="board"
         cellSpacing="0">
         <tbody>
-        {gamePerspective.boardPosition.map((row, index) =>
+        {game.boardPosition.map((row, index) =>
           <tr 
             className="board-row"
             key={index}>

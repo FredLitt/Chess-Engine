@@ -2,7 +2,8 @@
   --main-bg-color: rgba(0, 0, 0, 0.85);
   --light-square: hsl(33, 63%, 81%);
   --dark-square: hsl(33, 32%, 56%);
-  --piece-size: calc(16px + 2vw);
+  --piece-size: calc(16px + 2.5vw);
+  --game-options-bar-height: var(--piece-size);
   --square-length: calc(1.5 * var(--piece-size));
   --board-length: calc(8 * var(--square-length));
   --move-list-height: calc(.8 * var(--board-length));
@@ -18,14 +19,29 @@ html {
 }
 
 main {
-  height: 90vh;
+  height: 80vh;
   width: 100vw;
+}
+
+#game-options-bar {
+  position: absolute;
+  height: var(--game-options-bar-height);
+  top: 0px;
+}
+
+#game-options-bar > button {
+  background-color: var(--main-bg-color);
+  font-size: calc(0.5 * var(--piece-size));
+  color: lightgray;
+  cursor: pointer;
+  height: 100%;
+  width: calc(4 * var(--piece-size));
 }
 
 #game-container {
   display: flex;
   justify-content: center;
-  margin-top: calc(0.5 * (100vh - var(--board-length)));
+  margin-top: calc(1.25 * var(--game-options-bar-height));
 }
 
 .black-wins-result {
@@ -78,20 +94,13 @@ main {
 
 #move-list {
   display: grid;
-  background-color: black;
+  background-color: var(--main-bg-color);
   grid-template-columns: 1fr 1fr;
   color: lightgrey;
   align-content: start;
   height: 40%;
   min-width: 100%;
   overflow-y: auto;
-}
-
-#playback-btn-container {
-  display: flex;
-  padding: 0.25rem;
-  background-color: var(--main-bg-color);
-  justify-content: center;
 }
 
 #move-list::-webkit-scrollbar {
@@ -183,6 +192,7 @@ main {
 
 @media only screen and (max-width: 600px) {
   #game-container {
+    margin-top: var(--piece-size);
     flex-direction: column;
     align-items: center;
   }
@@ -192,8 +202,8 @@ main {
     top: calc(0.5 * (var(--board-length) - var(--new-game-modal-height)));
   }
 
-  #game-container {
-    margin: 0;
+  #game-options-bar {
+    
   }
 
   .promotion-pieces {

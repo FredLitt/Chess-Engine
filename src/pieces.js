@@ -405,6 +405,23 @@ export const pieceSymbols = {
   blackPawn: "\u265F"
 }
 
+export const findPiece = (color, type) => {
+  if (color === "white"){
+    if (type === "pawn") { return whitePawn }
+    if (type === "knight") { return whiteKnight }
+    if (type === "bishop") { return whiteBishop }
+    if (type === "rook") { return whiteRook }
+    if (type === "queen") { return whiteQueen }
+  }
+  if (color === "black"){
+    if (type === "pawn") { return blackPawn }
+    if (type === "knight") { return blackKnight }
+    if (type === "bishop") { return blackBishop }
+    if (type === "rook") { return blackRook }
+    if (type === "queen") { return blackQueen }
+  }
+}
+
 const whitePawn = new Pawn("white")
 const whiteKnight = new Knight("white")
 const whiteBishop = new Bishop("white")

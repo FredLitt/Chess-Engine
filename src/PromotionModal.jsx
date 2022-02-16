@@ -19,7 +19,6 @@ export default function PromotionPopUp({promotionData, board, promote}){
     pieces.blackKnight
   ]
   
-  
     return (
       <div id="promotion-modal">
 
