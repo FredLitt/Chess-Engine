@@ -1,7 +1,8 @@
 :root {
   --main-bg-color: rgba(0, 0, 0, 0.85);
-  --light-square: hsl(33, 63%, 81%);
-  --dark-square: hsl(33, 32%, 56%);
+  --light-square: beige;
+  --dark-square: tan;
+  --highlight: peru;
   --piece-size: calc(16px + 2.5vw);
   --game-options-bar-height: var(--piece-size);
   --square-length: calc(1.5 * var(--piece-size));
@@ -70,7 +71,7 @@ main {
   height: calc(0.5 * var(--piece-size));
   width: calc(0.5 * var(--piece-size));
   margin: auto;
-  background-color: rgb(134, 102, 60);
+  background-color: var(--highlight);
   position: absolute;
   top: 0;
   left: 0;
@@ -227,10 +228,6 @@ main {
   #new-game-modal > div {
     left: calc(50% - (0.5 * var(--new-game-modal-width)));
     top: calc(0.5 * (var(--board-length) - var(--new-game-modal-height)));
-  }
-
-  #game-options-bar {
-    
   }
 
   .promotion-pieces {

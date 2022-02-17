@@ -4,11 +4,8 @@ export default function GameOptionsBar({flipBoard, createNewGame, takeback, chan
 
   const [ themesMenu, setThemesMenu ] = useState("closed")
 
-  //changeTheme(light, dark)...
-
   const toggleThemeMenu = () => {
-    if (themesMenu === "closed"){
-      
+    if (themesMenu === "closed"){      
       setThemesMenu("open")
       }
     if (themesMenu === "open"){
@@ -17,9 +14,11 @@ export default function GameOptionsBar({flipBoard, createNewGame, takeback, chan
   }
 
   const colorSchemes = [
-    { light: "lightgrey", dark: "slategrey" },
-    { light: "pink", dark: "red" },
-    { light: "lightblue", dark: "grey" }
+    { light: "beige", dark: "tan", highlight: "peru" },
+    { light: "lightgrey", dark: "slategrey", highlight: "darkslategrey" },
+    { light: "skyblue", dark: "steelblue", highlight: "royalblue" },
+    { light: "darkseagreen", dark: "green", highlight: "forestgreen" },
+    { light: "palevioletred", dark: "darkmagenta", highlight: "darkslateblue" }
   ]
 
   return (
@@ -42,7 +41,7 @@ export default function GameOptionsBar({flipBoard, createNewGame, takeback, chan
             <div 
               className="color-choice" 
               onClick={() => {
-                changeTheme(scheme.light, scheme.dark)
+                changeTheme(scheme.light, scheme.dark, scheme.highlight)
                 toggleThemeMenu()}}>
               <div style={{backgroundColor: scheme.light}}></div>
               <div style={{backgroundColor: scheme.dark}}></div>

@@ -137,9 +137,10 @@ export default function BoardUI({board, setBoard}){
 
   const root = document.querySelector(":root")
 
-  const changeTheme = (lightSquareChoice, darkSquareChoice) => {
+  const changeTheme = (lightSquareChoice, darkSquareChoice, highlightChoice) => {
     document.documentElement.style.setProperty("--light-square", lightSquareChoice)
     document.documentElement.style.setProperty("--dark-square", darkSquareChoice)
+    document.documentElement.style.setProperty("--highlight", highlightChoice)
     setBoard(board.clone())
   }
 
