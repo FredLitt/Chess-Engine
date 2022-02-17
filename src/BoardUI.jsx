@@ -83,10 +83,6 @@ export default function BoardUI({board, setBoard}){
       return "square"
   }
 
-  const lightSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--light-square")
-
-  const darkSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--dark-square")
-
   const flipBoard = () => {
     const updatedPosition = {}
     const boardToFlip = board.squares
@@ -121,7 +117,6 @@ export default function BoardUI({board, setBoard}){
 
   const takeback = () => {
     const movesToPlayBack = board.playedMoveList.slice(0, -1)
-    console.log(movesToPlayBack)
     createNewGame()
     for (let i = 0; i < movesToPlayBack.length; i++){
       board.selectPieceToMove(movesToPlayBack[i].fromSquare)
@@ -136,12 +131,25 @@ export default function BoardUI({board, setBoard}){
     }
   }
 
+  const lightSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--light-square")
+
+  const darkSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--dark-square")
+
+  const root = document.querySelector(":root")
+
+  const changeTheme = (lightSquareChoice, darkSquareChoice) => {
+    document.documentElement.style.setProperty("--light-square", lightSquareChoice)
+    document.documentElement.style.setProperty("--dark-square", darkSquareChoice)
+    setBoard(board.clone())
+  }
+
   return (
     <>
       <GameOptionsBar 
         createNewGame={createNewGame}
         flipBoard={flipBoard} 
-        takeback={takeback}/>
+        takeback={takeback}
+        changeTheme={changeTheme}/>
 
       {pawnPromotion.pawnIsPromoting && <PromotionModal
         promotionData={pawnPromotion}

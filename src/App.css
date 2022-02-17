@@ -190,6 +190,33 @@ main {
   cursor: pointer;
 }
 
+#theme-options {
+  padding: 2vh 0;
+  width: 25%;
+  background-color: black;
+  position: relative;
+  left: 75%;
+  z-index: 3;
+}
+
+#theme-options > div {
+  height: calc(1.25 * var(--piece-size));
+  display: flex;
+}
+
+.color-choice {
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-choice > div {
+  width: 35%;
+  height: 60%;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
   #game-container {
     margin-top: var(--piece-size);

@@ -6,11 +6,8 @@ import CapturedPieceContainer from "./CapturedPieceContainer"
 import NewGameModal from "./NewGameModal"
 import "./App.css";
 
-//TODO: Flip board option
-//TODO: Reset game button
 //TODO: 2 player network chess
 //TODO: Custom board colors and piece designs
-//TODO: Add skip forward and backward buttons on move list
 
 const createNewBoard = () => {
   const newBoard = new Board()
