@@ -4,7 +4,7 @@
   --dark-square: tan;
   --highlight: peru;
   --piece-size: calc(16px + 2.5vw);
-  --game-options-bar-height: var(--piece-size);
+  --game-options-bar-height: calc(0.75 * var(--piece-size));
   --square-length: calc(1.5 * var(--piece-size));
   --board-length: calc(8 * var(--square-length));
   --move-list-height: calc(.8 * var(--board-length));
@@ -225,13 +225,22 @@ main {
     align-items: center;
   }
 
+  #game-options-bar > button {
+    background-color: var(--main-bg-color);
+    font-size: calc(0.35 * var(--piece-size));
+    color: lightgray;
+    cursor: pointer;
+    height: 100%;
+    width: calc(3 * var(--piece-size));
+  }
+
   #new-game-modal > div {
     left: calc(50% - (0.5 * var(--new-game-modal-width)));
     top: calc(0.5 * (var(--board-length) - var(--new-game-modal-height)));
   }
 
   .promotion-pieces {
-    position: fixed;
+    position: absolute;
     top: calc(0.25 * var(--board-length));
     left: 50%;
     transform: translate(-50%);

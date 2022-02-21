@@ -7,7 +7,6 @@ import NewGameModal from "./NewGameModal"
 import "./App.css";
 
 //TODO: 2 player network chess
-//TODO: Custom board colors and piece designs
 
 const createNewBoard = () => {
   const newBoard = new Board()

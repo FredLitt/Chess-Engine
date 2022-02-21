@@ -3,21 +3,29 @@
     "src/App.css": [
       {
         "id": "d92bc672-f5f5-415e-9556-0451db35cda3",
-        "line": 45,
-        "version": 16886,
-        "index": 1173
+        "line": 46,
+        "version": 17962,
+        "index": 1181
       },
       {
         "id": "5ffb96b9-e0ea-42d6-8cd0-f8ba908f82d1",
-        "line": 106,
-        "version": 16886,
-        "index": 2290
+        "line": 107,
+        "version": 17962,
+        "index": 2297
       },
       {
         "id": "adfffc4c-c1ef-4664-9d5e-67cef2bbe94d",
-        "line": 106,
-        "version": 16886,
-        "index": 2290
+        "line": 107,
+        "version": 17962,
+        "index": 2297
+      }
+    ],
+    "src/GameOptionsBar.jsx": [
+      {
+        "id": "d7e78f75-1b4d-4537-924e-045554e9485e",
+        "line": 12,
+        "version": 2366,
+        "index": 341
       }
     ]
   }

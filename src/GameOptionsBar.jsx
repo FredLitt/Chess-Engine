@@ -16,9 +16,9 @@ export default function GameOptionsBar({flipBoard, createNewGame, takeback, chan
   const colorSchemes = [
     { light: "beige", dark: "tan", highlight: "peru" },
     { light: "lightgrey", dark: "slategrey", highlight: "darkslategrey" },
-    { light: "skyblue", dark: "steelblue", highlight: "royalblue" },
+    { light: "skyblue", dark: "steelblue", highlight: "darkblue" },
     { light: "darkseagreen", dark: "green", highlight: "forestgreen" },
-    { light: "palevioletred", dark: "darkmagenta", highlight: "darkslateblue" }
+    { light: "palevioletred", dark: "darkmagenta", highlight: "lightblue" }
   ]
 
   return (

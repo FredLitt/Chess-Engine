@@ -5,11 +5,9 @@ import PromotionModal from "./PromotionModal"
 
 export default function BoardUI({board, setBoard}){
 
-  // TODO: custom board colors
-
   const [pieceToMove, setPieceToMove] = useState(null)
 
-  const [game, setGame] = 
+  const [gameDisplay, setGameDisplay] = 
     useState({
       playerPerspective: "black", 
       boardPosition: board.squares})
@@ -23,6 +21,17 @@ export default function BoardUI({board, setBoard}){
   const getCoordinates = (coordinates) => {
     const stringCoordinates = coordinates.split(",")
     return stringCoordinates.map(coordinates => parseInt(coordinates))
+  }
+
+  const getSquaresClass = (square) => {
+    if (square.piece !== null) { 
+      return "square contains-piece" 
+      }
+      return "square"
+  }
+
+  const isLightSquare = (coordinate) => {
+    return ((coordinate[0] + coordinate[1]) % 2 === 0)
   }
 
   const move = (square) => {
@@ -72,22 +81,12 @@ export default function BoardUI({board, setBoard}){
     setBoard(board.clone())
   }
 
-  const isLightSquare = (coordinate) => {
-    return ((coordinate[0] + coordinate[1]) % 2 === 0)
-  }
-
-  const getSquaresClass = (square) => {
-    if (square.piece !== null) { 
-      return "square contains-piece" 
-      }
-      return "square"
-  }
-
   const flipBoard = () => {
     const updatedPosition = {}
     const boardToFlip = board.squares
     const flippedBoard = []
-    if (game.playerPerspective === "black"){
+    
+    if (gameDisplay.playerPerspective === "black"){
       for (let row = 7; row >= 0; row--){
         const boardRow = []
         for (let col = 7; col >= 0; col --){
@@ -97,10 +96,11 @@ export default function BoardUI({board, setBoard}){
       }
       updatedPosition.playerPerspective = "white"
       updatedPosition.boardPosition = flippedBoard
-      setGame(updatedPosition)
+      setGameDisplay(updatedPosition)
       return
     }
-    if(game.playerPerspective === "white"){
+
+    if(gameDisplay.playerPerspective === "white"){
       for (let row = 0; row <= 7; row++){
         const boardRow = []
         for (let col = 0; col <= 7; col++){
@@ -110,7 +110,7 @@ export default function BoardUI({board, setBoard}){
       }
       updatedPosition.playerPerspective = "black"
       updatedPosition.boardPosition = flippedBoard
-      setGame(updatedPosition)
+      setGameDisplay(updatedPosition)
       return
     }
   }
@@ -131,17 +131,10 @@ export default function BoardUI({board, setBoard}){
     }
   }
 
-  const lightSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--light-square")
-
-  const darkSquareColor = getComputedStyle(document.documentElement).getPropertyValue("--dark-square")
-
-  const root = document.querySelector(":root")
-
   const changeTheme = (lightSquareChoice, darkSquareChoice, highlightChoice) => {
     document.documentElement.style.setProperty("--light-square", lightSquareChoice)
     document.documentElement.style.setProperty("--dark-square", darkSquareChoice)
     document.documentElement.style.setProperty("--highlight", highlightChoice)
-    setBoard(board.clone())
   }
 
   return (
@@ -161,7 +154,7 @@ export default function BoardUI({board, setBoard}){
         id="board"
         cellSpacing="0">
         <tbody>
-        {game.boardPosition.map((row, index) =>
+        {gameDisplay.boardPosition.map((row, index) =>
           <tr 
             className="board-row"
             key={index}>
@@ -172,7 +165,7 @@ export default function BoardUI({board, setBoard}){
                 piece={square.piece}
                 key={square.coordinate} 
                 style={{
-                  backgroundColor: isLightSquare(square.coordinate) ? lightSquareColor : darkSquareColor,
+                  backgroundColor: isLightSquare(square.coordinate) ? "var(--light-square)" : "var(--dark-square)",
                   opacity: square.isLastPlayedMove ? 0.6 : 1.0
                   }}
                 onClick={(e) => move(e)}>

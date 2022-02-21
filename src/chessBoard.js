@@ -70,10 +70,6 @@ export class Board {
     return newBoard
   }
 
-  flipBoard(){
-    
-  }
-
   determineWhoseTurn(){
       if (this.playedMoveList.length % 2 === 0) { return "white" }
       else { return "black" }

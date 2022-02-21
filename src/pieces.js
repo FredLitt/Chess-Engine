@@ -20,8 +20,9 @@ const findSquaresForLongRange =
         "SouthWest": [fromRow + i, fromCol - i],
         "SouthEast": [fromRow + i, fromCol + i]
       }
-      for (const direction in allDirections) {
 
+      for (const direction in allDirections) {
+  
         if (!pieceDirections.includes(direction) || completedDirections.includes(direction)){
           continue;
         }
