@@ -5,9 +5,10 @@ const socketIO = require('socket.io');
 const Client = require("@replit/database");
 
 async function initializeGame(client) {
-  let initialGame = await client.get("game");
-  if (initialGame === null){
-    await client.set("game", [])
+  try {
+    let initialGame = await client.get("game");
+  } catch(err){
+      await client.set("game", [])
   }
 }
 
@@ -36,20 +37,20 @@ async function startGame() {
       socket.on("disconnect", () => {
           console.log("A user has disconnected.");
       })
-      socket.on("movePawn", async () => {
-          let number = await client.get("game")
+      socket.on("movePiece", async () => {
+          const currentGame = await client.get("game")
           const newMove = { 
             fromSquare: [1, 3], 
             toSquare: [3, 3]
           }
-          const currentGame = await client.get("game")
           const updatedGame = [...currentGame, newMove]
         
-          await client.set("game", )
-          io.emit("updatedNumber", newNumber)
+          await client.set("game", updatedGame)
+          io.emit("updatedGame", updatedGame)
+          console.log(updatedGame)
       })
-      const currentGame = await client.get("game")
-      socket.emit("updatedNumber", currentNumber)
+      // const currentGame = await client.get("game")
+      // socket.emit("updatedGame", currentGame)
   });
 }
 
