@@ -1,9 +1,15 @@
 let socket = io()
 let playerColor
 const testBtn = document.querySelector("#test-btn")
+const resetBtn = document.querySelector("#reset-btn")
 
 testBtn.addEventListener("click", () => {
   socket.emit("movePiece")
+})
+
+resetBtn.addEventListener("click", () => {
+  console.log("lol")
+  socket.emit("resetGame")
 })
 
 socket.on("updatedGame", (updatedGame) => {

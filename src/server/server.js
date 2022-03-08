@@ -7,6 +7,9 @@ const Client = require("@replit/database");
 async function initializeGame(client) {
   try {
     let initialGame = await client.get("game");
+    if (initialGame === null){
+      await client.set("game", [])
+    }
   } catch(err){
       await client.set("game", [])
   }
@@ -45,10 +48,15 @@ async function startGame() {
             toSquare: [3, 3]
           }
           const updatedGame = [...game, newMove]
-        
           await client.set("game", updatedGame)
           io.emit("updatedGame", updatedGame)
           console.log(updatedGame)
+      })
+      socket.on("resetGame", async () => {
+        const newGame = []
+        await client.set("game", newGame)
+        io.emit("updatedGame", newGame)
+        console.log(newGame)
       })
       const currentGame = await client.get("game")
       socket.emit("joinedGame", assignSide())
