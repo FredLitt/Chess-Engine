@@ -33,25 +33,33 @@ async function startGame() {
   });
   
   io.on("connection", async (socket) => {
+    
       console.log("A user just connected.");
       socket.on("disconnect", () => {
           console.log("A user has disconnected.");
       })
       socket.on("movePiece", async () => {
-          const currentGame = await client.get("game")
+          const game = await client.get("game")
           const newMove = { 
             fromSquare: [1, 3], 
             toSquare: [3, 3]
           }
-          const updatedGame = [...currentGame, newMove]
+          const updatedGame = [...game, newMove]
         
           await client.set("game", updatedGame)
           io.emit("updatedGame", updatedGame)
           console.log(updatedGame)
       })
-      // const currentGame = await client.get("game")
-      // socket.emit("updatedGame", currentGame)
+      const currentGame = await client.get("game")
+      socket.emit("joinedGame", assignSide())
+      socket.emit("updatedGame", currentGame)
   });
+}
+
+const assignSide = () => {
+  const sides = ["black", "white"]
+  const randomSide = sides[Math.floor(Math.random() * 2)]
+  return randomSide
 }
 
 startGame()
