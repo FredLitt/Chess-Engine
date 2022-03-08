@@ -15,13 +15,17 @@ async function startGame() {
   const client = new Client();
   await initializeGame(client)
 
-  const publicPath = path.join(__dirname, './public');
   const port = process.env.PORT || 3001;
   let app = express();
   let server = http.createServer(app);
   let io = socketIO(server);
-  
-  app.use(express.static(publicPath))
+
+  const testFolder = path.join(__dirname)
+  app.use(express.static(testFolder))
+
+  app.get("/", (req, res) => {
+    res.sendFile(testFolder + "/test.html")
+  })
   
   server.listen(port, () => {
       console.log(`Server is up on port ${port}.`)
@@ -50,4 +54,3 @@ async function startGame() {
 }
 
 startGame()
-
