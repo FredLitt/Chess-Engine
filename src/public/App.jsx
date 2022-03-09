@@ -24,7 +24,8 @@ function App() {
   }
 
   const test = () => {
-    
+    let socket = io()
+    socket.emit("movePiece")
   }
 
   return (

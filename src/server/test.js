@@ -8,7 +8,6 @@ testBtn.addEventListener("click", () => {
 })
 
 resetBtn.addEventListener("click", () => {
-  console.log("lol")
   socket.emit("resetGame")
 })
 
