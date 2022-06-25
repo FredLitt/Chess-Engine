@@ -3,7 +3,7 @@ import { pieces, findPiece } from "./pieces"
 import GameOptionsBar from "./GameOptionsBar"
 import PromotionModal from "./PromotionModal"
 
-export default function BoardUI({board, setBoard}){
+export default function Board({board, setBoard}){
 
   const [pieceToMove, setPieceToMove] = useState(null)
 
@@ -24,10 +24,9 @@ export default function BoardUI({board, setBoard}){
   }
 
   const getSquaresClass = (square) => {
-    if (square.piece !== null) { 
-      return "square contains-piece" 
-      }
-      return "square"
+    let squareClass
+    square.piece ? squareClass = "square contains-piece" : squareClass = "square"
+    return squareClass
   }
 
   const isLightSquare = (coordinate) => {
@@ -43,6 +42,7 @@ export default function BoardUI({board, setBoard}){
       const correctPlayersTurn = (whoseTurn === piecesColor)
       if (!correctPlayersTurn) { return }
       board.selectPieceToMove(squaresCoordinates)
+      
       const clickedPiecesMoves = board.selectedPiece.possibleMoves
       if (clickedPiecesMoves.length === 0) { return }
       setPieceToMove("selected")
@@ -169,7 +169,7 @@ export default function BoardUI({board, setBoard}){
                   opacity: square.isLastPlayedMove ? 0.6 : 1.0
                   }}
                 onClick={(e) => move(e)}>
-                  {square.piece !== null && square.piece.symbol}   
+                  {square.piece && square.piece.symbol}   
                   {square.isPossibleMove && 
                     <span className="possible-move"></span>}       </td>)}
             </tr>)}

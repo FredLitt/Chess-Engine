@@ -94,27 +94,18 @@ export class Board {
 
   squareIsEmpty(square){
     const [row, col] = square
-    if(this.squares[row][col].piece === null){
-      return true
-    }
-    return false
+    const squareIsEmpty = this.squares[row][col].piece === null
+    return squareIsEmpty
   }
 
   capturePiece(capturedPiece){
-    if(capturedPiece.originallyPawn && capturedPiece.color === "white"){
-      capturedPiece = pieces.whitePawn
+    if(capturedPiece.originallyPawn){
+      capturedPiece.color === "white" ? 
+        capturedPiece = pieces.whitePawn : capturedPiece = pieces.blackPawn
     }
-    if(capturedPiece.originallyPawn && capturedPiece.color === "black"){
-      capturedPiece = pieces.blackPawn
-    }
-    switch(capturedPiece.color){
-      case 'white':
-        this.whiteCapturedPieces.push(capturedPiece)
-        break
-      case 'black':
-        this.blackCapturedPieces.push(capturedPiece)
-        break
-    }
+    capturedPiece.color === "white" ? 
+      this.whiteCapturedPieces.push(capturedPiece) : 
+      this.blackCapturedPieces.push(capturedPiece)
   }
   
   addMoveToPlayedMoveList(fromSquare, toSquare, moveData){ 
@@ -182,6 +173,7 @@ export class Board {
 
   checkIfCastlingPossible(castlingDirection){
     const castlingKingColor = this.selectedPiece.piece.color
+ 
     let castlingRookSquare
     let kingStartSquare
     let castlingPathSquares
@@ -217,15 +209,25 @@ export class Board {
     }
 
     const kingHasMoved = 
-      (this.playedMoveList.includes(move => (move.piece.type === "king" && move.piece.color === castlingKingColor)) || !this.squaresAreEqual(this.selectedPiece.square, kingStartSquare) )
+      (this.playedMoveList.includes(move => 
+        (move.piece.type === "king" && move.piece.color === castlingKingColor)) || !this.squaresAreEqual(this.selectedPiece.square, kingStartSquare) )
+    
     const kingIsInCheck = 
       this.arrayContainsSquare(enemyControlledSquares, kingStartSquare)
+    
     const kingWouldPassThroughCheck = 
       (castlingPathSquares.some(square => this.arrayContainsSquare(enemyControlledSquares, square)))
+    
     const castlingRookHasMoved = this.playedMoveList.includes(move => board.squaresAreEqual(move.fromSquare, castlingRookSquare))
+    
     const castlingPathIsClear = 
       castlingPathSquares.every(square => this.squareIsEmpty(square))
+    
     if (kingHasMoved || kingIsInCheck || kingWouldPassThroughCheck ||castlingRookHasMoved || !castlingPathIsClear){
+
+      console.log("for direction", castlingDirection, "king moved:", kingHasMoved, "king in check?", kingIsInCheck,
+                 "would pass through check?", kingWouldPassThroughCheck, "castling rook moved?", castlingRookHasMoved, "path clear?", castlingPathIsClear)      
+      
       return false
     }
     return true

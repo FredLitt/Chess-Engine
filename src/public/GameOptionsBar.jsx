@@ -2,16 +2,11 @@ import React, { useState } from "react"
 
 export default function GameOptionsBar({flipBoard, createNewGame, takeback, changeTheme}){
 
-  const [ themesMenu, setThemesMenu ] = useState("closed")
+  const [ showColorThemes, setShowColorThemes ] = useState(false)
 
   const toggleThemeMenu = () => {
-    if (themesMenu === "closed"){      
-      setThemesMenu("open")
-      }
-    if (themesMenu === "open"){
-      setThemesMenu("closed")
-      }
-  }
+    setShowColorThemes(!showColorThemes)
+  } 
 
   const colorSchemes = [
     { light: "beige", dark: "tan", highlight: "peru" },
@@ -35,7 +30,8 @@ export default function GameOptionsBar({flipBoard, createNewGame, takeback, chan
       <button
         onClick={() => {toggleThemeMenu()}}
         >Board Theme</button>
-      {themesMenu === "open" && 
+      
+      {showColorThemes && 
         <div id="theme-options">
           {colorSchemes.map((scheme, index) =>
             <div 

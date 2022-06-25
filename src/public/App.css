@@ -104,10 +104,6 @@ main {
   overflow-y: auto;
 }
 
-#move-list::-webkit-scrollbar {
-  display: none;
-}
-
 #move-list > div {
   padding: .5rem .5rem .1rem 1rem;
 }

@@ -88,8 +88,8 @@ class King {
       "NorthEast": [fromRow - 1, fromCol + 1],
       "SouthWest": [fromRow + 1, fromCol - 1],
       "SouthEast": [fromRow + 1, fromCol + 1],
-      "Castle Kingside": [fromRow, fromCol - 2],
-      "Castle Queenside": [fromRow, fromCol + 2]
+      "Castle Queenside": [fromRow, fromCol + 2],
+      "Castle Kingside": [fromRow, fromCol - 2]
     }    
     if (squaresToFind === "controlled squares") {
       return this.findControlledSquares(board, fromSquare, kingDirections)

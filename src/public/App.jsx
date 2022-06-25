@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { Board } from "./chessBoard";
-import BoardUI from "./BoardUI"
+import Board from "./Board"
 import MoveList from "./MoveList"
 import CapturedPieceContainer from "./CapturedPieceContainer"
 import NewGameModal from "./NewGameModal"
 import "./App.css";
-
-import io from "socket.io-client"
 //TODO: 2 player network chess
 
 const createNewBoard = () => {
@@ -21,11 +19,6 @@ function App() {
   const createNewGame = () => {
     board.startNewGame()
     setBoard(board.clone())
-  }
-
-  const test = () => {
-    let socket = io()
-    socket.emit("movePiece")
   }
 
   return (
@@ -44,7 +37,6 @@ function App() {
           capturedPieces={board.whiteCapturedPieces}/>
       </div>
       </div>
-      <button onClick={test}>Test Button</button>
     </main>
   );
 }

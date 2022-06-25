@@ -18,25 +18,18 @@ export default function PromotionPopUp({promotionData, board, promote}){
     pieces.blackBishop,
     pieces.blackKnight
   ]
+
+  let piecesToRender
+  color === "white" ? piecesToRender = whitePieces : piecesToRender = blackPieces
   
     return (
       <div id="promotion-modal">
-
-        {color === "white" ?
-          <div className="promotion-pieces">{whitePieces.map((piece, index) => 
+          <div className="promotion-pieces">{piecesToRender.map((piece, index) => 
             <div
               key={index}
               onClick={(e) => {promote(promotionSquare, piece)}}>{piece.symbol}
             </div>)}
-        </div> :
-
-            <div className="promotion-pieces">{blackPieces.map((piece, index) =>
-              <div
-                key={index}
-                onClick={(e) => {promote(promotionSquare, piece)}}>
-                {piece.symbol}
-              </div>)}
-            </div>}
+        </div> 
       </div>)}
       
     

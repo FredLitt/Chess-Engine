@@ -1,0 +1,60 @@
+TODO LIST
+-----------
+
+- [x] Create games server
+- [x] Created game schema that includes move history
+- [x] Create POST request for creating new game
+- [ ] Create POST request for playing a move (without validation)
+  - [x] Add a hardcoded string to the end of the move history
+  - [x] Actually add a real move w/ a proper schema
+  - [ ] Fix bug: response doesn't contain updated game, contains the last one??
+  - [ ] (Optional) Make all move fields required. If you send a request that's missing a piece, it should error.
+- [ ] Validate moves
+  - [ ] Turn a move history into a Board object
+
+Pseudocode:
+
+- Make a new Board in-memory (const board = new Board())
+- Load the moves from the database (const moves = Game.findById(123).moveHistory)
+- For each move in the history:
+  - Turn the JSON move into a PlayedMove object
+    - Turn the piece into a Piece object
+    - const piece = new Piece(pieceType, color)
+  - Apply the move to the game: board.playMove(move)
+
+- [ ] Notify the other connected clients (big task: websockets)
+
+NOTES
+----------
+
+Phonebook
+
+- GET /people: get list of people
+- GET /people/<id>: get a specific person
+- POST /people: add a person to list
+- DELETE /people: delete person from list
+- PUT /people/<id>: edit existing person
+
+Chess
+
+- GET /games: get list of boards
+- GET /games/<id>: get a specific board
+- POST /games: create a new game
+- ??? make a move
+  - backend has to validate
+  - if valid
+    - apply the move
+    - update the game object in Mongo (just like updating a Person record)
+    - responds with a JSON object containing the updated game
+  - if not valid:
+    - don't update database
+    - respond with a JSON object indicating an invalid move: {"error": ...} (400/500 status code)
+  - notify other client???
+
+
+Game state JSON:
+{
+  "board": { "squares": ... },
+  "moveHistory": [...]
+}
+
